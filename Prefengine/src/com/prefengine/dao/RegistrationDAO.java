@@ -9,11 +9,11 @@ import com.prefengine.model.User;
 import com.prefengine.util.SQLConnection;
 
 
-public class RegestrationDAO{
+public class RegistrationDAO{
 
     private Connection connection;
 
-    public RegestrationDAO() {
+    public RegistrationDAO() {
         connection = SQLConnection.getConnection();
     }
 
