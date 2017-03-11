@@ -1,4 +1,4 @@
-package cs683.prefengine.domain;
+package com.prefengine.domain;
 
 /**
  * This enum holds all different cabin information provided by the Google QPX API.

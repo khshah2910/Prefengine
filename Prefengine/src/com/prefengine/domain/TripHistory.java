@@ -1,4 +1,4 @@
-package cs683.prefengine.domain;
+package com.prefengine.domain;
 
 /**
  * A trip History class that represents a user's previously selected trip.

@@ -1,4 +1,4 @@
-package cs683.prefengine.domain;
+package com.prefengine.domain;
 
 /**
  * A trip POJO that represents a single trip.
