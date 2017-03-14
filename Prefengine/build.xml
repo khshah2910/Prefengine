@@ -9,7 +9,7 @@
 	<property name="database.dir" value="database" />
 	<property name="src.dir" value="src" />
 	<property name="lib.dir" value="lib" />
-	<property name="classes.dir" value="bin" />
+	<property name="classes.dir" value="build" />
 	
 	<property name="MYSQL_URL" value = "jdbc:mysql://${env.MYSQL_SITE}/${env.MYSQL_USER}db"/>
 	<property name="JAVAAGENT" value="-javaagent:lib/eclipselink.jar"/>
@@ -23,7 +23,7 @@
 	</path>
 	
 	<target name="init">
-		<mkdir dir="${classes}"/>
+		<mkdir dir="${classes.dir}"/>
 	</target>
 
 	<!-- Clean up -->

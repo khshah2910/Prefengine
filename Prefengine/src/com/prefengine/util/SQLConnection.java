@@ -9,7 +9,7 @@ public class SQLConnection {
 	public static Connection connection = null;
 	//private static final String DBNAME = "jdbc:mysql://localhost:3306/prefengine";
 	private static final String DB_USERNAME = "root";
-	private static final String DB_PASSWORD = "root";
+	private static final String DB_PASSWORD = "";
 
 	public static Connection getConnection(){
 		if(connection!= null){
@@ -25,7 +25,8 @@ public class SQLConnection {
 			catch(Exception e){
 				e.printStackTrace();
 				try {
-					connection.close();
+					if(connection!= null)
+						connection.close();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

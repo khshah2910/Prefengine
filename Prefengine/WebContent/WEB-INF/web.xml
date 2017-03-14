@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>SimpleJspServletDB</display-name>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:web="http://java.sun.com/xml/ns/javaee" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+	id="PrefEngine1" 
+	version="2.5">
+  <display-name>Prefengine</display-name>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
@@ -9,9 +14,69 @@
     <display-name>UserController</display-name>
     <servlet-name>UserController</servlet-name>
     <servlet-class>com.prefengine.controller.UserController</servlet-class>
+    <load-on-startup>2</load-on-startup>  
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>UserController</servlet-name>
     <url-pattern>/UserController</url-pattern>
   </servlet-mapping>
+  
+  
+  
+  
+  <!-- for SystemTestServlet Emedded by Yinka for modification-->
+	<servlet>
+		<description>SystemTest Servlet</description>
+		<display-name>SysTestServlet</display-name>
+		<servlet-name>SysTestServlet</servlet-name>
+		<servlet-class>com.prefengine.presentation.web.SysTestServlet</servlet-class>
+		<init-param>
+			<param-name>compilerSourceVM</param-name>
+			<param-value>1.7</param-value>
+		</init-param>
+		<init-param>
+			<param-name>compilerTargetVM</param-name>
+			<param-value>1.7</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>SysTestServlet</servlet-name>
+		<url-pattern>/servlet/SystemTest</url-pattern>
+		<!-- not load-on-startup (i.e. load-when-needed) -->
+	</servlet-mapping>
+	
+	<!-- We have two production servlets, one for user actions and another
+	for admin actions, with clearly separate URL spaces. That way, we can more
+	easily add different security constraints for the two kinds of users. -->
+	<servlet>
+		<description>Admin Servlet</description>
+		<display-name>AdminServlet</display-name>
+		<servlet-name>AdminServlet</servlet-name>
+		<servlet-class>com.prefengine.presentation.web.AdminServlet</servlet-class>
+		<!-- make this servlet load after the dispatcher servlet -->
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdminServlet</servlet-name>
+		<url-pattern>/adminController/*</url-pattern>
+	</servlet-mapping>
+	<!-- We use *.html for page-to-page URLs in the student pages: all these URLs 
+	   point to the DispatcherServlet, which knows all the user-related controllers -->
+	<servlet>
+		<description>MVC Dispatcher Servlet</description>
+		<display-name>DispatcherServlet</display-name>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-class>com.prefengine.presentation.web.DispatcherServlet</servlet-class>
+		<!-- make this servlet load at web app startup (including redeployment) -->
+		<load-on-startup>1</load-on-startup>  
+	</servlet>
+	<!-- We use *.html for page-to-page URLs in this app: all these URLs 
+	    point to the DispatcherServlet, which knows all the controllers -->
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+  
 </web-app>
+

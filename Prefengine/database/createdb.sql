@@ -7,3 +7,6 @@ CREATE TABLE user_info (
     UNIQUE(email_address),
     PRIMARY KEY (user_id)
 );
+CREATE TABLE temp; 
+CREATE TABLE trip;
+CREATE TABLE trip_history;
