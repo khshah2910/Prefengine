@@ -20,18 +20,12 @@ public class SQLConnection {
 				
 				Class.forName("com.mysql.jdbc.Driver");
 				connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/prefengine",DB_USERNAME,DB_PASSWORD);
-				connection.close();
+				//connection.close();
 			}
 			catch(Exception e){
 				e.printStackTrace();
-				try {
-					connection.close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				
 			}
-			
 			return connection;
 		}
 

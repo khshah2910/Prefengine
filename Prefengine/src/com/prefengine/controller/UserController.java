@@ -9,17 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.prefengine.model.User;
-import com.prefengine.dao.RegestrationDAO;
+import com.prefengine.dao.RegistrationDAO;
 
 public class UserController extends HttpServlet {
     private static String INSERT = "/web/Register.jsp";
-    private RegestrationDAO dao;
+    private RegistrationDAO dao;
 
     
  
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	dao = new RegestrationDAO();
+    	dao = new RegistrationDAO();
     	User user = new User();
         //user.setId(request.getParameter("id"));
         user.setUserName(request.getParameter("userName"));
