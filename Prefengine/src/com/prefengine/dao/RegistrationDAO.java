@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.prefengine.model.User;
+import com.prefengine.model.*;
 import com.prefengine.util.SQLConnection;
 
 

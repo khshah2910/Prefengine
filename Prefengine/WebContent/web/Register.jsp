@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form method="post" action="/PrefengineLearning/UserController" name="addUser">
+	<form method="post" action="/Prefengine/UserController" name="addUser">
 		<h2>Prefengine Registration </h2>
 		<table>
 			<tr>
