@@ -15,6 +15,7 @@
 	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
 	<classpathentry kind="lib" path="lib/googleAPI/google-api-services-qpxExpress-v1-rev23-1.22.0-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/googleAPI/google-api-services-qpxExpress-v1-rev23-1.22.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.json.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/apache-ant-1.9.6/lib/ant.jar"/>
 	<classpathentry kind="lib" path="C:/apache-ant-1.9.6/lib/ant-antlr.jar"/>
