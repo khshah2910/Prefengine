@@ -35,7 +35,7 @@
 	</target>
 	
 	<!-- add data for testing queries -->
-	<target name="load-mysqldb-dl" description="Load Mysql download table">
+	<target name="load-mysqldb" description="Load Mysql download table">
 		<sql classpathref="project.classpath" driver="com.mysql.jdbc.Driver" 
 			url="${MYSQL_URL}" userid="${MYSQL_USER}" 
 			password="${MYSQL_PW}" src="load.sql" />

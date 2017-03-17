@@ -15,34 +15,44 @@ public class User implements Serializable,Comparable<User>{
 	 */
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private String email_address;
+	private String userName;
+	private String email;
 	private String hashedPassword;
 	private String saltKey;
+	private String secQue;
+	private String secAns;
 	
 	/**
 	 * @return the email_address
 	 */
 	public String getEmail_address() {
-		return email_address;
+		return email;
 	}
 	/**
 	 * @param id
-	 * @param email_address
+	 * @param userName
+	 * @param email
 	 * @param hashedPassword
 	 * @param saltKey
+	 * @param secQue
+	 * @param secAns
 	 */
-	public User(int id, String email_address, String hashedPassword, String saltKey) {
+	public User(int id, String userName, String email, String hashedPassword, String saltKey, 
+			String secQue, String secAns) {
 		super();
 		this.id = id;
-		this.email_address = email_address;
+		this.userName = userName;
+		this.email = email;
 		this.hashedPassword = hashedPassword;
 		this.saltKey = saltKey;
+		this.secQue = secQue;
+		this.secAns = secAns;
 	}
 	/**
 	 * @param email_address the email_address to set
 	 */
 	public void setEmail_address(String email_address) {
-		this.email_address = email_address;
+		this.email = email_address;
 	}
 	/**
 	 * @return the hashedPassword
@@ -74,6 +84,42 @@ public class User implements Serializable,Comparable<User>{
 	public int getId() {
 		return id;
 	}
+	/**
+	 * @return the secQue
+	 */
+	public String getSecQue() {
+		return secQue;
+	}
+	/**
+	 * @param secQue the secQue to set
+	 */
+	public void setSecQue(String secQue) {
+		this.secQue = secQue;
+	}
+	/**
+	 * @return the secAns
+	 */
+	public String getSecAns() {
+		return secAns;
+	}
+	/**
+	 * @param secAns the secAns to set
+	 */
+	public void setSecAns(String secAns) {
+		this.secAns = secAns;
+	}
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	/*
 	 * This compares users by their email address
 	 * (non-Javadoc)
@@ -98,4 +144,5 @@ public class User implements Serializable,Comparable<User>{
 	public String toString(){
 		return this.getEmail_address();
 	}
+	
 }
