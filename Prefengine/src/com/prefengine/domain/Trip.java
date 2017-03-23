@@ -22,7 +22,8 @@ public class Trip implements Serializable,Comparable<Trip>{
 	private double price;
 	private String carrier;
 	private int duration;
-	private int mileage;
+	private double mileage;
+	private Passenger passengers;
 	private Cabin cabin;
 	private String thisTrip;
 	private String jsonData;
@@ -41,7 +42,7 @@ public class Trip implements Serializable,Comparable<Trip>{
 	 * @param jsonData
 	 */
 	public Trip(int tripId, String departure, String destination, Timestamp departureTime, Timestamp arrivalTime,
-			double price, String carrier, int duration, int mileage, Cabin cabin, String jsonData) {
+			double price, String carrier, int duration, double mileage, Passenger passengers,Cabin cabin, String jsonData) {
 		super();
 		this.tripId = tripId;
 		this.departure = departure;
@@ -54,6 +55,7 @@ public class Trip implements Serializable,Comparable<Trip>{
 		this.mileage = mileage;
 		this.cabin = cabin;
 		this.jsonData = jsonData;
+		this.setPassengers(passengers);
 		thisTrip = getDeparture() + " to " + getDestination();
 	}
 	//should we add this?ontimeperformance
@@ -144,7 +146,7 @@ public class Trip implements Serializable,Comparable<Trip>{
 	/**
 	 * @return the mileage
 	 */
-	public int getMileage() {
+	public double getMileage() {
 		return mileage;
 	}
 	/**
@@ -213,6 +215,18 @@ public class Trip implements Serializable,Comparable<Trip>{
 	public String toString(){
 		return thisTrip + ": departs: " + getDepartureTime() + ", arrives: " + getArrivalTime()
 			+ ", price: USD " + getPrice();
+	}
+	/**
+	 * @return the object passenger
+	 */
+	public Passenger getPassengers() {
+		return passengers;
+	}
+	/**
+	 * @param passengers the object passengers to set
+	 */
+	public void setPassengers(Passenger passengers) {
+		this.passengers = passengers;
 	}
 	
 }

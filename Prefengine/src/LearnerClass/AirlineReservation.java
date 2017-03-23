@@ -3,8 +3,6 @@ package LearnerClass;
 import java.io.IOException;
 import java.util.*;
 
-import javax.swing.text.View;
-
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -30,15 +28,15 @@ public class AirlineReservation {
      */
 
 
-      private static final String APPLICATION_NAME = "MyFlightApplication";
+	private static final String APPLICATION_NAME = "MyFlightApplication";
 
-      private static final String API_KEY = ""; //put your own key
+	private static final String API_KEY = ""; //put your own key
 
-      /** Global instance of the HTTP transport. */
-      private static HttpTransport httpTransport;
+    /** Global instance of the HTTP transport. */
+    private static HttpTransport httpTransport;
 
-      /** Global instance of the JSON factory. */
-      private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    /** Global instance of the JSON factory. */
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
