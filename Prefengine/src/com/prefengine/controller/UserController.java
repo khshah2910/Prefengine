@@ -15,11 +15,8 @@ import com.prefengine.model.User;
 import com.prefengine.dao.RegistrationDAO;
 
 public class UserController extends HttpServlet {
-    private static String INSERT = "/web/Register.jsp";
+   // private static String INSERT = "/web/Register.jsp";
     private RegistrationDAO dao;
-
-    
- 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	dao = new RegistrationDAO();
@@ -36,7 +33,6 @@ public class UserController extends HttpServlet {
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = new User();
         RequestDispatcher rd= request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }

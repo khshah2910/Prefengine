@@ -6,13 +6,15 @@
  -->
 <!-- MYSQL_SITE should be for example "localhost:3306" -->	
 
-<project name="music3 DBhelpers">
+<project name="prefengine DBhelpers">
 	<!--Load environment variables and give them prefix "env." -->
 	<property environment="env" />
 
+	<!--<property name="MYSQL_PW" value="${env.MYSQL_PW}" /> -->
 	<property name="MYSQL_USER" value="${env.MYSQL_USER}" />
-	<property name="MYSQL_PW" value="${env.MYSQL_PW}" />
+	<property name="MYSQL_PW" value="" />
 	<property name="MYSQL_SITE" value="${env.MYSQL_SITE}" />
+	<property name="MYSQL_URL" value="jdbc:mysql://${MYSQL_SITE}/prefengine" />
 	
 	<!-- Classpath declaration: all jars in lib -->
 	<path id="project.classpath">
@@ -26,7 +28,7 @@
 	<!-- Mysql should always be up and ready to work for you, so all you have to
 		do is load the tables once and use it. 
 	-->
-	<target name="load-mysqldb" description="Load Mysql database">
+	<target name="create-mysqldb" description="create Mysql database tables">
 		<sql classpathref="project.classpath" driver="com.mysql.jdbc.Driver" 
 			url="${MYSQL_URL}" userid="${MYSQL_USER}" 
 			password="${MYSQL_PW}" src="createdb.sql" />

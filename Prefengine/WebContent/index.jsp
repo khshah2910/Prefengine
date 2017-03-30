@@ -7,6 +7,6 @@
 </head>
 <body>
 
-<jsp:forward page="/web/Register.jsp" />
+<jsp:forward page="/web/login_register.jsp" />
 </body>
 </html>
