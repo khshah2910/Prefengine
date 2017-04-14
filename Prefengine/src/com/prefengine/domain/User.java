@@ -1,4 +1,4 @@
-package com.prefengine.model;
+package com.prefengine.domain;
 
 public class User {
 	private int id;

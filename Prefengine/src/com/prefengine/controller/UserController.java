@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.prefengine.dao.RegistrationDAO;
-import com.prefengine.model.User;
+import com.prefengine.domain.User;
 import com.prefengine.dao.RegistrationDAO;
 
 public class UserController extends HttpServlet {

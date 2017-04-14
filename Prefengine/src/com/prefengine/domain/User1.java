@@ -9,7 +9,7 @@ package com.prefengine.domain;
  */
 import java.io.Serializable;
 
-public class User implements Serializable,Comparable<User>{
+public class User1 implements Serializable,Comparable<User1>{
 	/**
 	 * Serialize this class
 	 */
@@ -31,7 +31,7 @@ public class User implements Serializable,Comparable<User>{
 	 * @param hashedPassword
 	 * @param saltKey
 	 */
-	public User(int id, String email_address, String hashedPassword, String saltKey) {
+	public User1(int id, String email_address, String hashedPassword, String saltKey) {
 		super();
 		this.id = id;
 		this.email_address = email_address;
@@ -79,7 +79,7 @@ public class User implements Serializable,Comparable<User>{
 	 * (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(User x)
+	public int compareTo(User1 x)
 	{
 		return getEmail_address().compareTo(x.getEmail_address());
 	}
@@ -88,7 +88,7 @@ public class User implements Serializable,Comparable<User>{
 	{
 		if (x == null || x.getClass()!= getClass())
 			return false;
-		return getEmail_address().equals(((User)x).getEmail_address());
+		return getEmail_address().equals(((User1)x).getEmail_address());
 	}
 	@Override
 	public int hashCode()

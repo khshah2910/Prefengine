@@ -40,7 +40,7 @@ public class AirlineReservation {
 	 * @param args
 	 */private static final String APPLICATION_NAME = "Prefengine";
 
-	private static final String API_KEY ="" ; //put your own key
+	private static final String API_KEY ="AIzaSyAR42Q5Mf0sorfbvOAU2qrM52xXpMarTUo" ; //put your own key
 
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport httpTransport;
@@ -58,17 +58,19 @@ public class AirlineReservation {
 			passengers.setAdultCount(1);
 			List<SliceInput> slices = new ArrayList<SliceInput>();
 			SliceInput slice = new SliceInput();
-			String setOrigin = "BOS";
+			String setOrigin = "BOM";
 			String setDestination = "AMD";
 			slice.setOrigin(setOrigin); 
 			slice.setDestination(setDestination); 
-			slice.setDate("2017-04-29");
+			slice.setDate("2017-04-21");
 			slices.add(slice);
 			
 			TripOptionsRequest request= new TripOptionsRequest();
-			request.setSolutions(5);
+			//request.setSolutions(50);
 			request.setPassengers(passengers);
 			request.setSlice(slices);
+			
+			
 
 			TripsSearchRequest parameters = new TripsSearchRequest();
 			parameters.setRequest(request);
@@ -77,6 +79,8 @@ public class AirlineReservation {
 
 			TripsSearchResponse list= qpXExpress.trips().search(parameters).execute();
 			List<TripOption> tripResults=list.getTrips().getTripOption();
+			
+			List<CityData> a = list.getTrips().getData().getCity();
 /*			List<CityData> a = list.getTrips().getData().getCity();
 			List<AirportData> ap = list.getTrips().getData().getAirport();
 		
@@ -97,11 +101,15 @@ public class AirlineReservation {
 			String carrier = "";
 			String price = null;
 			float finalPrice = 0;
+			
+			
 			for(int i=0; i<tripResults.size(); i++){
-				
+				String flightCarries1 ="";
+				String fr = "";
 				ArrayList<String> totalRoute = new ArrayList<String>();
 				ArrayList<String> departureTime = new ArrayList<String>();
 				ArrayList<String> arrivalTime = new ArrayList<String>();
+				ArrayList<String> flightCarries = new ArrayList<String>();
 				int totalMilage = 0; 
 				String finalRoute = "";
 				String cabin = "";
@@ -116,8 +124,11 @@ public class AirlineReservation {
 					List<SegmentInfo> segInfo= sliceInfo.get(j).getSegment();
 					cabin = segInfo.get(j).getCabin();
 					carrier = segInfo.get(j).getFlight().getCarrier();
+					//System.out.println("=-=-=-=-="+segInfo.get(j).getFlight());
 					for(int k=0; k<segInfo.size(); k++){
 						List<LegInfo> leg=segInfo.get(k).getLeg();
+						System.out.println("------<><>"+segInfo.get(k).getFlight());
+						flightCarries1 = segInfo.get(k).getFlight().getCarrier().concat(",");
 						for(int l=0; l<leg.size(); l++){
 							arrivalTime.add(leg.get(l).getArrivalTime());
 							departureTime.add(leg.get(l).getDepartureTime());
@@ -127,24 +138,29 @@ public class AirlineReservation {
 							mil= leg.get(l).getMileage();
 							route =  origin.concat("-->"+dest);
 							totalRoute.add(route);
-//							a.get(l).getName();
-//							System.out.println("--=-=-=-=-=-=- > "+a.get(l).getName());
+							//System.out.println("----->"+leg.get(l).getOperatingDisclosure());
 						}
 						totalMilage = totalMilage+mil;
 						stops++;
+						flightCarries.add(flightCarries1);
 					}
 					
 				}
 				System.out.println("Stops : "+(stops-1));
 				List<PricingInfo> priceInfo= tripResults.get(i).getPricing();
+				
+				for(int n=0;n<flightCarries.size();n++){
+					fr=fr+flightCarries.get(n);
+				}
+				
 				for(int l=0;l<totalRoute.size();l++){
-					finalRoute = totalRoute.get(l);
-					System.out.println("stop : "+l+" :" +finalRoute);
-					//finalRoute = finalRoute+totalRoute.get(l).concat(", ");
+					//finalRoute = totalRoute.get(l);
+					//System.out.println("stop : "+l+" :" +finalRoute);
+					finalRoute = finalRoute+totalRoute.get(l).concat(",");
 				}
 				
 				for(int p=0; p<priceInfo.size(); p++){
-					price= priceInfo.get(p).getSaleTotal();
+					price= priceInfo.get(i).getSaleFareTotal();
 					finalPrice = Float.parseFloat(price.substring(3));
 					System.out.println("Price "+price);
 				}
@@ -152,39 +168,40 @@ public class AirlineReservation {
 				format.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
 				id= tripResults.get(i).getId();
-				System.out.println("Final route : "+finalRoute);
+				System.out.println("Route carriers: "+fr.substring(0, fr.length()-1));
+				System.out.println("Final route : "+finalRoute.substring(0, finalRoute.length()-1));
 				System.out.println("id "+id);
 				System.out.println("Departure "+setOrigin);
 				System.out.println("Destination "+ setDestination);
 				System.out.println("Departure Time"+departureTime.get(0));
 				System.out.println("Arrival Time"+arrivalTime.get(arrivalTime.size()-1));
-				
 				System.out.println("Total Miles "+totalMilage);
 				System.out.println("Total Duration = " + duration/60 +"hours");
 				System.out.println("Cabin = "+cabin);
 				System.out.println("Carrier  = "+ carrier);
 				System.out.println("----------------------------------------");
 			
-				Connection connection = SQLConnection.getConnection();
+				/*Connection connection = SQLConnection.getConnection();
 				
-				String query = "insert into flightRecord (tripId, departure, destination, route, stops, departureTime, arrivalTime, price, carrier, duration, milage,cabin, thisTrip, jsonData) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				String query = "insert into flightRecord (tripId, departure, destination, route, stops, departureTime, arrivalTime, price, carrier, route_flights,duration, milage,cabin, thisTrip, jsonData) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 				PreparedStatement pst = connection.prepareStatement(query);
 				pst.setString(1,id);
 				pst.setString(2, setOrigin);
 				pst.setString(3, setDestination);
-				pst.setString(4, finalRoute);
+				pst.setString(4, finalRoute.substring(0, finalRoute.length()-1));
 				pst.setInt(5, stops-1);
 				pst.setString(6,departureTime.get(0));
 				pst.setString(7,arrivalTime.get(arrivalTime.size()-1));
 				pst.setFloat(8, finalPrice);
 				pst.setString(9, carrier);
-				pst.setFloat(10,duration );
-				pst.setInt(11, totalMilage);
-				pst.setString(12, cabin);
-				pst.setString(13, null);
+				pst.setString(10, fr.substring(0, fr.length()-1));
+				pst.setFloat(11,duration );
+				pst.setInt(12, totalMilage);
+				pst.setString(13, cabin);
 				pst.setString(14, null);
+				pst.setString(15, null);
 				
-				pst.execute();
+				pst.execute();*/
 
 			}
 			return;

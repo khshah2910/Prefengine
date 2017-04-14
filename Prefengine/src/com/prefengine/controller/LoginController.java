@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.prefengine.dao.loginDAO;
-import com.prefengine.model.User;
+import com.prefengine.domain.User;
 
 
 @WebServlet("/Welcome")
