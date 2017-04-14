@@ -1,101 +1,48 @@
-package com.prefengine.domain;
+package com.prefengine.model;
 
-
-/**
- * A user POJO that represents a single user.
- * 
- * @author Yinka - UMB Preference Based Search Engine Team
- * 
- */
-import java.io.Serializable;
-
-public class User implements Serializable,Comparable<User>{
-	/**
-	 * Serialize this class
-	 */
-	private static final long serialVersionUID = 1L;
+public class User {
 	private int id;
-	private String email_address;
-	private String hashedPassword;
-	private String saltKey;
+	private String userName;
+	private String email;
+	private String password;
+	private String secQue;
+	private String secAns;
 	
-	/**
-	 * @return the email_address
-	 */
-	public String getEmail_address() {
-		return email_address;
-	}
-	/**
-	 * @param id
-	 * @param email_address
-	 * @param hashedPassword
-	 * @param saltKey
-	 */
-	public User(int id, String email_address, String hashedPassword, String saltKey) {
-		super();
-		this.id = id;
-		this.email_address = email_address;
-		this.hashedPassword = hashedPassword;
-		this.saltKey = saltKey;
-	}
-	/**
-	 * @param email_address the email_address to set
-	 */
-	public void setEmail_address(String email_address) {
-		this.email_address = email_address;
-	}
-	/**
-	 * @return the hashedPassword
-	 */
-	public String getHashedPassword() {
-		return hashedPassword;
-	}
-	/**
-	 * @param hashedPassword the hashedPassword to set
-	 */
-	public void setHashedPassword(String hashedPassword) {
-		this.hashedPassword = hashedPassword;
-	}
-	/**
-	 * @return the saltKey
-	 */
-	public String getSaltKey() {
-		return saltKey;
-	}
-	/**
-	 * @param saltKey the saltKey to set
-	 */
-	public void setSaltKey(String saltKey) {
-		this.saltKey = saltKey;
-	}
-	/**
-	 * @return the id
-	 */
 	public int getId() {
 		return id;
 	}
-	/*
-	 * This compares users by their email address
-	 * (non-Javadoc)
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public int compareTo(User x)
-	{
-		return getEmail_address().compareTo(x.getEmail_address());
+	public void setId(int id) {
+		this.id = id;
 	}
-	@Override
-	public boolean equals(Object x)
-	{
-		if (x == null || x.getClass()!= getClass())
-			return false;
-		return getEmail_address().equals(((User)x).getEmail_address());
+	public String getUserName() {
+		return userName;
 	}
-	@Override
-	public int hashCode()
-	{
-		return getEmail_address().hashCode();
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String toString(){
-		return this.getEmail_address();
+	public String getEmail() {
+		return email;
 	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getSecQue() {
+		return secQue;
+	}
+	public void setSecQue(String secQue) {
+		this.secQue = secQue;
+	}
+	public String getSecAns() {
+		return secAns;
+	}
+	public void setSecAns(String secAns) {
+		this.secAns = secAns;
+	}
+
 }
