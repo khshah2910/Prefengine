@@ -31,6 +31,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
+import com.prefengine.domain.Airport;
+import com.prefengine.domain.City;
 import com.prefengine.domain.Trip;
 import com.prefengine.util.SQLConnection;
 
@@ -40,7 +42,7 @@ public class AirlineReservation {
 	 * @param args
 	 */private static final String APPLICATION_NAME = "Prefengine";
 
-	private static final String API_KEY ="AIzaSyAR42Q5Mf0sorfbvOAU2qrM52xXpMarTUo" ; //put your own key
+	private static final String API_KEY ="AIzaSyC0vHA4J81upfiXK6_dtq6JifSrrscwaNM" ; //put your own key
 
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport httpTransport;
@@ -66,7 +68,7 @@ public class AirlineReservation {
 			slices.add(slice);
 			
 			TripOptionsRequest request= new TripOptionsRequest();
-			//request.setSolutions(50);
+			request.setSolutions(50);
 			request.setPassengers(passengers);
 			request.setSlice(slices);
 			
@@ -80,19 +82,14 @@ public class AirlineReservation {
 			TripsSearchResponse list= qpXExpress.trips().search(parameters).execute();
 			List<TripOption> tripResults=list.getTrips().getTripOption();
 			
-			List<CityData> a = list.getTrips().getData().getCity();
-/*			List<CityData> a = list.getTrips().getData().getCity();
+			List<CityData> c = list.getTrips().getData().getCity();
 			List<AirportData> ap = list.getTrips().getData().getAirport();
+			List<CarrierData> cd = list.getTrips().getData().getCarrier();
 		
-			for(int i=0;i<a.size();i++){
-				System.out.println("------> "+a.get(i).getName()+" :"+a.get(i).getCountry());
-			}
-			for(int i=0;i<ap.size();i++){
-				System.out.println("------> "+ap.get(i).getName());
-			}
-			//List<CarrierData> c = list.getTrips().getData().getCarrier();
-			//List<Integer> milage = new ArrayList<Integer>();
-*/			String id;
+			
+			
+			
+			String id;
 			float duration = 0.0f;
 			String dest = null;
 			String origin = null;
@@ -115,6 +112,9 @@ public class AirlineReservation {
 				String cabin = "";
 				int stops=0;
 				
+				
+				
+				
 				//Slice
 				List<SliceInfo> sliceInfo= tripResults.get(i).getSlice();
 				 
@@ -130,6 +130,10 @@ public class AirlineReservation {
 						System.out.println("------<><>"+segInfo.get(k).getFlight());
 						flightCarries1 = segInfo.get(k).getFlight().getCarrier().concat(",");
 						for(int l=0; l<leg.size(); l++){
+							System.out.println("------Airport----" + c.get(l).getName());
+							System.out.println("-----city------"+ap.get(l).getCity());
+							System.out.println("-----Carrier------"+cd.get(l).getName());
+							
 							arrivalTime.add(leg.get(l).getArrivalTime());
 							departureTime.add(leg.get(l).getDepartureTime());
 							dest=leg.get(l).getDestination();

@@ -1,6 +1,11 @@
-<%@page import="com.prefengine.beans.FlightRecord"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.prefengine.domain.SearchAttributes"%>
+<%@page import="com.prefengine.dao.FlightRecordDAO"%>
+<%@page import="com.prefengine.service.SearchService"%>
+<%@page import="com.prefengine.service.SearchCriteria"%>
+<%@page import="com.prefengine.domain.Flights"%>
 <%@page import="java.util.List"%>
-<%@page import="com.prefengine.beans.TripRecord"%>
+<%@page import="com.prefengine.domain.Itinerary"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -68,22 +73,17 @@
 					<div class="row">
 						<div class="col-md-3">
 							<a class="logo" href="index.html"> <img
-								src="img/logo-invert.png" alt="Image Alternative text"
+								src="web/img/new_logo_1.png" height="47px" width="150px"
 								title="Image Title" />
 							</a>
 						</div>
 
-						<div class="col-md-4">
+						<div class="col-md-9">
 							<div class="top-user-area clearfix">
 								<ul class="top-user-area-list list list-horizontal list-border">
-									<li class="top-user-area-avatar"><a
-										href="user-profile.html"> <img class="origin round"
-											src="./web/img/40x40.png" alt="Image Alternative text"
-											title="AMaze" />Hi, John
-									</a></li>
+									<li class="top-user-area-avatar"><a href=""> Hello, <%=session.getAttribute("name")%></a>
+									</li>
 									<li><a href="#">Sign Out</a></li>
-
-
 								</ul>
 							</div>
 						</div>
@@ -93,206 +93,47 @@
 			<div class="container"></div>
 
 		</header>
-
-
-
+	<%
+				ArrayList<Itinerary> list = (ArrayList<Itinerary>)request.getAttribute("tripRecord");
+							ArrayList<Flights> getRouteDetails;
+	%>
 
 
 		<div class="container">
-
-			<div class="mfp-with-anim mfp-hide mfp-dialog mfp-search-dialog"
-				id="search-dialog">
-				<h3>Search for Flight</h3>
-				<form>
-					<div class="tabbable">
-						<ul class="nav nav-pills nav-sm nav-no-br mb10"
-							id="flightChooseTab">
-							<li class="active"><a href="#flight-search-1"
-								data-toggle="tab">Round Trip</a></li>
-							<li><a href="#flight-search-2" data-toggle="tab">One Way</a>
-							</li>
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane fade in active" id="flight-search-1">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group form-group-lg form-group-icon-left">
-											<i class="fa fa-map-marker input-icon input-icon-highlight"></i>
-											<label>From</label> <input class="typeahead form-control"
-												placeholder="City, Airport or U.S. Zip Code" type="text" />
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group form-group-lg form-group-icon-left">
-											<i class="fa fa-map-marker input-icon input-icon-highlight"></i>
-											<label>To</label> <input class="typeahead form-control"
-												placeholder="City, Airport or U.S. Zip Code" type="text" />
-										</div>
-									</div>
-								</div>
-								<div class="input-daterange" data-date-format="MM d, D">
-									<div class="row">
-										<div class="col-md-3">
-											<div class="form-group form-group-lg form-group-icon-left">
-												<i class="fa fa-calendar input-icon input-icon-highlight"></i>
-												<label>Departing</label> <input class="form-control"
-													name="start" type="text" />
-											</div>
-										</div>
-										<div class="col-md-3">
-											<div class="form-group form-group-lg form-group-icon-left">
-												<i class="fa fa-calendar input-icon input-icon-highlight"></i>
-												<label>Returning</label> <input class="form-control"
-													name="end" type="text" />
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group form-group-lg form-group-select-plus">
-												<label>Passengers</label>
-												<div class="btn-group btn-group-select-num"
-													data-toggle="buttons">
-													<label class="btn btn-primary active"> <input
-														type="radio" name="options" />1
-													</label> <label class="btn btn-primary"> <input
-														type="radio" name="options" />2
-													</label> <label class="btn btn-primary"> <input
-														type="radio" name="options" />3
-													</label> <label class="btn btn-primary"> <input
-														type="radio" name="options" />4
-													</label> <label class="btn btn-primary"> <input
-														type="radio" name="options" />5
-													</label> <label class="btn btn-primary"> <input
-														type="radio" name="options" />5+
-													</label>
-												</div>
-												<select class="form-control hidden">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-													<option selected="selected">6</option>
-													<option>7</option>
-													<option>8</option>
-													<option>9</option>
-													<option>10</option>
-													<option>11</option>
-													<option>12</option>
-													<option>13</option>
-													<option>14</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane fade" id="flight-search-2">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group form-group-lg form-group-icon-left">
-											<i class="fa fa-map-marker input-icon input-icon-highlight"></i>
-											<label>From</label> <input class="typeahead form-control"
-												placeholder="City, Airport or U.S. Zip Code" type="text" />
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group form-group-lg form-group-icon-left">
-											<i class="fa fa-map-marker input-icon input-icon-highlight"></i>
-											<label>To</label> <input class="typeahead form-control"
-												placeholder="City, Airport or U.S. Zip Code" type="text" />
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group form-group-lg form-group-icon-left">
-											<i class="fa fa-calendar input-icon input-icon-hightlight"></i>
-											<label>Departing</label> <input
-												class="date-pick form-control" data-date-format="MM d, D"
-												type="text" />
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group form-group-lg form-group-select-plus">
-											<label>Passengers</label>
-											<div class="btn-group btn-group-select-num"
-												data-toggle="buttons">
-												<label class="btn btn-primary active"> <input
-													type="radio" name="options" />1
-												</label> <label class="btn btn-primary"> <input type="radio"
-													name="options" />2
-												</label> <label class="btn btn-primary"> <input type="radio"
-													name="options" />3
-												</label> <label class="btn btn-primary"> <input type="radio"
-													name="options" />4
-												</label> <label class="btn btn-primary"> <input type="radio"
-													name="options" />5
-												</label> <label class="btn btn-primary"> <input type="radio"
-													name="options" />5+
-												</label>
-											</div>
-											<select class="form-control hidden">
-												<option>1</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-												<option>5</option>
-												<option selected="selected">6</option>
-												<option>7</option>
-												<option>8</option>
-												<option>9</option>
-												<option>10</option>
-												<option>11</option>
-												<option>12</option>
-												<option>13</option>
-												<option>14</option>
-											</select>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<button class="btn btn-primary btn-lg" type="submit">Search
-						for Flights</button>
-					<br> <br> <br> <br> <br> <br>
-				</form>
-			</div>
-
-			<form class="booking-item-dates-change mb30">
+			<br>
+			<br>
+			<form method="post" action="/Prefengine/SearchController"
+													name="search" class="booking-item-dates-change mb30">
 				<div class="row">
 					<div class="col-md-3">
 						<div class="form-group form-group-icon-left">
 							<i class="fa fa-map-marker input-icon input-icon-hightlight"></i>
-							<label>From</label> <input class="typeahead form-control"
-								value="Great Britan, London"
-								placeholder="City, Hotel Name or U.S. Zip Code" type="text" />
+							<label>From</label> <input class="typeahead form-control" name="departure"
+								type="text"  value="<%out.print(list.get(0).getOrigin());%>"/>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group form-group-icon-left">
 							<i class="fa fa-map-marker input-icon input-icon-hightlight"></i>
-							<label>To</label> <input class="typeahead form-control"
-								value="United States, New York"
-								placeholder="City, Hotel Name or U.S. Zip Code" type="text" />
+							<label>To</label> <input type="text" name="destination" class="typeahead form-control"
+								value="<%out.print(list.get(0).getDestination());%>"  />
 						</div>
 					</div>
 					<div class="col-md-2">
 						<div class="form-group form-group-icon-left">
 							<i class="fa fa-calendar input-icon input-icon-hightlight"></i> <label>Departing</label>
-							<input class="date-pick form-control" data-date-format="MM d, D"
-								type="text" />
+							<input class="form-control" 
+								type="text" name="departureDate" value="<%out.print(list.get(0).getDepartureTime());%>"/>
 						</div>
 					</div>
 					<div class="col-md-2">
-						<div class="form-group form-group-lg form-group-icon-left">
-							<label>Passngers</label>
-							<div class="btn-group btn-group-select-num" data-toggle="buttons">
-								<input class="form-control" type="text"
+						<div class="form-group form-group-icon-left">
+							<i class="input-icon input-icon-hightlight"></i> <label>Passngers</label>
+							<input class=" form-control" type="text"
 									name="numberOfPassengers" value=1>
-							</div>
 						</div>
 					</div>
+					<input type="submit" class="btn btn-primary btn-lg" value="Search" >
 				</div>
 			</form>
 			<div class="row">
@@ -302,23 +143,17 @@
 						<ul class="list booking-filters-list">
 							<li>
 								<h5 class="booking-filters-title">
-									Stops <small>Price from</small>
+								Stops	<small>Price from</small>
 								</h5>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Non-stop<span
-										class="pull-right">$215</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />1
-										Stop<span class="pull-right">$154</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />2+
-										Stops<span class="pull-right">$197</span>
-									</label>
-								</div>
+								<%	
+									SearchAttributes attributes = (SearchAttributes)request.getAttribute("searchAttr");
+									HashMap<Integer,Float> stopAttr = attributes.getStops();
+									for(HashMap.Entry<Integer, Float> r : stopAttr.entrySet()){
+										out.print(r.getKey()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"); 
+										out.print(r.getValue()+ "<br>");
+									}
+								
+								%>
 							</li>
 							<li>
 								<h5 class="booking-filters-title">Price</h5> <input type="text"
@@ -328,56 +163,28 @@
 								<h5 class="booking-filters-title">
 									Flight Class <small>Price from</small>
 								</h5>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Economy<span
-										class="pull-right">$154</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Business<span
-										class="pull-right">$316</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />First<span
-										class="pull-right">$450</span>
-									</label>
-								</div>
+								<%	
+									
+								HashMap<String,Float> cabinClass1 = attributes.getCoach();
+								for(HashMap.Entry<String, Float> r : cabinClass1.entrySet()){
+									out.print(r.getKey()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"); 
+									out.print(r.getValue()+ "<br>");
+								}
+								%>
+								
 							</li>
 							<li>
 								<h5 class="booking-filters-title">
 									Airlines <small>Price from</small>
 								</h5>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Lufthansa<span
-										class="pull-right">$215</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />American
-										Airlines<span class="pull-right">$350</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Airfrance<span
-										class="pull-right">$154</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Croatia
-										Airlines<span class="pull-right">$197</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Delta<span
-										class="pull-right">$264</span>
-									</label>
-								</div>
-								<div class="checkbox">
-									<label> <input class="i-check" type="checkbox" />Air
-										Canada<span class="pull-right">$445</span>
-									</label>
-								</div>
+								<%	
+									HashMap<String,Float> airlineAttr = attributes.getAirlines();
+									for(HashMap.Entry<String, Float> r : airlineAttr.entrySet()){
+										out.print(r.getKey()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"); 
+										out.print(r.getValue()+ "<br>");
+									}
+								
+								%>
 							</li>
 							<li>
 								<h5 class="booking-filters-title">Departure Time</h5>
@@ -418,17 +225,11 @@
 					<ul class="booking-list">
 						<%
 							//request.getAttribute("tripRecord");
-							ArrayList<TripRecord> list = (ArrayList<TripRecord>)request.getAttribute("tripRecord");
-							ArrayList<FlightRecord> getRouteDetails;
+							
 							for(int i=0;i<list.size();i++){
-								
 								getRouteDetails = list.get(i).getFlightRecord();
 								int stops=getRouteDetails.size()-1;
-								
-							
 						%>
-						
-						
 						<li>
 							<div class="booking-item-container">
 								<div class="booking-item">

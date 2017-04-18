@@ -9,6 +9,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.services.qpxExpress.QPXExpress;
 import com.google.api.services.qpxExpress.QPXExpressRequestInitializer;
+import com.google.api.services.qpxExpress.model.CityData;
 import com.google.api.services.qpxExpress.model.PassengerCounts;
 import com.google.api.services.qpxExpress.model.SliceInput;
 import com.google.api.services.qpxExpress.model.TripOption;
@@ -19,7 +20,13 @@ import com.prefengine.util.Constants;
 
 public class APIService {
 	private static HttpTransport httpTransport;
-	public List<TripOption> requestData(SearchCriteria sc) throws GeneralSecurityException, IOException{
+	
+	private TripsSearchResponse response = null;
+	
+	public TripsSearchResponse requestData(SearchCriteria sc) throws GeneralSecurityException, IOException{
+			if(response!= null){
+				return response;
+			}
 		
 			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			PassengerCounts passengers= new PassengerCounts();
@@ -40,9 +47,10 @@ public class APIService {
 					.setGoogleClientRequestInitializer(new QPXExpressRequestInitializer(Constants.API_KEY)).build();
 
 			TripsSearchResponse list= qpXExpress.trips().search(parameters).execute();
-			List<TripOption> tripResults=list.getTrips().getTripOption();
-		
-		return tripResults;
+			//List<TripOption> tripResults=list.getTrips().getTripOption();
+		response = list;
+		return list;
 		
 	}
+	
 }

@@ -232,7 +232,7 @@
 
 															<div class="content hideContent" hidden="true"
 																id="hidden">
-																<div class="col-md-2">
+																<div class="col-md-3">
 																	<h5 class="booking-filters-title">Stops</h5>
 																	<div class="checkbox">
 																		<label> <input class="i-check" type="checkbox"
@@ -251,31 +251,45 @@
 																	</div>
 																</div>
 																<div class="col-md-1"></div>
-																<div class="col-md-2">
+																<!-- <div class="col-md-3">
 																	<h5 class="booking-filters-title">Price</h5>
 																	<input type="text" id="price-slider" name="price">
-																</div>
-																<div class="col-md-1"></div>
-																<div class="col-md-2">
-																	<h5 class="booking-filters-title">Flight Class</h5>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			name=cabin />Economy
-																		</label>
+																</div> -->
+																<div class="col-md-3">
+																	<h5 class="booking-filters-title">Price</h5>
+																	<div class="col-md-1">
+																		<label>Min:</label><br>
+																		<label>Max:</label> 
+																		
 																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			name="cabin" />Business
-																		</label>
-																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			name="cabin" />First
-																		</label>
+																	<div class="col-md-1"></div>
+																	<div class="col-md-1">
+																		<input type="text"  name="minPrice"><br><br>
+																		<input type="text"  name="maxPrice">
+																		
 																	</div>
 																</div>
 																<div class="col-md-1"></div>
 																<div class="col-md-3">
+																	<h5 class="booking-filters-title">Flight Class</h5>
+																	<div class="checkbox">
+																		<label> <input class="i-check" type="checkbox"
+																			value="COACH" name=cabin />Economy
+																		</label>
+																	</div>
+																	<div class="checkbox">
+																		<label> <input class="i-check" type="checkbox"
+																			value="BUSINESS"	name="cabin" />Business
+																		</label>
+																	</div>
+																	<div class="checkbox">
+																		<label> <input class="i-check" type="checkbox"
+																		value="FIRST"	name="cabin" />First
+																		</label>
+																	</div>
+																</div>
+																<div class="col-md-1"></div>
+																<!-- <div class="col-md-3">
 																	<h5 class="booking-filters-title">Departure Time</h5>
 																	<div class="checkbox">
 																		<label> <input class="i-check" type="checkbox" />Morning
@@ -292,7 +306,7 @@
 																			(6:00p - 11:59p)
 																		</label>
 																	</div>
-																</div>
+																</div> -->
 
 															</div>
 														</div>

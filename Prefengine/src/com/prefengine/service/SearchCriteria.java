@@ -7,13 +7,18 @@ public class SearchCriteria {
 	private String returnDate;
 	private int stops;
 	private boolean nonStop=false;
-	
 	private boolean oneStop=false;
 	private boolean twoOrMoreStop=false;
+	private boolean economy=false;
+	private boolean first=false;
+	private boolean business=false;
 	private int numberOfPassengers;
 	private float price;
 	private String cabin;
 	private String travelTimePreference;
+	private float maxPrice;
+	private float minPrice;
+	
 	public String getDeparture() {
 		return departure;
 	}
@@ -86,4 +91,35 @@ public class SearchCriteria {
 	public void setTwoOrMoreStop(boolean twoOrMoreStop) {
 		this.twoOrMoreStop = twoOrMoreStop;
 	}
+	public boolean isEconomy() {
+		return economy;
+	}
+	public void setEconomy(boolean economy) {
+		this.economy = economy;
+	}
+	public boolean isFirst() {
+		return first;
+	}
+	public void setFirst(boolean first) {
+		this.first = first;
+	}
+	public boolean isBusiness() {
+		return business;
+	}
+	public void setBusiness(boolean business) {
+		this.business = business;
+	}
+	public float getMaxPrice() {
+		return maxPrice;
+	}
+	public void setMaxPrice(float maxPrice) {
+		this.maxPrice = maxPrice;
+	}
+	public float getMinPrice() {
+		return minPrice;
+	}
+	public void setMinPrice(float minPrice) {
+		this.minPrice = minPrice;
+	}
+	
 }

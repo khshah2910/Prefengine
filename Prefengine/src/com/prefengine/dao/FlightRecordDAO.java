@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.prefengine.domain.Itinerary;
 import com.prefengine.service.SearchCriteria;
@@ -97,9 +101,6 @@ public class FlightRecordDAO {
 				tr.setTotalMiles(rs.getDouble("milage"));
 				tr.setCoach(rs.getString("cabin"));
 				tr.setFlightRecord(new ArrayList<>());
-				
-				
-				
 				records.add(tr);
 			}
 			return records;
@@ -111,12 +112,43 @@ public class FlightRecordDAO {
 		rs = stmt.executeQuery(sql);
 		return this.processResultSet(rs);
 	}
-	public ArrayList<Itinerary> getRecordsBy(String choice) throws SQLException{
-		String sql="select distinct "+choice+" from flightRecord;";
+	public HashMap<Integer,Float> getRecordsByStops(SearchCriteria sc) throws SQLException{
+		String sql="select distinct stops,min(price) as price from flightRecord group by stops order by stops asc";
+		HashMap<Integer,Float> result= new HashMap<>();
 		stmt = connection.createStatement();
 		rs = stmt.executeQuery(sql);
-		return this.processResultSet(rs);
+		while(rs.next()){
+			result.put(rs.getInt(1), rs.getFloat(2));
+		}
+		return result;
 	}
+	
+	public HashMap<String, Float> getRecordsByAirline(SearchCriteria sc) throws SQLException{
+		String sql="select distinct carrier,min(price) as price from flightRecord group by carrier order by price asc";
+		HashMap<String, Float> result= new HashMap<>();
+		stmt = connection.createStatement();
+		rs = stmt.executeQuery(sql);
+		while(rs.next()){
+			result.put(rs.getString(1), rs.getFloat(2));
+		}
+		return result;
+	}
+	
+	
+	public HashMap<String, Float> getRecordsByCabin(SearchCriteria sc) throws SQLException{
+		String sql = "select distinct cabin,min(price) as price from flightRecord group by cabin order by price asc";
+		HashMap<String, Float> result1 = new HashMap<>();
+		stmt = connection.createStatement();
+		rs = stmt.executeQuery(sql);
+		while(rs.next()){
+			result1.put(rs.getString(1),rs.getFloat(2));
+			
+		}
+		//result1.forEach((k,v)->System.out.println("Key: "+k+ " And Value :" +v));
+		return result1;
+	}
+	
+	
 	public ArrayList<Itinerary> searchByAirline(String choice) throws SQLException{
 		String sql="select * from flightRecord where carrier LIKE "+choice;
 		stmt = connection.createStatement();
@@ -124,10 +156,11 @@ public class FlightRecordDAO {
 		return this.processResultSet(rs);
 	}
 	public ArrayList<Itinerary> searchByParameters(SearchCriteria sc) throws SQLException{
-		ArrayList<Itinerary> newtr = new ArrayList<>();
 		String sql = "select * from flightRecord where departure LIKE ? AND destination LIKE ? ";
 		String stopsCriteria = "";
-		
+		String cabinCriteria = "";
+		String priceCriteria = "";
+		// search by Stops
 		if(sc.isNonStop()){
 			stopsCriteria += "AND (stops = 0";
 		}
@@ -150,14 +183,53 @@ public class FlightRecordDAO {
 		if(!"".equals(stopsCriteria)){
 			stopsCriteria += ")";
 			sql+= stopsCriteria;
+			System.out.println(sql);
 		}
+		// search by cabin(Coach)
+		if(sc.isEconomy()){
+			cabinCriteria += " AND (cabin LIKE 'COACH'";
+		}
+		if(sc.isBusiness()){
+			if("".equals(cabinCriteria)){
+				cabinCriteria += "AND (cabin LIKE 'BUSINESS'";
+			}
+			else{
+				cabinCriteria += " OR cabin LIKE 'BUSINESS'";
+			}
+		}
+		if(sc.isFirst()){
+			if("".equals(cabinCriteria)){
+				cabinCriteria += "AND (cabin LIKE 'FIRST'";
+			}
+			else{
+				cabinCriteria += " OR cabin LIKE 'FIRST'";
+			}
+		}
+		if(!"".equals(cabinCriteria)){
+			cabinCriteria += ")";
+			sql+= cabinCriteria;
+			System.out.println(sql);
+		}
+		//search by price
+		System.out.println(sc.getMaxPrice());
+		System.out.println(sc.getMinPrice());
+		if(sc.getMaxPrice()!=0 && sc.getMinPrice()!=0){
+			priceCriteria = " AND price between ? AND ?";
+			sql+= priceCriteria;
+			System.out.println(sql);
+		}
+		
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setString(1, sc.getDeparture());
 		pst.setString(2, sc.getDestination());
+		if(sc.getMaxPrice()!=0 && sc.getMinPrice()!=0){
+			pst.setFloat(3, sc.getMinPrice());
+			pst.setFloat(4, sc.getMaxPrice());
+		}
 		rs = pst.executeQuery();
+		System.out.println(sql);
 		return this.processResultSet(rs);
 		
-		//return newtr;
 	}
 	
 }

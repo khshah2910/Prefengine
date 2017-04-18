@@ -2,6 +2,8 @@ package com.prefengine.domain;
 
 import java.util.ArrayList;
 
+
+
 public class Itinerary {
 	private ArrayList<Flights> flightRecord = new ArrayList<Flights>();
 	private String tripId;
@@ -18,7 +20,6 @@ public class Itinerary {
 	private String coach;
 	private String departureTime;
 	private String arrivalTime;
-	
 	public String getDepartureTime() {
 		return departureTime;
 	}
@@ -92,6 +93,9 @@ public class Itinerary {
 	public String toString(){
 		return this.getTripId();
 	}
+	
+
+	
 	
 
 }
