@@ -90,18 +90,13 @@
 			</div>
 		</header>
 
-		<!-- TOP AREA -->
-		<div class="top-area show-onload">
+		<div class="show-onload">
 			<div class="bg-holder full">
 				<div class="bg-mask"></div>
 				<div class="bg-img"
-					style="background-image: url(web/img/2048x1365.png);"></div>
-				<video class="bg-video hidden-sm hidden-xs" preload="auto"
-					autoplay="true" loop="loop" muted="muted"
-					poster="web/img/video-bg.jpg">
-					<source src="web/media/loop.webm" type="video/webm" />
-					<source src="web/media/loop.mp4" type="video/mp4" />
-				</video>
+					style="background-image: url(web/img/2048x1365.png);">
+				</div>
+				
 				<div class="bg-content">
 					<div class="container">
 						<div class="row">
@@ -114,7 +109,7 @@
 
 											<div class="tab-pane fade in active" id="tab-1">
 												<h2>Search for Cheap Flights</h2>
-												<form method="post" action="/Prefengine/SearchController"
+												<form method="get" action="/Prefengine/SearchController"
 													name="search">
 													<div class="tabbable">
 														<ul class="nav nav-pills nav-sm nav-no-br mb10"
@@ -153,8 +148,8 @@
 																				class="form-group form-group-lg form-group-icon-left">
 																				<i
 																					class="fa fa-calendar input-icon input-icon-highlight"></i>
-																				<label>Departing</label> <input class="form-control"
-																					name="departureDate" value="2017-04-21" type="text" />
+																				<label>Departing</label> <input class="date-pick form-control" id="departureDate"
+																					name="departureDate" data-date-format="M d, D"  type="text" />
 																			</div>
 																		</div>
 																		<div class="col-md-3">
@@ -162,8 +157,8 @@
 																				class="form-group form-group-lg form-group-icon-left">
 																				<i
 																					class="fa fa-calendar input-icon input-icon-highlight"></i>
-																				<label>Returning</label> <input class="form-control"
-																					name="returnDate" type="text" />
+																				<label>Returning</label> <input class="date-pick form-control" id="returnDate"
+																					name="returnDate" data-date-format="M d, D"  type="text" />
 																			</div>
 																		</div>
 																		<div class="col-md-6">
@@ -213,7 +208,7 @@
 																	<div class="col-md-6">
 																		<div
 																			class="form-group form-group-lg form-group-icon-left">
-																			<label>Passngers</label>
+																			<label>Passengers</label>
 																			<div class="btn-group btn-group-select-num"
 																				data-toggle="buttons">
 																				<input class="form-control" type="text"
@@ -232,82 +227,115 @@
 
 															<div class="content hideContent" hidden="true"
 																id="hidden">
-																<div class="col-md-3">
-																	<h5 class="booking-filters-title">Stops</h5>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			value="0" name="stops" />Non-stop
-																		</label>
-																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			value="1" name="stops" />1 Stop
-																		</label>
-																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																		value="2"	name="stops" />2+ Stops
-																		</label>
-																	</div>
-																</div>
-																<div class="col-md-1"></div>
-																<!-- <div class="col-md-3">
-																	<h5 class="booking-filters-title">Price</h5>
-																	<input type="text" id="price-slider" name="price">
-																</div> -->
-																<div class="col-md-3">
-																	<h5 class="booking-filters-title">Price</h5>
-																	<div class="col-md-1">
-																		<label>Min:</label><br>
-																		<label>Max:</label> 
-																		
+																<div class="row">
+																	<div class="col-md-2">
+																		<h5 class="booking-filters-title">Stops</h5>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox"
+																				value="0" name="stops" />Non-stop
+																			</label>
+																		</div>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox"
+																				value="1" name="stops" />1 Stop
+																			</label>
+																		</div>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox"
+																			value="2"	name="stops" />2+ Stops
+																			</label>
+																		</div>
 																	</div>
 																	<div class="col-md-1"></div>
-																	<div class="col-md-1">
-																		<input type="text"  name="minPrice"><br><br>
-																		<input type="text"  name="maxPrice">
-																		
+																	<div class="col-md-2">
+																		<h5 class="booking-filters-title">Price</h5>
+																		<input type="text" id="price-slider" name="price">
 																	</div>
+																	<div class="col-md-1"></div>
+																	<div class="col-md-2">
+																		<h5 class="booking-filters-title">Flight Class</h5>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox"
+																				name="economy" />Economy
+																			</label>
+																		</div>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox"
+																				name="business" />Business
+																			</label>
+																		</div>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox"
+																				name="first" />First
+																			</label>
+																		</div>
+																	</div>
+																	<div class="col-md-1"></div>
+																	<div class="col-md-3">
+																		<h5 class="booking-filters-title">Departure Time</h5>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox" />Morning
+																				(5:00a - 11:59a)
+																			</label>
+																		</div>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox" />Afternoon
+																				(12:00p - 5:59p)
+																			</label>
+																		</div>
+																		<div class="checkbox">
+																			<label> <input class="i-check" type="checkbox" />Evening
+																				(6:00p - 11:59p)
+																			</label>
+																		</div>
+																	</div>
+																	<p></p>
 																</div>
-																<div class="col-md-1"></div>
-																<div class="col-md-3">
-																	<h5 class="booking-filters-title">Flight Class</h5>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			value="COACH" name=cabin />Economy
-																		</label>
+																<div id="nonfuncarea">
+																	<div class="row">
+																		<h3>Advanced Non-Functional Parameters</h3>
+																		<div class="col-md-4">
+																			<div class="form-group form-group-lg">
+																				<label>Non-Functional Requirement</label>
+																				<select name="req1" value="Price, stops, duration..." class="form-control">
+																				  <option value="price">Price</option>
+																				  <option value="stops">Stops</option>
+																				  <option value="duration">Duration</option>
+																				  <option value="mileage">Mileage</option>
+																				</select>																	
+																				
+																			</div>
+																		</div>
+																		<div class="col-md-3">
+																			<div class="form-group form-group-lg">
+																				<label>Operator</label>
+																				<input type="radio" name="operator1" value="and" checked> AND
+																				<input type="radio" name="operator1" value="or"> OR
+																				<input type="radio" name="operator1" value="compromise"> COMPROMISE
+																			</div>
+																		</div>
+																		<div class="col-md-4">
+																			<div class="form-group form-group-lg">
+																				<label>Non-Functional Requirement</label>
+																				<select name="req2" value="Price, stops, duration..." class="form-control">
+																				  <option value="price">Price</option>
+																				  <option value="stops">Stops</option>
+																				  <option value="duration">Duration</option>
+																				  <option value="mileage">Mileage</option>
+																				</select>																	
+																				
+																			</div>
+																		</div>
+																		<div class="col-md-1">
+																			<div class="form-group form-group-lg">
+																				<label>Add</label>
+																					<a href="#" onclick="return addNewRow();"><i class="fa fa-plus" aria-hidden="true"></i></a>
+																				</label>
+																			</div>
+																		</div>
 																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																			value="BUSINESS"	name="cabin" />Business
-																		</label>
-																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox"
-																		value="FIRST"	name="cabin" />First
-																		</label>
-																	</div>
-																</div>
-																<div class="col-md-1"></div>
-																<!-- <div class="col-md-3">
-																	<h5 class="booking-filters-title">Departure Time</h5>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox" />Morning
-																			(5:00a - 11:59a)
-																		</label>
-																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox" />Afternoon
-																			(12:00p - 5:59p)
-																		</label>
-																	</div>
-																	<div class="checkbox">
-																		<label> <input class="i-check" type="checkbox" />Evening
-																			(6:00p - 11:59p)
-																		</label>
-																	</div>
-																</div> -->
-
+																	
+																
 															</div>
 														</div>
 													</div>
@@ -323,67 +351,14 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- END TOP AREA  -->
-
+			
 
 
 
 		<footer id="main-footer">
 			<div class="container">
 				<div class="row row-wrap">
-					<!--  <div class="col-md-3">
-                        <a class="logo" href="index.html">
-                            <img src="img/logo-invert.png" alt="Image Alternative text" title="Image Title" />
-                        </a>
-                        <p class="mb20">Booking, reviews and advices on hotels, resorts, flights, vacation rentals, travel packages, and lots more!</p>
-                       <ul class="list list-horizontal list-space">
-                            <li>
-                                <a class="fa fa-facebook box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
-                            </li>
-                            <li>
-                                <a class="fa fa-twitter box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
-                            </li>
-                            <li>
-                                <a class="fa fa-google-plus box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
-                            </li>
-                            <li>
-                                <a class="fa fa-linkedin box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
-                            </li>
-                            <li>
-                                <a class="fa fa-pinterest box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
-                            </li>
-                        </ul>
-                    </div>
-                        -->
-					<!-- 
-                    <div class="col-md-2">
-                        <ul class="list list-footer">
-                            <li><a href="#">About US</a>
-                            </li>
-                          <li><a href="#">Press Centre</a>
-                            </li>
-                            <li><a href="#">Best Price Guarantee</a>
-                            </li>
-                            <li><a href="#">Travel News</a>
-                            </li>
-                            <li><a href="#">Jobs</a>
-                            </li>
-                            <li><a href="#">Privacy Policy</a>
-                            </li>
-                            <li><a href="#">Terms of Use</a>
-                            </li>
-                            <li><a href="#">Feedback</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h4>Have Questions?</h4>
-                        <h4 class="text-color">+1-202-555-0173</h4>
-                        <h4><a href="#" class="text-color">support@traveler.com</a></h4>
-                        <p>24/7 Dedicated Customer Support</p>
-                    </div>
-                    -->
+					
 				</div>
 			</div>
 		</footer>
@@ -408,6 +383,66 @@
 		<script src="web/js/countdown.js"></script>
 		<script src="web/js/gridrotator.js"></script>
 		<script src="web/js/custom.js"></script>
+		
+		<script type="text/javascript">
+			var rowCount = 1;
+			//Added code by Yinka
+			function addNewRow(){
+					rowCount += 1;
+					$('#nonfuncarea').append("<div class='row'> <div class='col-md-4'> " +
+							"<div class='form-group form-group-lg'> <label>Non-Functional Requirement</label> " +
+							"<select name='req" + ((rowCount * 2)-1) + "' value='Price, stops, duration...' class='form-control'> " +
+																				  "<option value='price'>Price</option> " +
+																				  "<option value='stops'>Stops</option> " +
+																				  "<option value='duration'>Duration</option> " +
+																				  "<option value='mileage'>Mileage</option> " +
+																				"</select> " +
+																			"</div> " +
+																		"</div> " +
+																		"<div class='col-md-3'> " +
+																		"	<div class='form-group form-group-lg'> " +
+																		"		<label>Operator</label> " +
+																		"		<input type='radio' name='operator" + rowCount + "' value='and' checked> AND " +
+																		"		<input type='radio' name='operator" + rowCount + "' value='or'> OR " +
+																		"		<input type='radio' name='operator" + rowCount + "' value='compromise'> COMPROMISE " +
+																		"	</div> " +
+																		"</div> " +
+																		"<div class='col-md-4'> " +
+																		"	<div class='form-group form-group-lg'> " +
+																	"			<label>Non-Functional Requirement</label> " +
+																	"			<select name='req" + (rowCount * 2) + "' value='Price, stops, duration...' class='form-control'> " +
+																	"			  <option value='price'>Price</option> " +
+																	"			  <option value='stops'>Stops</option> " +
+																	"			  <option value='duration'>Duration</option> " +
+																	"			  <option value='mileage'>Mileage</option>  " +
+																	"			</select>	 " +																
+																	"		</div>  " +
+																	"	</div> " +
+																	"</div> " 
+																	
+																	);
+					return false;
+				}
+			$(document).ready(function() {
+				var date = new Date();
+				var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+				$('#departureDate').datepicker('setStartDate', 'today');
+				$('#returnDate').datepicker('setStartDate', 'today');
+		
+				
+				$('#departureDate').datepicker()
+				  .on('changeDate', function(ev){
+					  $("#returnDate").val($("#departureDate").datepicker('getFormattedDate'));
+					  $('#returnDate').datepicker('setStartDate', val($("#departureDate").datepicker('getFormattedDate')))
+					//if (ev.date.valueOf() < startDate.valueOf()){
+					  //....
+				  });
+				  
+				
+
+			
+			});
+		</script>
 	</div>
 </body>
 

@@ -75,7 +75,7 @@ $('.typeahead').typeahead({
 
 
 $('input.date-pick, .input-daterange, .date-pick-inline').datepicker({
-    todayHighlight: true
+    todayHighlight: true,
 });
 
 
@@ -91,6 +91,8 @@ $('input.time-pick').timepicker({
 $('input.date-pick-years').datepicker({
     startView: 2
 });
+
+
 
 
 
@@ -224,13 +226,15 @@ $('.nav-drop').dropit();
 
 
 $("#price-slider").ionRangeSlider({
-    min: 130,
-    max: 575,
+    min: 0,
+    max: 4000,
     type: 'double',
-    prefix: "$",
-    // maxPostfix: "+",
+    prefix: '$', 
+    //maxPostfix: "+",
     prettify: false,
-    hasGrid: true
+    hasGrid: true,
+	values_separator: ' - ',
+	input_values_separator: ' - '
 });
 
 $('.i-check, .i-radio').iCheck({
