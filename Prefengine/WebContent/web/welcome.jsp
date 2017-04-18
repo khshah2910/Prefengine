@@ -109,7 +109,7 @@
 
 											<div class="tab-pane fade in active" id="tab-1">
 												<h2>Search for Cheap Flights</h2>
-												<form method="get" action="/Prefengine/SearchController"
+												<form method="post" action="/Prefengine/SearchController"
 													name="search">
 													<div class="tabbable">
 														<ul class="nav nav-pills nav-sm nav-no-br mb10"
@@ -247,54 +247,39 @@
 																		</div>
 																	</div>
 																	<div class="col-md-1"></div>
-																	<div class="col-md-2">
-																		<h5 class="booking-filters-title">Price</h5>
-																		<input type="text" id="price-slider" name="price">
-																	</div>
-																	<div class="col-md-1"></div>
-																	<div class="col-md-2">
-																		<h5 class="booking-filters-title">Flight Class</h5>
-																		<div class="checkbox">
-																			<label> <input class="i-check" type="checkbox"
-																				name="economy" />Economy
-																			</label>
-																		</div>
-																		<div class="checkbox">
-																			<label> <input class="i-check" type="checkbox"
-																				name="business" />Business
-																			</label>
-																		</div>
-																		<div class="checkbox">
-																			<label> <input class="i-check" type="checkbox"
-																				name="first" />First
-																			</label>
-																		</div>
-																	</div>
-																	<div class="col-md-1"></div>
-																	<div class="col-md-3">
-																		<h5 class="booking-filters-title">Departure Time</h5>
-																		<div class="checkbox">
-																			<label> <input class="i-check" type="checkbox" />Morning
-																				(5:00a - 11:59a)
-																			</label>
-																		</div>
-																		<div class="checkbox">
-																			<label> <input class="i-check" type="checkbox" />Afternoon
-																				(12:00p - 5:59p)
-																			</label>
-																		</div>
-																		<div class="checkbox">
-																			<label> <input class="i-check" type="checkbox" />Evening
-																				(6:00p - 11:59p)
-																			</label>
-																		</div>
-																	</div>
-																	<p></p>
+																
+																<div class="col-md-3">
+																	<h5 class="booking-filters-title">Price</h5>
+																	<input type="text" id="price-slider" name="price">
 																</div>
+																<div class="col-md-1"></div>
+																<div class="col-md-3">
+																	<h5 class="booking-filters-title">Flight Class</h5>
+																	<div class="checkbox">
+																		<label> <input class="i-check" type="checkbox"
+																			value="COACH" name=cabin />Economy
+																		</label>
+																	</div>
+																	<div class="checkbox">
+																		<label> <input class="i-check" type="checkbox"
+																			value="BUSINESS"	name="cabin" />Business
+																		</label>
+																	</div>
+																	<div class="checkbox">
+																		<label> <input class="i-check" type="checkbox"
+																		value="FIRST"	name="cabin" />First
+																		</label>
+																	</div>
+																</div>
+																<div class="col-md-1"></div>
+															</div>
+																	
+																
 																<div id="nonfuncarea">
 																	<div class="row">
 																		<h3>Advanced Non-Functional Parameters</h3>
 																		<div class="col-md-4">
+																		
 																			<div class="form-group form-group-lg">
 																				<label>Non-Functional Requirement</label>
 																				<select name="req1" value="Price, stops, duration..." class="form-control">
@@ -336,7 +321,7 @@
 																	</div>
 																	
 																
-															</div>
+															</div>  
 														</div>
 													</div>
 													<button class="btn btn-primary btn-lg" type="submit">Search
@@ -426,7 +411,7 @@
 			$(document).ready(function() {
 				var date = new Date();
 				var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-				$('#departureDate').datepicker('setStartDate', 'today');
+				$('#departureDate').datepicker('setStartDate', 'today', 'dateFormat', 'yy-mm-dd');
 				$('#returnDate').datepicker('setStartDate', 'today');
 		
 				
