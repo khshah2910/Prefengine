@@ -109,21 +109,22 @@
 						<div class="form-group form-group-icon-left">
 							<i class="fa fa-map-marker input-icon input-icon-hightlight"></i>
 							<label>From</label> <input class="typeahead form-control" name="departure"
-								type="text"  value="<%out.print(list.get(0).getOrigin());%>"/>
+								type="text"  value="<%out.print(list.get(0).getOriginCityName());%>"/>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group form-group-icon-left">
 							<i class="fa fa-map-marker input-icon input-icon-hightlight"></i>
 							<label>To</label> <input type="text" name="destination" class="typeahead form-control"
-								value="<%out.print(list.get(0).getDestination());%>"  />
+								value="<%out.print(list.get(0).getDestinationCityName());%>"  />
 						</div>
 					</div>
 					<div class="col-md-2">
 						<div class="form-group form-group-icon-left">
 							<i class="fa fa-calendar input-icon input-icon-hightlight"></i> <label>Departing</label>
-							<input class="form-control" 
-								type="text" name="departureDate" value="<%out.print(list.get(0).getDepartureTime());%>"/>
+							<input class="date-pick form-control" id="departureDate" name="departureDate" data-date-format="yyyy-m-d"  type="text" />
+							<%-- <input class="form-control" 
+								type="text" name="departureDate" value="<%out.print(list.get(0).getDepartureTime());%>"/> --%>
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -238,8 +239,7 @@
 											<div class="booking-item-airline-logo">
 												
 												<p>
-													<% out.print(list.get(i).getTripCarrier());
-														out.print(i);
+													<% out.print(list.get(i).getCarrierName());
 													%>
 												</p>
 												
@@ -249,15 +249,22 @@
 											<div class="booking-item-flight-details">
 												<div class="booking-item-departure">
 													<i class="fa fa-plane"></i>
-													<h5><% out.print(getRouteDetails.get(0).getDepartureTime());%></h5>
+													
 													<%-- <p class="booking-item-date"><% out.print(getRouteDetails.get(0).getDepartureTime());%></p> --%>
-													<p class="booking-item-destination"><%out.print(list.get(i).getOrigin()); %></p>
+													<p style="font-size: 18px;" class="booking-item-destination"> <%out.print(list.get(i).getOriginCityName()); %></p>
+														<h5><% 
+															String departureTime = getRouteDetails.get(0).getDepartureTime();
+															out.print(departureTime.subSequence(0,10)+"<br> at "+departureTime.substring(12));%></h5>
 												</div>
 												<div class="booking-item-arrival">
 													<i class="fa fa-plane fa-flip-vertical"></i>
-													<h5><% out.print(getRouteDetails.get(0).getArrivalTime());%></h5>
+													
 													<%-- <p class="booking-item-date"><% out.print(getRouteDetails.get(getRouteDetails.size()-1).getArrivalTime());%></p> --%>
-													<p class="booking-item-destination"><%out.print(list.get(i).getDestination()); %></p>
+													<p  style="font-size: 18px;" class="booking-item-destination"><%out.print(list.get(i).getDestinationCityName()); %></p>
+													<h5><%
+													String arrivalTime = getRouteDetails.get(0).getArrivalTime();
+													arrivalTime.substring(0, 11);
+													out.print(arrivalTime.substring(0, 10)+"<br> at "+arrivalTime.substring(12));%></h5>
 												</div>
 											</div>
 										</div>
@@ -272,7 +279,7 @@
 											<p><%out.print("Stops: "+stops); %></p>
 										</div>
 										<div class="col-md-3">
-											<span class="booking-item-price"><%out.print(list.get(i).getPrice()+" $"); %></span><span>/person</span>
+											<span class="booking-item-price"><%out.print(" $ "+list.get(i).getPrice()); %></span><span>/person</span>
 											<br>
 											<br>
 											<p class="booking-item-flight-class"><%out.print("Class Type: "+list.get(i).getCoach()); %></p>
@@ -291,13 +298,13 @@
 											%>
 											<h5 class="list-title">
 											
-												 From <%out.print(getRouteDetails.get(j).getAirportDeparture().getAirportCode()); %>
-												 to <%out.print(getRouteDetails.get(j).getAirportArrival().getAirportCode()); %> 
+												 <b>From : </b> <%out.print("<b>"+getRouteDetails.get(j).getAirportDeparture().getAirportCity()+"</b> ( "+ getRouteDetails.get(j).getAirportDeparture().getAirportName()+" Airport ) <br>");%>
+												 <b>To : </b> <%out.print("<b>"+getRouteDetails.get(j).getAirportArrival().getAirportCity()+"</b> ( "+ getRouteDetails.get(j).getAirportArrival().getAirportName()+" Airport )"); %> 
 												 	
 											
 											 </h5>
 											<ul class="list">
-												<li>Airline <%out.print(getRouteDetails.get(j).getCarrier().getCarrierCode()+" "+getRouteDetails.get(j).getFlightNumber()); %></li>
+												<li>Airline : <%out.print(getRouteDetails.get(j).getCarrier().getCarrierName()+" "+getRouteDetails.get(j).getFlightNumber()); %></li>
 												<li> Coach Class <% out.print(getRouteDetails.get(j).getCabin());%></li>
 												<li>Departure Time :<%out.print(getRouteDetails.get(j).getDepartureTime()); %> Arrival Time <%out.print(getRouteDetails.get(j).getArrivalTime()); %></li>
 												<li>Flight Duration <%out.print(getRouteDetails.get(j).getOnAirTime()/60 +" hours " +getRouteDetails.get(j).getOnAirTime()%60+ " minutes"); %></li>

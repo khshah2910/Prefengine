@@ -49,18 +49,18 @@ public class SearchController extends HttpServlet {
 			String[] cabin = request.getParameterValues("cabin");
  			String numberOfPassengers = request.getParameter("numberOfPassengers");
  			
- 			
- 			
- 			
 			//int actualStops = Integer.parseInt(stops);
-			String price =request.getParameter("price");
+			//String price =request.getParameter("price");
 			searchCriteria.setDeparture(departure);
 			searchCriteria.setDestination(destination);
 			searchCriteria.setDepartureDate(departureDate);
 			searchCriteria.setNumberOfPassengers(Integer.parseInt(numberOfPassengers));
 			
-			String maxPrice1 = request.getParameter("maxPrice");
-			String minPrice1 = request.getParameter("minPrice");
+			String price = request.getParameter("price");
+			String minPrice1 = price.split(" - ")[0];
+			String maxPrice1 = price.split(" - ")[1];
+			//String maxPrice1 = request.getParameter("maxPrice");
+			//String minPrice1 = request.getParameter("minPrice");
 			
 			if((maxPrice1==null||"".equals(maxPrice1)) && (minPrice1==null||"".equals(minPrice1))){
 				searchCriteria.setMaxPrice(0);

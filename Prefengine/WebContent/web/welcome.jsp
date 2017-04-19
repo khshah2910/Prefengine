@@ -149,7 +149,7 @@
 																				<i
 																					class="fa fa-calendar input-icon input-icon-highlight"></i>
 																				<label>Departing</label> <input class="date-pick form-control" id="departureDate"
-																					name="departureDate" data-date-format="M d, D"  type="text" />
+																					name="departureDate" data-date-format="yyyy-m-d"  type="text" />
 																			</div>
 																		</div>
 																		<div class="col-md-3">
@@ -158,7 +158,7 @@
 																				<i
 																					class="fa fa-calendar input-icon input-icon-highlight"></i>
 																				<label>Returning</label> <input class="date-pick form-control" id="returnDate"
-																					name="returnDate" data-date-format="M d, D"  type="text" />
+																					name="returnDate" data-date-format="yyyy-m-d"  type="text" />
 																			</div>
 																		</div>
 																		<div class="col-md-6">
@@ -220,7 +220,7 @@
 															</div>
 															<input type="checkbox" name="checkbox"
 																onclick="showHide()" id="show" />
-															<lable for="show">Show more</lable>
+															<lable for="show">Show more options</lable>
 															<br>
 															<br>
 
@@ -287,7 +287,15 @@
 																				  <option value="stops">Stops</option>
 																				  <option value="duration">Duration</option>
 																				  <option value="mileage">Mileage</option>
-																				</select>																	
+																				</select>	
+																				
+																				<label>Non-Functional Requirement</label>
+																				<select name="req2" value="Price, stops, duration..." class="form-control">
+																				  <option value="price">Price</option>
+																				  <option value="stops">Stops</option>
+																				  <option value="duration">Duration</option>
+																				  <option value="mileage">Mileage</option>
+																				</select>																
 																				
 																			</div>
 																		</div>
@@ -299,7 +307,7 @@
 																				<input type="radio" name="operator1" value="compromise"> COMPROMISE
 																			</div>
 																		</div>
-																		<div class="col-md-4">
+																		<!-- <div class="col-md-4">
 																			<div class="form-group form-group-lg">
 																				<label>Non-Functional Requirement</label>
 																				<select name="req2" value="Price, stops, duration..." class="form-control">
@@ -310,7 +318,7 @@
 																				</select>																	
 																				
 																			</div>
-																		</div>
+																		</div> -->
 																		<div class="col-md-1">
 																			<div class="form-group form-group-lg">
 																				<label>Add</label>
@@ -319,8 +327,6 @@
 																			</div>
 																		</div>
 																	</div>
-																	
-																
 															</div>  
 														</div>
 													</div>
@@ -374,8 +380,19 @@
 			//Added code by Yinka
 			function addNewRow(){
 					rowCount += 1;
-					$('#nonfuncarea').append("<div class='row'> <div class='col-md-4'> " +
+					$('#nonfuncarea').append("<div class='row'> "+
+							"<div class='col-md-4'> " +
+							"	<div class='form-group form-group-lg'> " +
+							"		<label>Operator</label> " +
+							"		<input type='radio' name='operator" + rowCount + "' value='and' checked> AND " +
+							"		<input type='radio' name='operator" + rowCount + "' value='or'> OR " +
+							"		<input type='radio' name='operator" + rowCount + "' value='compromise'> COMPROMISE " +
+							"	</div> " +
+							"</div> " +
+							"<div class='col-md-4'> " +
+							
 							"<div class='form-group form-group-lg'> <label>Non-Functional Requirement</label> " +
+							
 							"<select name='req" + ((rowCount * 2)-1) + "' value='Price, stops, duration...' class='form-control'> " +
 																				  "<option value='price'>Price</option> " +
 																				  "<option value='stops'>Stops</option> " +
@@ -383,16 +400,17 @@
 																				  "<option value='mileage'>Mileage</option> " +
 																				"</select> " +
 																			"</div> " +
+																			
 																		"</div> " +
-																		"<div class='col-md-3'> " +
+																		/* "<div class='col-md-3'> " +
 																		"	<div class='form-group form-group-lg'> " +
 																		"		<label>Operator</label> " +
 																		"		<input type='radio' name='operator" + rowCount + "' value='and' checked> AND " +
 																		"		<input type='radio' name='operator" + rowCount + "' value='or'> OR " +
 																		"		<input type='radio' name='operator" + rowCount + "' value='compromise'> COMPROMISE " +
 																		"	</div> " +
-																		"</div> " +
-																		"<div class='col-md-4'> " +
+																		"</div> " + */
+																		/* "<div class='col-md-4'> " +
 																		"	<div class='form-group form-group-lg'> " +
 																	"			<label>Non-Functional Requirement</label> " +
 																	"			<select name='req" + (rowCount * 2) + "' value='Price, stops, duration...' class='form-control'> " +
@@ -400,7 +418,7 @@
 																	"			  <option value='stops'>Stops</option> " +
 																	"			  <option value='duration'>Duration</option> " +
 																	"			  <option value='mileage'>Mileage</option>  " +
-																	"			</select>	 " +																
+																	"			</select>	 " + */																
 																	"		</div>  " +
 																	"	</div> " +
 																	"</div> " 

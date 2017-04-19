@@ -10,6 +10,10 @@ public class Itinerary {
 	private float price;
 	private String origin;
 	private String destination;
+	
+	private String originCityName;
+	private String destinationCityName;
+	
 	private float totalDuration;
 	private int numberOfStops;
 	public void setNumberOfStops(int numberOfStops) {
@@ -17,6 +21,7 @@ public class Itinerary {
 	}
 	private double totalMiles;
 	private String tripCarrier;
+	private String carrierName;
 	private String coach;
 	private String departureTime;
 	private String arrivalTime;
@@ -93,8 +98,26 @@ public class Itinerary {
 	public String toString(){
 		return this.getTripId();
 	}
+	public String getOriginCityName() {
+		return originCityName;
+	}
+	public void setOriginCityName(String originCityName) {
+		this.originCityName = originCityName;
+	}
+	public String getDestinationCityName() {
+		return destinationCityName;
+	}
+	public void setDestinationCityName(String destinationCityName) {
+		this.destinationCityName = destinationCityName;
+	}
+	public String getCarrierName() {
+		return carrierName;
+	}
+	public void setCarrierName(String carrierName) {
+		this.carrierName = carrierName;
+	}
 	
-
+	
 	
 	
 

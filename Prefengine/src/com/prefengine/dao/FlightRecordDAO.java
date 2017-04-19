@@ -51,8 +51,10 @@ public class FlightRecordDAO {
 			float totalDuration=  tripRec.get(i).getTotalDuration();
 			double miles = tripRec.get(i).getTotalMiles();
 			String coach = tripRec.get(i).getCoach();
-			
-			String query = "insert into flightRecord (tripId, departure, destination, stops, departureTime, arrivalTime, price, carrier,duration, milage,cabin, thisTrip, jsonData) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String departureCityName = tripRec.get(i).getOriginCityName();
+			String arrivalCityName = tripRec.get(i).getDestinationCityName();
+			String carrierName = tripRec.get(i).getCarrierName();			
+			String query = "insert into flightRecord (tripId, departure, destination, stops, departureTime, arrivalTime, price, carrier,duration, milage,cabin, thisTrip, jsonData,departureCityName,destinationCityName,carrierName) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			try {
 				PreparedStatement pst = connection.prepareStatement(query);
 				pst.setString(1,tripId);
@@ -68,7 +70,9 @@ public class FlightRecordDAO {
 				pst.setString(11, coach);
 				pst.setString(12, null);
 				pst.setString(13, null);
-
+				pst.setString(14, departureCityName);
+				pst.setString(15, arrivalCityName);
+				pst.setString(16, carrierName);
 				pst.execute();
 
 			} catch (SQLException e) {
@@ -100,7 +104,12 @@ public class FlightRecordDAO {
 				tr.setTotalDuration(rs.getFloat("duration"));
 				tr.setTotalMiles(rs.getDouble("milage"));
 				tr.setCoach(rs.getString("cabin"));
+				tr.setOriginCityName(rs.getString("departureCityName"));
+				tr.setDestinationCityName(rs.getString("destinationCityName"));
+				tr.setCarrierName(rs.getString("carrierName"));
+				
 				tr.setFlightRecord(new ArrayList<>());
+				
 				records.add(tr);
 			}
 			return records;
@@ -124,7 +133,7 @@ public class FlightRecordDAO {
 	}
 	
 	public HashMap<String, Float> getRecordsByAirline(SearchCriteria sc) throws SQLException{
-		String sql="select distinct carrier,min(price) as price from flightRecord group by carrier order by price asc";
+		String sql="select distinct carrierName ,min(price) as price from flightRecord group by carrierName order by price asc";
 		HashMap<String, Float> result= new HashMap<>();
 		stmt = connection.createStatement();
 		rs = stmt.executeQuery(sql);

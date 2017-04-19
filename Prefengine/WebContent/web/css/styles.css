@@ -6638,7 +6638,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
   line-height: 1em;
 }
 .booking-item-price {
-  font-size: 47px;
+  font-size: 35px;
   color: #626262;
   line-height: 1em;
   display: inline-block;
@@ -6700,6 +6700,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
 }
 .booking-item-flight-details .booking-item-destination {
   font-size: 12px;
+  font-weight:bold;
   line-height: 1.3em;
 }
 .booking-item-airline-logo > p {

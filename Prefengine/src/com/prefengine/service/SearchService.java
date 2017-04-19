@@ -34,6 +34,7 @@ public class SearchService {
 
 	private HashMap<String, Airport> mapAirp = new HashMap<>();
 	private HashMap<String, City> mapCity = new HashMap<>();
+	private HashMap<String, Carriers> mapCarrier = new HashMap<>();
 	
 	public ArrayList<Itinerary> search(SearchCriteria sc) throws IOException, GeneralSecurityException{
 		APIService apiService  = new APIService();
@@ -69,17 +70,31 @@ public class SearchService {
 			mapCity.put(cty.getCityCode(), cty);
 		}
 		
+		for(int carrier = 0;carrier<carriers.size();carrier++){
+			Carriers carr = new Carriers();
+			carr.setCarrierCode(carriers.get(carrier).getCode());
+			carr.setCarrierName(carriers.get(carrier).getName());
+			mapCarrier.put(carr.getCarrierCode(), carr);
+		}
 		
 		
 
 		for(int i=0; i<tripResults.size(); i++){
 			Itinerary tr = new Itinerary();
-			System.out.println("--->>>Departure Ciry name -->> "+mapCity.get(sc.getDeparture()).getCityName());
-			System.out.println("--->>>Arrival Ciry name -->> "+mapCity.get(sc.getDestination()).getCityName());
+			
+			
+			
 			tr.setOrigin(sc.getDeparture());
 			tr.setDestination(sc.getDestination());
+			tr.setOriginCityName(mapCity.get(sc.getDeparture()).getCityName());
+			tr.setDestinationCityName(mapCity.get(sc.getDestination()).getCityName());
+			
+//			System.out.println("--->>>Departure Ciry name -->> "+mapCity.get(sc.getDeparture()).getCityName());
+//			System.out.println("--->>>Arrival Ciry name -->> "+mapCity.get(sc.getDestination()).getCityName());
+			
+			
 			tr.setTripId(tripResults.get(i).getId());
-			System.out.println("\n Carrier : "+carriers.get(0).getName());
+//			System.out.println("\n Carrier : "+carriers.get(0).getName());
 			
 			List<SliceInfo> sliceInfo= tripResults.get(i).getSlice();
 			for(int j=0; j<sliceInfo.size(); j++){
@@ -87,6 +102,10 @@ public class SearchService {
 				List<SegmentInfo> segInfo= sliceInfo.get(j).getSegment();
 				tr.setCoach(segInfo.get(j).getCabin());
 				tr.setTripCarrier(segInfo.get(j).getFlight().getCarrier());
+				
+				System.out.println("-----Carrier ----- > "+mapCarrier.get(segInfo.get(j).getFlight().getCarrier()).getCarrierName());
+				
+				tr.setCarrierName(mapCarrier.get(segInfo.get(j).getFlight().getCarrier()).getCarrierName());
 				
 				ArrayList<Flights> fligts = this.getFlightRecords(segInfo,response);
 				
@@ -129,17 +148,14 @@ public class SearchService {
 	public ArrayList<Flights> getFlightRecords(List<SegmentInfo> segInfo,TripsSearchResponse response) throws GeneralSecurityException, IOException{
 		ArrayList<Flights> flightRecord = new ArrayList<>();
 		//APIService apiService =new APIService();
-		
-		List<CityData> cityData = response.getTrips().getData().getCity();
-		List<AirportData> airport = response.getTrips().getData().getAirport();
-		List<CarrierData> carriers = response.getTrips().getData().getCarrier();
-		
-		
 			for(int k=0; k<segInfo.size(); k++){
 				Carriers c = new Carriers();
 				Flights fr = new Flights();
 				List<LegInfo> leg=segInfo.get(k).getLeg();
 				c.setCarrierCode((segInfo.get(k).getFlight().getCarrier()));
+				
+				c.setCarrierName(mapCarrier.get((segInfo.get(k).getFlight().getCarrier())).getCarrierName());
+				
 				fr.setCarrier(c);
 				fr.setFlightNumber(segInfo.get(k).getFlight().getNumber());
 				
@@ -160,10 +176,17 @@ public class SearchService {
 					departure.setAirportCode(leg.get(l).getOrigin());
 					
 					Airport airport1 = mapAirp.get(arrival.getAirportCode());
-					System.out.println("airport1 ::::::"+ airport1.getAirportCity());
-					System.out.println("---->> intermediate "+mapCity.get(mapAirp.get(arrival.getAirportCode()).getAirportCity()).getCityName());
-					System.out.println("---->> intermediate "+mapCity.get(mapAirp.get(departure.getAirportCode()).getAirportCity()).getCityName());
+//					System.out.println("airport1 ::::::"+ airport1.getAirportCity());
+//					System.out.println("---->> intermediate "+mapCity.get(mapAirp.get(arrival.getAirportCode()).getAirportCity()).getCityName());
+//					System.out.println("---->> intermediate "+mapCity.get(mapAirp.get(departure.getAirportCode()).getAirportCity()).getCityName());
 					
+					
+					
+					departure.setAirportCity(mapCity.get(mapAirp.get(departure.getAirportCode()).getAirportCity()).getCityName());
+					arrival.setAirportCity(mapCity.get(mapAirp.get(arrival.getAirportCode()).getAirportCity()).getCityName());
+					
+					departure.setAirportName(mapAirp.get(arrival.getAirportCode()).getAirportName());
+					arrival.setAirportName(mapAirp.get(departure.getAirportCode()).getAirportName());
 				
 					fr.setAirportArrival(arrival);
 					fr.setAirportDeparture(departure);
