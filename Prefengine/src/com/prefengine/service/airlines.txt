@@ -1,0 +1,804 @@
+0a	amber air
+0b	blue air
+0d	darwin airline
+2b	aerocondor
+2c	sncf
+2e	smokey bay air
+2i	star peru
+2j	air burkina
+2k	aerolineas galapagos
+2l	helvetic airways
+2m	moldavian airlines
+2n	nextjet
+2o	island air service
+2p	air philippines
+2q	avitrans nordic
+2u	sun dor international air
+2w	welcome air
+2y	air andaman
+2z	tta
+3b	job air
+3c	regionsair
+3e	"multi-aero, inc. d/b/a air choice one"
+3f	pacific airways inc
+3h	air inuit
+3i	aerolineas del sur
+3k	jetstar asia
+3l	intersky luftfahrt
+3m	gulfstream
+3o	air arabia maroc
+3p	tiara air aruba
+3r	gromov airline
+3s	air antilles express
+3t	turan air
+3u	sichuan airlines
+3w	euromanx
+3y	kartika airlines
+3z	everts air
+4c	aires
+4d	air sinai
+4e	tanana air service
+4g	gazprom avia
+4h	united airways bangladesh
+4j	somon air
+4k	kenn borek air
+4l	euroline
+4m	lan argentina
+4n	air north
+4o	interjet
+4q	safi airways
+4r	hamburg international
+4t	belair airlines
+4u	germanwings
+4v	lignes aeriennes congolaises
+4w	warbelow
+4y	flight alaska
+5c	natureair
+5g	skyservice airlines
+5h	five forty aviation
+5j	cebu air
+5l	aerosur
+5m	flymontserrat
+5n	nordavia
+5o	europe airpost
+5p	aerolinea principal
+5q	bqb air
+5r	karthago airlines
+5t	canadian north
+5u	royal belau airways
+5v	lviv airlines
+5w	astraeus
+5y	express rail link
+5z	bismillah airlines
+6a	aviacsa
+6c	air timor
+6e	indigo air
+6f	mat airways
+6g	gulfstream connection
+6h	israir airlines
+6i	fly 6ix
+6j	jubba airways
+6k	kyrgyztransavia
+6l	aklak air
+6n	nordic airways
+6p	gryphon airlines
+6q	cham wings airlines
+6r	alrosa
+6s	kato airline
+6t	air mandalay ltd
+6v	mars rk
+6w	saratov air
+6y	smartlynx airlines ltd
+6z	euro-asia air
+7c	jeju airlines
+7d	donbass aero
+7e	sylt air gmbh
+7f	first air
+7g	star flyer
+7h	era aviation
+7i	insel air international
+7j	tajik air
+7k	kogalym avia
+7l	aerocaribbean
+7m	"mayair, s.a. de c.v."
+7n	national airways
+7p	air castilla
+7r	rusline air
+7v	federal airlines (pty) ltd
+7w	wind rose
+7z	halcyonair cabo verde airways s.a.
+8b	business air centre co
+8d	"servant air, inc."
+8e	bering air
+8f	stp airways
+8g	girjet
+8j	jet4you.com
+8l	lucky air co. ltd.
+8m	myanmar airways
+8n	barents airlink
+8o	west coast air
+8p	pacific coastal airlines
+8q	onur air
+8r	trip linhas aereas s.a.
+8t	air tindi ltd
+8u	afriqiyah airways
+8v	wright air service
+8w	private wings
+9b	accesrail
+9c	spring airlines
+9d	toumai air tchad
+9e	pinnacle airlines
+9f	eurostar
+9g	9g rail ltd
+9h	dutch antilles express
+9j	dana airlines ltd
+9k	cape air
+9l	colgan airlines
+9m	central mountain air
+9o	national airways cameroon
+9r	satena
+9u	air moldova
+9v	avior airlines
+9w	jet airways
+9x	new axis airways
+9y	air kazakstan
+a0	l'avion
+a2	astra airlines
+a3	aegean airlines
+a4	aerocon
+a5	airlinair
+a6	air alps aviation
+a7	air comet
+a8	benin golf air
+a9	georgian airways
+aa	american airlines
+ab	air berlin
+ac	air canada
+ad	azul airlines
+ae	mandarin airlines
+af	air france
+ah	air algerie
+ai	nacil air india
+aj	aerocontractors
+ak	airasia
+am	aeromexico
+ao	avianova
+ap	air one
+aq	aloha airlines
+ar	aerolineas argentinas
+as	alaska airlines
+at	royal air maroc
+au	austral lineas aereas
+av	avianca
+aw	africa world airlines limited
+ax	american connection
+ay	finnair
+az	alitalia
+b2	belavia
+b3	bellview airlines
+b5	east african safari air
+b6	jetblue
+b7	uni air
+b8	eritrean airlines
+b9	iran air tours
+ba	british airways
+bb	seaborne airlines
+bc	skymark airlines
+bd	bmi
+be	flybe
+bf	vincent aviation
+bg	biman airlines
+bh	hawkair
+bi	royal brunei
+bj	nouvelair
+bk	okay airways
+bl	pacific airlines
+bn	bahrain air
+bp	air botswana
+br	eva air
+bs	british international
+bt	air baltic
+bu	sas norway
+bv	blue panorama air
+bw	caribbean airlines
+bx	coast air
+c3	icar airlines
+c4	alma de mexico
+c5	commutair
+c7	rico linhas aereas
+c8	cronosair
+c9	cirrus airlines
+ca	air china
+cb	scotairways
+cc	macair airlines
+ce	nationwide air
+cf	city airline
+cg	airlines png
+ch	bemidji airlines
+ci	china airlines
+cj	china northern airlines
+cl	lufthansa cityline
+cm	copa airlines
+cn	islands nationair
+co	continental airlines
+cq	sunshine express airlines
+ct	civil air transport
+cu	cubana
+cw	air marshall islands
+cx	cathay pacific
+cy	cyprus airways
+cz	china southern airlines
+d2	severstal air
+d3	daallo airlines
+d4	alidaunia
+d6	inter air
+d7	airasia x
+d9	aeroflot-don
+db	brit air
+dc	golden air
+dd	nok air
+de	condor
+dg	south east asian airlines
+dh	asia sahand airlines
+di	dba
+dj	virgin blue
+dl	delta air lines
+dn	air deccan
+do	air vallee
+dr	air link
+dt	taag
+du	hemus air
+dv	jsc aircompany scat
+dx	danish air transport
+dy	norwegian air
+dz	djibouti air
+e0	eos airlines
+e3	domodedovo airlines
+e4	eastok avia
+e5	samara airlines
+e8	jsc semeyavia
+ea	european air express
+ec	avialeasing
+ee	aero airlines
+ef	far eastern air
+eg	japan asia airways
+ei	aer lingus
+ej	new england airlines
+ek	emirates
+el	air nippon
+en	air dolomiti
+eo	hewa bora airways
+ep	iran aseman airlines
+eq	tame linea aerea del ecuador
+et	ethiopian airlines
+eu	chengdu airlines
+ew	eurowings
+ey	etihad airways
+ez	sun air of scandinavia
+f2	safarilink
+f5	fly540 s.a
+f7	flybaboo
+f9	frontier airlines
+fb	bulgaria air
+fc	finncomm airlines
+fd	thai airasia
+fe	far eastern air transport
+fg	ariana afghan airlines
+fi	icelandair
+fj	air pacific
+fl	airtran airways
+fm	shanghai airlines
+fn	regional air lines
+fo	felix airways
+fp	freedom air
+fq	brindabella airlines
+fr	ryanair
+fs	itali airlines
+ft	siem reap airways intl
+fv	gtk rossia
+fw	ibex airlines
+fy	firefly
+fz	flydubai
+g0	ghana intl airlines
+g3	gol transportes aereos
+g4	allegiant air llc
+g8	go air
+g9	air arabia
+ga	garuda indonesia
+ge	transasia airways
+gf	gulf air
+gi	itek air
+gj	eurofly
+gl	air greenland
+gq	big sky airlines
+gr	aurigny air
+gs	tianjin airlines
+gt	gb airways
+gu	aviateca
+gv	"grant aviation, inc."
+gw	kuban airlines
+gy	gabon airlines
+gz	air rarotonga
+h2	sky airline
+h3	harbour air
+h4	heli securite
+h7	eagle air
+h8	dalavia
+h9	pegasus airlines
+ha	hawaiian airlines
+hb	homer air
+hd	hokkaido international airlines
+he	lgw
+hf	hapagfly
+hg	niki
+hh	taban air
+hi	papillon airways
+hm	air seychelles
+ho	juneyao airlines
+hr	hahn air
+hs	svenska air
+ht	aeromist-kharkov
+hu	hainan airlines
+hv	transavia.com
+hw	north-wright airways ltd.
+hx	hong kong airlines
+hy	uzbekistan airways
+hz	sat airlines
+i2	munich airlines
+i3	ata airlines
+i4	international airlink
+i5	compagnie aerienne mali
+i7	paramount airways
+i8	izhavia
+i9	air italy
+ia	iraqi airways
+ib	iberia
+ic	nacil indian airline
+ie	solomon airlines
+if	islas airways
+ig	meridiana
+ih	falcon air
+ik	imair airline
+in	macedonian airlines
+ip	atyrau aue joly
+iq	augsburg airways
+ir	iran air
+is	"island airlines, inc."
+it	kingfisher airlines
+iv	wind jet
+ix	air india express
+iy	yemenia airways
+iz	arkia
+j0	jetlink express
+j2	azerbaijan airlines
+j3	northwestern air
+j4	jet for you
+j5	alaska seaplane service l.l.c.
+j6	avcom
+j7	centre-avia airlines
+j8	berjaya air
+j9	jazeera airways
+ja	b&h airlines
+jb	helijet international
+jd	beijing capital airlines
+je	mango
+jh	fuji dream airlines
+jj	tam linhas aereas
+jk	spanair
+jl	japan airlines
+jm	air jamaica
+jn	avia-jaynar
+jo	jalways
+jp	adria airways
+jq	jetstar
+jr	joy air
+js	air koryo
+jt	lion air
+ju	jat airways
+jv	bearskin airlines
+jx	nice helicopteres
+jy	air turks 
+jz	skyways ab
+k2	eurolot
+k3	taquan air services
+k5	wings of alaska seaport airline
+k6	bravo air congo
+k7	air kbz
+k8	zambia skyways
+k9	tonlesap airlines
+ka	dragonair
+kb	druk air
+kc	air astana
+kd	kd avia
+ke	korean air
+kf	blue1
+kg	aerogaviota
+kh	kyrgyz air
+ki	kuban airlines
+kj	bmed
+kk	atlasjet airlines
+kl	klm
+km	air malta
+kn	china united airlines
+ko	khors
+kq	kenya airways
+kr	comores aviation
+ks	penair
+kt	katmai air llc
+ku	kuwait airways
+kv	kavminvody avia
+kw	wataniya airways
+kx	cayman airways
+ky	kunming airlines
+l3	ltu
+l5	lufttransport as
+l6	tbilaviamsheni
+l9	belle air europe
+la	lan airlines
+lf	flynordic
+lg	luxair
+lh	lufthansa
+li	liat
+lj	jin air
+lm	livingston
+ln	libyan airlines
+lo	lot polish airlines
+lp	lan peru
+lr	lacsa
+ls	jet2.com
+lt	ltu
+lv	albanian airlines
+lw	pacific wings
+lx	swiss
+ly	el al
+lz	belle air
+m2	air manas
+m3	north flying as
+m5	kenmore air
+m6	meta linhas aereas
+m7	mas air
+m9	motor-sich jsc
+ma	malev
+md	air madagascar
+me	middle east airlines
+mf	xiamen airlines
+mh	malaysia airlines
+mi	silkair
+mj	mihin lanka
+mk	air mauritius
+ml	air mediterranee
+mm	soc aero de medellin
+mn	comair
+mo	calm air international
+mp	martinair
+ms	egyptair
+mu	china eastern airlines
+mw	maya island air
+mx	mexicana
+my	maxjet airways
+mz	saereo s.a
+n2	dagestan airlines
+n3	omskavia
+n4	trans air benin
+n5	norfolk air
+n6	alpine air private ltd.
+n7	lagun air
+n9	kabo air
+na	north american airlines
+nc	national jet systems
+nd	sky wings airlines
+nf	air vanuatu
+ng	lauda air
+nh	all nippon airways
+ni	pga-portug_lia airlines
+nk	spirit airlines
+nl	shaheen air international
+nm	manx2
+nn	vim airlines
+nq	air japan
+nr	max air
+ns	hebei airlines
+nt	binter canarias
+nu	japan transocean air
+nw	northwest airlines
+nx	air macau
+ny	air iceland
+nz	air new zealand
+o2	oceanic airlines
+o4	antrak air
+o6	oceanair
+o7	ozjet
+oa	olympic airlines
+ob	boliviana de aviacion - boa
+oc	"oriental air bridge co., ltd. (orc)"
+of	air finland
+og	one two go airlines
+ok	czech airlines
+ol	olt ostfriesische lufttr
+om	miat mongolian airlines
+on	our airline
+op	chalk ocean airways
+or	arkefly
+os	austrian
+ot	aeropelican air services
+ou	croatia airlines
+ov	estonian air
+ox	orient thai airlines
+oy	andes lineas aereas
+oz	asiana airlines
+p0	proflight commuter services
+p2	airkenya express
+p3	passaredo
+p4	aero lineas sosa
+p5	aerorepublica
+p6	pascan aviation inc.
+p8	pantanal linhas aereas
+p9	perm airlines
+pb	provincial airlines
+pc	air fiji
+pd	porter airlines inc.
+pe	peoples vienna line
+pg	bangkok airways
+pj	air saint pierre
+pk	pakistan international airlines
+pl	southern air charter
+pm	pamir airways
+pn	china west air
+pr	philippine airlines
+ps	ukraine intl airlines
+pu	pluna
+pv	saint barth commuter
+pw	precision air
+px	air niugini
+py	surinam airways
+pz	tam mercosur
+q2	maldivian
+q3	anguilla air services
+q4	starlink aviation
+q5	40 mile air
+q6	skytrans
+q7	skybahamas
+q8	trans air congo
+qb	georgian national air
+qc	air corridor
+qf	qantas airways
+qg	global aviation
+qh	kyrgyzstan air
+qi	cimber air
+qk	air canada jazz
+ql	laser airlines
+qm	air malawi
+qp	airkenya aviation
+qr	qatar airways
+qs	smart wings
+qu	east african airlines
+qv	lao airlines
+qw	blue wings
+qx	horizon air
+qz	pt indonesia airasia
+r2	orenair
+r3	yakutia air
+r4	stc russia
+r6	danu oro transportas
+r7	aserca
+ra	royal nepal airlines
+rb	syrian arab airlines
+rc	atlantic airways
+re	aer arann
+rg	vrg linhas aereas sa
+rh	robin hood aviation
+ri	mandala airlines
+rj	royal jordanian
+rk	region-avia
+rl	royal falcon
+ro	tarom
+rq	kam air
+rt	rak airways
+ru	tci skyking ltd
+rv	caspian airlines
+rx	regent airways
+rz	sansa airlines
+s0	slok air international
+s2	jet lite
+s3	santa barbara airlines
+s4	sata international
+s5	shuttle america
+s6	sun air
+s7	s7
+s9	starbow airlines
+sa	south african airways
+sb	aircalin
+sc	"shandong airlines co., ltd."
+sd	sudan airways
+se	xl airways france
+sf	tassili airlines
+sg	spicejet
+sh	sharp airlines
+si	blue islands
+sj	sriwijaya air
+sk	scandinavian airlines
+sl	solenta aviation
+sm	spirit of manila airlines
+sn	brussels airlines
+so	salsa d
+sp	sata air acores
+sq	singapore airlines
+ss	corsair
+su	aeroflot
+sv	saudi arabian airlines
+sw	air namibia
+sx	skybus airlines
+sy	sun country
+t3	eastern airways
+t4	trip linhas aereas
+t5	turkmenistan airlines
+t6	tavrey aircompany
+t7	twin jet
+ta	taca intl airlines
+tc	air tanzania
+td	atlantis european airway
+te	flylal
+tf	malmo aviation
+tg	thai airways intl
+tj	tradewind aviation
+tk	turkish airlines
+tl	airnorth regional
+tm	lam mozambique
+tn	air tahiti nui
+to	transavia.com france
+tp	tap portugal
+tq	tandem aero
+tr	tiger airways
+ts	air transat
+tt	tiger airways australia
+tu	tunisair
+tv	tibet airlines
+tw	t
+tx	air caraibes
+ty	air caledonie
+tz	ata airlines
+u2	easyjet
+u3	avies air company
+u4	pmt air
+u5	usa 3000
+u6	ural airlines
+u7	air uganda
+u8	armavia
+u9	tatarstan air
+ua	united airlines
+ub	myanma airways
+ud	hex air
+ue	nasair
+uf	um air
+ug	sevenair
+uh	us helicopter corp
+uj	almasria universal airlines
+ul	srilankan airlines
+um	air zimbabwe
+un	transaero
+uo	hong kong express airways
+up	bahamasair
+uq	o connor airlines
+ur	ut air
+us	us airways
+ut	ut air
+uu	air austral
+uv	helicopteros del sureste
+ux	air europa
+uy	cameroon airlines
+uz	buraq air
+v0	conviasa
+v2	vision airlines
+v3	carpatair
+v4	vieques air link
+v5	danube wings
+v6	vip s.a.
+v7	air senegal
+v8	iliamna air taxi
+va	v australia
+vb	vivaaerobus
+vc	strategic airlines pty ltd
+ve	avensa
+vf	valuair
+vg	vlm airlines
+vh	aeropostal
+vk	virgin nigeria
+vm	viaggio air
+vn	vietnam airlines
+vo	tyrolean airways
+vq	viking hellas airlines
+vr	tacv cabo verde airlines
+vs	virgin atlantic
+vt	air tahiti
+vu	air ivoire
+vv	aerosvit airlines
+vw	aeromar
+vx	virgin america 
+vy	vueling airlines
+vz	velvet sky
+w2	canadian western air
+w3	arik air
+w4	lc busre
+w5	mahan airlines
+w6	wizz air
+w7	sayakhat airlines
+w9	air bagan
+wa	klm cityhopper
+wb	rwandair express
+wc	islena airlines
+wf	wideroe
+wh	webjet linhas aereas
+wj	air labrador
+wk	edelweiss air
+wl	aeroperlas
+wm	windward island airways
+wn	southwest airlines
+wp	island air
+wr	jsc aviaprad
+ws	westjet
+wt	wasaya airways lp
+wu	wizz air ukraine
+ww	bmibaby
+wx	cityjet
+wy	oman air
+x3	tuifly
+x4	"air excursions, llc"
+x7	air service
+x9	city star airlines
+xc	kd air
+xe	expressjet airlines
+xf	vladivostok air
+xk	ccm airlines
+xl	lan ecuador
+xm	alitalia express
+xp	xtra airways
+xq	sun express
+xr	skywest airlines
+xu	african express airways
+xv	bvi airways
+xw	sky express
+xy	al-khayala
+y0	yellow airtaxi
+y1	taymir
+y4	volaris
+y5	asia wings
+y7	nordstar
+y8	passaredo linhas aereas
+y9	kish air
+yc	yamal air
+yd	mauritania airways
+yg	south airlines
+yi	air sunshine
+yk	cyprus turkish airlines
+yl	yamal airlines
+ym	montenegro airlines
+yn	air creebec (1994) inc.
+yo	heli air monaco
+yq	polet airlines
+yr	scenic airlines
+ys	regional
+yt	yeti airlines
+yu	euroatlantic airways
+yv	mesa airlines
+yw	air nostrum
+yx	midwest airlines
+z2	zestair
+z3	pm air llc
+z4	puma air
+z5	gmg airlines
+z6	dnieproavia
+z8	amaszonas
+za	interavia airlines
+zb	monarch airlines
+ze	lineas azteca
+zf	athens airways
+zh	shenzhen airlines
+zi	aigle azur
+zj	zambezi airlines
+zk	great lakes aviation
+zl	regional express
+zn	naysa
+zo	central air transport services (cats)
+zu	bashkortostan air
+zv	zagros airlines
+zy	sky airlines
