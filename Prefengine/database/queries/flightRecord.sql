@@ -13,5 +13,8 @@ CREATE TABLE `flightRecord` (
   `cabin` varchar(45) DEFAULT NULL,
   `thisTrip` varchar(45) DEFAULT NULL,
   `jsonData` json DEFAULT NULL,
+  `departureCityName` varchar(45) DEFAULT NULL,
+  `destinationCityName` varchar(45) DEFAULT NULL,
+  `carrierName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=256 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=latin1;
