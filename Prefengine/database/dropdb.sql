@@ -1,6 +1,10 @@
 --drop targets of FKs after tables with the FKs
 
-drop table user_info;
-drop table temp; 
-drop table trip;
-drop table trip_history;
+
+DROP TABLE IF EXISTS AirlineRanks;
+
+DROP TABLE IF EXISTS airlines;
+
+DROP TABLE IF EXISTS flightRecord;
+
+DROP TABLE IF EXISTS user;
