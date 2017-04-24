@@ -8,11 +8,40 @@
 	<property environment="env" />
 	<property name="database.dir" value="database" />
 	<property name="src.dir" value="src" />
-	<property name="lib.dir" value="lib" />
-	<property name="classes.dir" value="bin" />
+	<!--Added due to issues with easily setting up -Yinka -->
+	<property name="webinf.dir" value="WebContent/WEB-INF" />
+	<!-- Note new location of classes, even in client-server case-->
+	<property name="classes.dir" value="${webinf.dir}/classes" />
+	<!-- the main set of jars is set that is deployed with the web app -->
+	<property name="lib.dir" value="${webinf.dir}/lib" />
 	
-	<property name="MYSQL_URL" value = "jdbc:mysql://${env.MYSQL_SITE}/${env.MYSQL_USER}db"/>
-	<property name="JAVAAGENT" value="-javaagent:lib/eclipselink.jar"/>
+	
+	
+	<!-- Global properties for this build -->
+	<property environment="env" />
+	<!-- on PC, maybe c:\tomcat-8.0 -->
+	<property name="CATALINA_HOME" value="${env.CATALINA_HOME}" />
+	<!-- on PC, http://localhost:8080-->
+	<property name="TOMCAT_URL" value="${env.TOMCAT_URL}" />
+	<property name="deploy.dir" value="${CATALINA_HOME}/webapps/${ant.project.name}" />
+
+	<property name="database.dir" value="database" />
+	<property name="src.dir" value="src" />
+	<property name="webinf.dir" value="WebContent/WEB-INF" />
+	<!-- Note new location of classes, even in client-server case-->
+	<property name="classes.dir" value="${webinf.dir}/classes" />
+	<!-- the main set of jars is set that is deployed with the web app -->
+	<property name="lib.dir" value="${webinf.dir}/lib" />
+	<!-- lib has jars needed only for clientserver case, add-ons to main set,
+	     which includes all the driver jars.  Note that we do not need to *deploy* 
+	     (i.e., install with the web app) the driver jars, because they
+	      are not directly used in the web app case. Instead, we need to
+	      make sure they are in tomcat's lib dir, so tomcat can create the needed
+	      Datasource objects. The preconfigured tomcat has the needed driver jars.
+	   -->
+	<property name="clientserver-lib.dir" value="lib" />
+	<property name="MYSQL_URL" value = "jdbc:mysql://${env.MYSQL_SITE}/prefengine"/>
+	<property name="JAVAAGENT" value="-javaagent:${lib.dir}/eclipselink.jar" />
 	
 	<!-- Classpath declaration: all jars in lib -->
 	<path id="project.classpath">
@@ -23,7 +52,7 @@
 	</path>
 	
 	<target name="init">
-		<mkdir dir="${classes}"/>
+		<mkdir dir="${classes.dir}"/>
 	</target>
 
 	<!-- Clean up -->
@@ -42,10 +71,37 @@
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${src.dir}" debug="on" destdir="${classes.dir}" 
 			classpathref="project.classpath" includeantruntime="false">
+			<exclude name="**/service/src/" />
 			<compilerarg value="-Xlint:deprecation" />
 		</javac>
 	</target>
 
+	<!-- simple deployment: copy WebContent file tree to webapps area -->
+	<!-- also, clean up first -->
+	<target name="deploy" depends="build, config-check-web">
+		<delete dir="${deploy.dir}" />
+		<copy todir="${deploy.dir}">
+			<fileset dir="WebContent" />
+		</copy>
+	</target>
+	
+	<!--check that one of the above web config targets has been used -->
+	<target name="config-check-web">
+		<available file="${classes.dir}/META-INF/persistence.xml" property="configOK" />
+		<available file="web.flag" property="webSetup" />
+		<fail message="You need to run ant config-web-xxxdb" unless="configOK" />
+		<fail message="You need to run ant config-web-xxxdb (not config-clientserver-xxxdb)" unless="webSetup" />
+		<loadfile property="currentdb" srcFile="currentdb.txt" />
+		<echo message="config-check-web: JPA is set up for web use with ${currentdb}" />
+	</target>
+	
+	<target name="config-web-mysqldb" depends="build">
+		<copy file="database/mysql/web-persistence.xml" tofile="${src.dir}/META-INF/persistence.xml" overwrite="true" />
+		<copy file="database/mysql/web-persistence.xml" tofile="${classes.dir}/META-INF/persistence.xml" overwrite="true" />
+		<delete file="clientserver.flag" />
+		<echo file="currentdb.txt" message="mysqldb" />
+		<touch file="web.flag" />
+	</target>
 	<!-- use the power of ant to edit a file, substitute username, pw 
 		     to give us persistence.xml with current username, pw in it.
 	 -->

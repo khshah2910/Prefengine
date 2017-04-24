@@ -5,12 +5,14 @@ CREATE TABLE `AirlineRanks` (
   `AirlineName` varchar(45) DEFAULT NULL,
   `AirlineCode` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Rank`)
-) ;
+);
+
 
 CREATE TABLE `airlines` (
   `iata` text,
   `name` text
 );
+
 
 CREATE TABLE `flightRecord` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,8 +29,12 @@ CREATE TABLE `flightRecord` (
   `cabin` varchar(45) DEFAULT NULL,
   `thisTrip` varchar(45) DEFAULT NULL,
   `jsonData` text DEFAULT NULL,
+  `departureCityName` varchar(45) DEFAULT NULL,
+  `destinationCityName` varchar(45) DEFAULT NULL,
+  `carrierName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
+
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,3 +46,10 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ;
+
+
+CREATE TABLE `ciry` (
+  `code` text,
+  `name` text,
+  `country_code` text
+);

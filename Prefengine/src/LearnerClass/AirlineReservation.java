@@ -61,10 +61,10 @@ public class AirlineReservation {
 			List<SliceInput> slices = new ArrayList<SliceInput>();
 			SliceInput slice = new SliceInput();
 			String setOrigin = "BOM";
-			String setDestination = "AMD";
+			String setDestination = "LAX";
 			slice.setOrigin(setOrigin); 
 			slice.setDestination(setDestination); 
-			slice.setDate("2017-04-21");
+			slice.setDate("2017-04-24");
 			slices.add(slice);
 			
 			TripOptionsRequest request= new TripOptionsRequest();

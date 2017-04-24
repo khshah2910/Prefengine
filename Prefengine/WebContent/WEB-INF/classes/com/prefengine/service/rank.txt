@@ -1,0 +1,150 @@
+1	emirates	ek
+
+2	qatar airways	qr
+
+3	singapore airlines	sq
+
+4	cathay pacific	cx
+
+6	etihad airways	ey
+
+7	turkish airlines	tk
+
+8	eva air	br
+
+9	qantas airways	qf
+
+10	lufthansa	lh
+
+11	garuda indonesia	ga
+
+12	hainan airlines	hu
+
+14	air france	af
+
+16	asiana airlines	oz
+
+17	air new zealand	nz
+
+19	austrian	os
+
+20	bangkok airways	pg
+
+21	japan airlines	jl
+
+22	dragonair	ka
+
+23	airasia	ak
+
+24	klm	kl
+
+25	virgin america 	vx
+
+26	british airways	ba
+
+27	finnair	ay
+
+28	virgin atlantic	vs
+
+29	hong kong airlines	hx
+
+31	air canada	ac
+
+33	aegean airlines	a3
+
+34	malaysia airlines	mh
+
+35	delta air lines	dl
+
+36	korean air	ke
+
+37	china airlines	ci
+
+38	easyjet	u2
+
+39	silkair	mi
+
+40	aeroflot	su
+
+41	south african airways	sa
+
+42	oman air	wy
+
+43	air astana	kc
+
+44	vietnam airlines	vn
+
+45	lan airlines	la
+
+49	aer lingus	ei
+
+50	westjet	ws
+
+52	iberia	ib
+
+54	jetstar asia	3k
+
+55	azul airlines	ad
+
+56	avianca	av
+
+58	alitalia	az
+
+59	brussels airlines	sn
+
+60	alaska airlines	as
+
+63	air seychelles	hm
+
+66	southwest airlines	wn
+
+67	srilankan airlines	ul
+
+68	united airlines	ua
+
+69	copa airlines	cm
+
+70	azerbaijan airlines	j2
+
+71	jet airways	9w
+
+72	hawaiian airlines	ha
+
+73	air mauritius	mk
+
+74	air berlin	ab
+
+75	eurowings	ew
+
+76	ethiopian airlines	et
+
+77	american airlines	aa
+
+80	gulf air	gf
+
+81	icelandair	fi
+
+82	saudi arabian airlines	sv
+
+83	philippine airlines	pr
+
+85	kenya airways	kq
+
+87	air china	ca
+
+88	air transat	ts
+
+89	air nostrum	yw
+
+90	juneyao airlines	ho
+
+94	aeromexico	am
+
+96	tianjin airlines	gs
+
+97	tiger airways	tr
+
+98	mango	je
+99	royal jordanian	rj
+
+100	spicejet	sg

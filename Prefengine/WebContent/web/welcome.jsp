@@ -109,7 +109,7 @@
 
 											<div class="tab-pane fade in active" id="tab-1">
 												<h2>Search for Cheap Flights</h2>
-												<form method="post" action="/Prefengine/SearchController"
+												<form method="post" action="/prefengine/SearchController"
 													name="search">
 													<div class="tabbable">
 														<ul class="nav nav-pills nav-sm nav-no-br mb10"
