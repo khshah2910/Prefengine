@@ -78,7 +78,7 @@
 
 	<!-- simple deployment: copy WebContent file tree to webapps area -->
 	<!-- also, clean up first -->
-	<target name="deploy" depends="build, config-check-web">
+	<target name="deploy" depends="clean, build, config-web-mysqldb, config-check-web">
 		<delete dir="${deploy.dir}" />
 		<copy todir="${deploy.dir}">
 			<fileset dir="WebContent" />
