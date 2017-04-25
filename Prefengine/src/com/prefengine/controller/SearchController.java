@@ -15,6 +15,10 @@ import com.prefengine.domain.Itinerary;
 import com.prefengine.domain.SearchAttributes;
 import com.prefengine.service.APIService;
 import com.prefengine.service.SearchCriteria;
+
+import com.prefengine.service.compilerForPF.LeaveAndArriveFunctionType;
+import com.prefengine.service.compilerForPF.Parser;
+import com.prefengine.service.compilerForPF.Scanner;
 import com.prefengine.service.SearchService;
 
 /**
@@ -39,6 +43,11 @@ public class SearchController extends HttpServlet {
 		// TODO Auto-generated method stub
 		SearchCriteria searchCriteria = new SearchCriteria();
 		SearchService service = new SearchService();
+		SearchCriteria searchCriteriaFromSentence = new SearchCriteria();
+		SearchService serviceFromSentence = new SearchService();
+		SearchAttributes searchAttrFromSentence = null ;			
+		ArrayList<Itinerary> tripRecordFromSentence = null;
+		 boolean hasSentenceInput = false;
 		try {
 			
 			String departure =request.getParameter("departure");
@@ -48,7 +57,8 @@ public class SearchController extends HttpServlet {
 			String[] stops =request.getParameterValues("stops");
 			String[] cabin = request.getParameterValues("cabin");
  			String numberOfPassengers = request.getParameter("numberOfPassengers");
- 			
+
+ 			String sentenceInput = request.getParameter("requirementSentence");
 			//int actualStops = Integer.parseInt(stops);
 			//String price =request.getParameter("price");
 			searchCriteria.setDeparture(departure);
@@ -74,7 +84,39 @@ public class SearchController extends HttpServlet {
 			}
 			
  			
- 			
+// when there is sentences input from UI
+			
+			
+ 			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
+ 			{
+ 				hasSentenceInput = true;
+ 				Scanner scanner = new Scanner(sentenceInput);
+ 				scanner.scannerEngine();
+ 				scanner.printMessage();
+ 				Parser parser = new Parser(scanner);
+ 				ArrayList<ArrayList<Object>> resultFromCompiler = parser.parserEngine();
+ 				parser.printMessage();
+ 				if(resultFromCompiler.size() == 1)
+ 				{
+ 					for(Object content : resultFromCompiler.get(0))
+ 					{
+ 						if(content instanceof LeaveAndArriveFunctionType)
+ 						{
+ 							LeaveAndArriveFunctionType landaInstance = (LeaveAndArriveFunctionType)content;
+ 							if(landaInstance.getArrivePlace() != null)
+ 								searchCriteriaFromSentence.setDestination(landaInstance.getArrivePlace().getImage());
+ 							if(landaInstance.getLeavePlace() != null)
+ 	 							searchCriteriaFromSentence.setDeparture(landaInstance.getLeavePlace().getImage());
+ 							if(landaInstance.getLeaveDay() != null)
+	 							searchCriteriaFromSentence.setDepartureDate(landaInstance.getLeaveDay().toString());
+ 							 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
+ 							 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
+ 						}
+ 					}
+ 				}
+
+ 				
+ 			}
 			if(stops!=null){
 				for(int i=0;i<stops.length;i++){
 					if("0".equals(stops[i])){
@@ -104,9 +146,18 @@ public class SearchController extends HttpServlet {
 			SearchAttributes searchAttr = service.getSearchAttributes(searchCriteria);
 			ArrayList<Itinerary> tripRecord = service.search(searchCriteria);
 			System.out.println(tripRecord.get(0));
-			request.setAttribute("searchAttr", searchAttr);
-			request.setAttribute("tripRecord", tripRecord);
 			
+			//if there is sentence input, then use another set of fields to deal with searching
+			if(hasSentenceInput = true)
+			{
+				request.setAttribute("searchAttr", searchAttrFromSentence);
+				request.setAttribute("tripRecord", tripRecordFromSentence);
+			}
+			else
+			{
+				request.setAttribute("searchAttr", searchAttr);
+				request.setAttribute("tripRecord", tripRecord);
+			}
 		
 		}
 		catch (GeneralSecurityException e) {
