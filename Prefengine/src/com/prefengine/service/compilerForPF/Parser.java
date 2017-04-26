@@ -1,5 +1,7 @@
-package compilerForPF;
+package com.prefengine.service.compilerForPF;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Year;
 import java.util.ArrayList;
@@ -15,20 +17,21 @@ public class Parser {
 	
 	/** contain the whole NFR and connective operators, if is round trip, then both of the trips is inside also. This is used for Display
 	 *  */
-	private ArrayList<Object> totalArray = new ArrayList<Object>();
+	private ArrayList<ArrayList<Object>> totalArray = new ArrayList<ArrayList<Object>>();
 	
 	/** Define the output ArrayList of non-functional request. */
 	private ArrayList<BasicFunctionType> propertyArray = new ArrayList<BasicFunctionType>();
-	
-	/** the final result to server, contain Clause instances with left-hand, connective operator and right-hand; for round trip also. */
-	private ArrayList<ArrayList<Clause>> resultArray = new ArrayList<ArrayList<Clause>>();
+
 	/** Define the output ArrayList of connective operators between requests. */
 	private ArrayList<ConnectiveOperator> connevtiveOperatorArray = new ArrayList<ConnectiveOperator>();
 
 	/** Store the output of scanner */
 	private ArrayList<ArrayList<TokenGeneralKind>> targetClauseArray = new ArrayList<ArrayList<TokenGeneralKind>> ();
 	
-
+	
+	/** a set of connective operators as an output of scanner  */
+	private Data data = new Data ();
+	
 	/** Define the output ArrayList of connective operators between requests for back trip. */
 	private ArrayList<ConnectiveOperator> connevtiveOperatorArrayOfBackTrip = new ArrayList<ConnectiveOperator>();
 
@@ -49,12 +52,15 @@ public class Parser {
 	 * 
 	 *  @param scanner
 	 *  		a Scanner instance  
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public Parser(Scanner scanner)
+	public Parser(Scanner scanner) throws FileNotFoundException, IOException
 	{	
 		this.targetClauseArray = scanner.getClauseArray();
 		this.connevtiveOperatorArray = scanner.getConnectiveOperatorArray();
 		this.isRoundTrip = false;
+		Data.setupData();
 	}
 	
 	/**
@@ -62,9 +68,9 @@ public class Parser {
      * 
      * @return the list of final result of Clause instances with left-hand, connective operator and right-hand; for round trip also.
      */
-	public ArrayList<ArrayList<Clause>> parserEngine()
+	public ArrayList<ArrayList<Object>> parserEngine()
 	{			
-		ArrayList<Float> weight = new ArrayList<Float>();
+		//ArrayList<Float> weight = new ArrayList<Float>();
 		organizeClauseByFunctionType();
 		ArrayList<ArrayList<TokenGeneralKind>> midResult = new ArrayList<ArrayList<TokenGeneralKind>> ();
 		for(ArrayList<TokenGeneralKind> o : targetClauseArray)
@@ -75,65 +81,63 @@ public class Parser {
 		for(int i = 0; i< midResult.size();i++ )
 		{	
 			BasicFunctionType here = calculateFunctionProperty(midResult.get(i),i);
-//			for(TokenGeneralKind token : midResult.get(i))
-//			{
-//				if(token instanceof Token)
-//				System.out.println(((Token)token).getFunctionType() + "+++");
-//				System.out.println(targetClauseArray.get(i).size());
-//			}
 			propertyArray.add(here);
-			((FunctionType)(propertyArray.get(propertyArray.size()-1))).setWeight(fixWeight(midResult.get(i)));
-			weight.add(fixWeight(midResult.get(i)));						
+//			((BasicFunctionType)(propertyArray.get(propertyArray.size()-1))).setWeight(fixFunctionWeight(midResult.get(i)));
+//			weight.add(fixFunctionWeight(midResult.get(i)));						
 		}	
-		weight = rerangeWeights(weight);		
-		//set weight after re-range as a property of FunctionType instance
-		for(int i = 0;i< propertyArray.size();i++)
+//		weight = rerangeWeights(weight);		
+//		//set weight after re-range as a property of FunctionType instance
+//		for(int i = 0;i< propertyArray.size();i++)
+//		{
+//			((BasicFunctionType)propertyArray.get(i)).setWeight(weight.get(i));
+//		}
+		ArrayList<Object> resultOfGoTrip = new ArrayList<Object>();
+		for(int index =0; index< propertyArray.size() -1; index ++)
 		{
-			((FunctionType)propertyArray.get(i)).setWeight(weight.get(i));
+			resultOfGoTrip.add(propertyArray.get(index));
+			resultOfGoTrip.add(connevtiveOperatorArray.get(index));
 		}
-		ArrayList<Clause> resultOfGoTrip = new ArrayList<Clause>();
-		for(int i =0; i< propertyArray.size() -1; i ++)
-		{
-			Clause newClause = new Clause(this.propertyArray.get(i),this.connevtiveOperatorArray.get(i),this.propertyArray.get(i+1));
-			resultOfGoTrip.add(newClause);
-		}
-		this.resultArray.add(resultOfGoTrip);
+		resultOfGoTrip.add(propertyArray.get(propertyArray.size() -1));
+		totalArray.add(resultOfGoTrip);
 		if(this.isRoundTrip)
 			generateSecondSliceForRoundTrip();
-		weight = new ArrayList<Float>();
+		//weight = new ArrayList<Float>();
 		if(isRoundTrip && targetClauseArrayofBackTrip.size() >0)
-		{	for(ArrayList<TokenGeneralKind> o : targetClauseArrayofBackTrip )
-			{	
-				((FunctionType)(propertyArrayOfBackTrip.get(propertyArrayOfBackTrip.size()-1))).setWeight(fixWeight(o));
-				weight.add(fixWeight(o));						
-			}	
-			weight = rerangeWeights(weight);
-			for(int i = 0;i< propertyArrayOfBackTrip.size();i++)
-			{	
-				((FunctionType)propertyArrayOfBackTrip.get(i)).setWeight(weight.get(i));
-			}
-			resultOfGoTrip =  new ArrayList<Clause>(); 
-			for(int i =0; i< propertyArrayOfBackTrip.size() -1; i ++)
+	{	
+	
+//			weight = rerangeWeights(weight);
+//			for(int i = 0;i< propertyArrayOfBackTrip.size();i++)
+//			{	
+//				((BasicFunctionType)propertyArrayOfBackTrip.get(i)).setWeight(weight.get(i));
+//			}
+			resultOfGoTrip =  new ArrayList<Object>(); 
+			for(int index =0; index< propertyArrayOfBackTrip.size() -1; index ++)
 			{
-				Clause newClause = new Clause(this.propertyArrayOfBackTrip.get(i),this.connevtiveOperatorArrayOfBackTrip.get(i)
-						,this.propertyArrayOfBackTrip.get(i+1));
-				resultOfGoTrip.add(newClause);
-				this.resultArray.add(resultOfGoTrip);
+				resultOfGoTrip.add(propertyArrayOfBackTrip.get(index));
+				resultOfGoTrip.add(connevtiveOperatorArrayOfBackTrip.get(index));
 			}
-			
+			resultOfGoTrip.add(propertyArrayOfBackTrip.get(propertyArrayOfBackTrip.size() -1));
+			totalArray.add(resultOfGoTrip);						
 		}
-		
-		return this.resultArray;
+		for(ArrayList<Object> o : totalArray)
+		{
+			for(Object oo : o)
+			{
+				System.out.println(oo.getClass());
+			}
+			System.out.println("-----------");
+		}
+		return this.totalArray;
 	}
 	
 	/**
-     * Get the output of parser.
+     * Get the arrays of go and round trip's function properties and operations.
      * 
-     * @return the ArrayList of FunctionType sub-classes.           
+     * @return the ArrayList of the total array.           
      */
-	public ArrayList<ArrayList<Clause>> getFinalResultArray()
-	{	return this.resultArray;
-	}	
+	public ArrayList<ArrayList<Object>> getTotalArray()
+	{	return this.totalArray;
+	}
 	
 	/**
      * Get the output of parser.
@@ -165,12 +169,12 @@ public class Parser {
 	/**
      * separate logical clause within one literal clause, in case user type in requirements without any conjunction.
      * 
-     * @param  functionFound
-     * 				list of function-type recognized in one literal clause
+     * @param  indexOfFunctionFound
+     * 				list of the index of the function-type recognized in one literal clause
      * @param  indexOfClause
      * 				index of the literal clause in the whole clause list          
      */
-	private void separateFunctionTypeWithoutCojunction ( ArrayList<BasicFunctionType> functionFound,int indexOfClause)
+	private void separateFunctionTypeWithoutCojunction ( ArrayList<Integer> indexOfFunctionFound,int indexOfClause)
 	{
 		ArrayList<ArrayList<TokenGeneralKind>> separateFunctionTypeList = new ArrayList<ArrayList<TokenGeneralKind>>();
 		ArrayList<ArrayList<TokenGeneralKind>> copyOfClausesBefore = new ArrayList<ArrayList<TokenGeneralKind>>();
@@ -185,21 +189,23 @@ public class Parser {
 			{
 				copyOfClausesAfter.add(targetClauseArray.get(i));
 			}
-			int endIndex = findSeparateIndex(targetClauseArray.get(indexOfClause));
+			int endIndex = 0;
 			int startIndex = 0;
-			for(int size = 0; size < functionFound.size(); size ++)
+			for(int index = 0; index < indexOfFunctionFound.size(); index ++)
 			{
 				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				endIndex = indexOfFunctionFound.get(index);
 				for(int i = startIndex; i<endIndex;i++)
 					target.add( targetClauseArray.get(indexOfClause).get(i));
 				separateFunctionTypeList.add(target);
-				startIndex = endIndex ;
-				ArrayList<TokenGeneralKind> tool = new ArrayList<TokenGeneralKind>();
-				for(int j = startIndex; j <targetClauseArray.get(indexOfClause).size(); j++)
-					tool.add(targetClauseArray.get(indexOfClause).get(j));
-				if (endIndex < targetClauseArray.size()-1)
-				endIndex = findSeparateIndex(tool);
-				System.out.println(endIndex + "]]]]]]");
+				startIndex = endIndex ;				
+			}
+			if(endIndex != targetClauseArray.get(indexOfClause).size()-1)
+			{
+				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				for(int i = endIndex; i<targetClauseArray.get(indexOfClause).size();i++)
+					target.add( targetClauseArray.get(indexOfClause).get(i));
+				separateFunctionTypeList.add(target);
 			}
 			ArrayList<ArrayList<TokenGeneralKind>> resultFunctionList =  copyOfClausesBefore;
 			ArrayList<ConnectiveOperator>  resultConjunctionList = new ArrayList<ConnectiveOperator> ();
@@ -226,20 +232,25 @@ public class Parser {
 			{
 				copyOfClausesBefore.add(targetClauseArray.get(i));
 			}
-			int endIndex = findSeparateIndex(targetClauseArray.get(indexOfClause));
+			int endIndex = 0;
 			int startIndex = 0;
-			while(startIndex != endIndex)
+			for(int index = 0; index < indexOfFunctionFound.size(); index ++)
 			{
 				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				endIndex = indexOfFunctionFound.get(index);
 				for(int i = startIndex; i<endIndex;i++)
 					target.add( targetClauseArray.get(indexOfClause).get(i));
 				separateFunctionTypeList.add(target);
 				startIndex = endIndex ;
-				ArrayList<TokenGeneralKind> tool = new ArrayList<TokenGeneralKind>();
-				for(int j = startIndex; j <targetClauseArray.get(indexOfClause).size(); j++)
-					tool.add(targetClauseArray.get(indexOfClause).get(j));
-				if (endIndex < targetClauseArray.size()-1)
-				endIndex = findSeparateIndex(tool);
+				
+			}
+			if(endIndex != targetClauseArray.get(indexOfClause).size()-1)
+			{
+				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				for(int i = endIndex; i<targetClauseArray.get(indexOfClause).size();i++)
+					target.add( targetClauseArray.get(indexOfClause).get(i));
+				separateFunctionTypeList.add(target);
+				
 			}
 			ArrayList<ArrayList<TokenGeneralKind>> resultFunctionList =  copyOfClausesBefore;
 			ArrayList<ConnectiveOperator>  resultConjunctionList = new ArrayList<ConnectiveOperator> ();
@@ -256,21 +267,23 @@ public class Parser {
 		}
 		else if(indexOfClause == targetClauseArray.size()-1 && indexOfClause ==0)
 		{
-			int endIndex = findSeparateIndex(targetClauseArray.get(indexOfClause));
-			System.out.println("--===-=" + endIndex);
+			int endIndex = 0;
 			int startIndex = 0;
-			while(startIndex != endIndex)
+			for(int index = 0; index < indexOfFunctionFound.size(); index ++)
 			{
 				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				endIndex = indexOfFunctionFound.get(index);
 				for(int i = startIndex; i<endIndex;i++)
 					target.add( targetClauseArray.get(indexOfClause).get(i));
 				separateFunctionTypeList.add(target);
 				startIndex = endIndex ;
-				ArrayList<TokenGeneralKind> tool = new ArrayList<TokenGeneralKind>();
-				for(int j = startIndex; j <targetClauseArray.get(indexOfClause).size(); j++)
-					tool.add(targetClauseArray.get(indexOfClause).get(j));
-				if (endIndex < targetClauseArray.size()-1)
-				endIndex = findSeparateIndex(tool);
+			}
+			if(endIndex != targetClauseArray.get(indexOfClause).size()-1)
+			{
+				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				for(int i = endIndex; i<targetClauseArray.get(indexOfClause).size();i++)
+					target.add( targetClauseArray.get(indexOfClause).get(i));
+				separateFunctionTypeList.add(target);				
 			}
 			ArrayList<ArrayList<TokenGeneralKind>> resultFunctionList =  new ArrayList<ArrayList<TokenGeneralKind>>();
 			ArrayList<ConnectiveOperator>  resultConjunctionList = new ArrayList<ConnectiveOperator> ();
@@ -287,20 +300,23 @@ public class Parser {
 		}
 		else if(indexOfClause != targetClauseArray.size()-1 && indexOfClause ==0)
 		{
-			int endIndex = findSeparateIndex(targetClauseArray.get(indexOfClause));
+			int endIndex = 0;
 			int startIndex = 0;
-			while(startIndex != endIndex)
+			for(int index = 0; index < indexOfFunctionFound.size(); index ++)
 			{
 				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				endIndex = indexOfFunctionFound.get(index);
 				for(int i = startIndex; i<endIndex;i++)
 					target.add( targetClauseArray.get(indexOfClause).get(i));
 				separateFunctionTypeList.add(target);
-				startIndex = endIndex ;
-				ArrayList<TokenGeneralKind> tool = new ArrayList<TokenGeneralKind>();
-				for(int j = startIndex; j <targetClauseArray.get(indexOfClause).size(); j++)
-					tool.add(targetClauseArray.get(indexOfClause).get(j));
-				if (endIndex < targetClauseArray.size()-1)
-				endIndex = findSeparateIndex(tool);
+				startIndex = endIndex ;				
+			}
+			if(endIndex != targetClauseArray.get(indexOfClause).size()-1)
+			{
+				ArrayList<TokenGeneralKind> target= new ArrayList<TokenGeneralKind> ();
+				for(int i = endIndex; i<targetClauseArray.get(indexOfClause).size();i++)
+					target.add( targetClauseArray.get(indexOfClause).get(i));
+				separateFunctionTypeList.add(target);				
 			}
 			ArrayList<ArrayList<TokenGeneralKind>> resultFunctionList =  new ArrayList<ArrayList<TokenGeneralKind>>();
 			ArrayList<ConnectiveOperator>  resultConjunctionList = new ArrayList<ConnectiveOperator> ();
@@ -323,31 +339,13 @@ public class Parser {
 			targetClauseArray = resultFunctionList;
 		}
 	}
-	private int findSeparateIndex(ArrayList<TokenGeneralKind> tokens)
-	{
-		int index = 0;
-		BasicFunctionType functionType = null;
-		for(int i =0; i< tokens.size();i++)
-		{
-			if(tokens.get(i) instanceof Token 
-					&& ((Token)tokens.get(i)).getFunctionType() !=  ServiceProperty.GENERALPROPERTY
-					&& ((CoreMeaning)((Token)tokens.get(i)).getCoreMeaning()).getBasicProperty() != Properties.NUMBER )
-			{
-				if( functionType == null)
-					functionType = ((Token)tokens.get(i)).getFunctionType();
-				else if(functionType != ((Token)tokens.get(i)).getFunctionType())
-					return i;
-			}
-		}
-		return index;
-	}
+	
 	/**
      * if this request is round trip, generate another slice for connecting to API.          
      */
 	
 	private void generateSecondSliceForRoundTrip()
-	{	totalArray.add(this.propertyArray);
-		totalArray.add(this.connevtiveOperatorArray);
+	{	
 		//organizeClauseByFunctionType();
 		ArrayList<BasicFunctionType> functionListOfBackTripRequest = new ArrayList<BasicFunctionType>();
 		ArrayList<BasicFunctionType> copy = new ArrayList<BasicFunctionType>();
@@ -399,8 +397,6 @@ public class Parser {
 					this.connevtiveOperatorArrayOfBackTrip.add(ConnectiveOperator.AND);
 				}
 			}
-			totalArray.add(this.propertyArrayOfBackTrip);			
-			totalArray.add(this.connevtiveOperatorArrayOfBackTrip);
 		}
 		else
 		{
@@ -412,14 +408,12 @@ public class Parser {
 				{
 					((LeaveAndArriveFunctionType) function).setArriveDay(null);
 					((LeaveAndArriveFunctionType) function).setLeaveDay(null);
-					ArrayList<String> oldArrivePlace = ((LeaveAndArriveFunctionType) function).getArrivePlace();
-					ArrayList<String> oldLeavePlace = ((LeaveAndArriveFunctionType) function).getLeavePlace();
+					City oldArrivePlace = ((LeaveAndArriveFunctionType) function).getArrivePlace();
+					City oldLeavePlace = ((LeaveAndArriveFunctionType) function).getLeavePlace();
 					((LeaveAndArriveFunctionType) function).setArrivePlace(oldLeavePlace);
 					((LeaveAndArriveFunctionType) function).setLeavePlace(oldArrivePlace);
 				}
 			}
-			totalArray.add(this.propertyArrayOfBackTrip);			
-			totalArray.add(this.connevtiveOperatorArrayOfBackTrip);
 		}
 	}
 	
@@ -467,62 +461,106 @@ public class Parser {
 	private void organizeClauseByFunctionType()
 	{
 		ArrayList<ArrayList<TokenGeneralKind>> copyClause = new ArrayList<ArrayList<TokenGeneralKind>>();
+		
 		for(int i = 0; i< targetClauseArray.size(); i++)
 			copyClause.add(targetClauseArray.get(i));
 		for(int i = 0; i< copyClause.size(); i++) 
 		{
-			ArrayList <BasicFunctionType> functionTypeArray = new ArrayList <BasicFunctionType>();
-			for(TokenGeneralKind token : copyClause.get(i) )
-			{	if((token instanceof Token)
-					&&(((Token)token).getFunctionType() != ServiceProperty.GENERALPROPERTY))
-				{	if(!functionTypeArray.contains(((Token)token).getFunctionType()))
-						functionTypeArray.add(((Token)token).getFunctionType());
+			ArrayList <Integer> functionIndexArray = new ArrayList <Integer>();
+			ArrayList <BasicFunctionType> functionTypeArray = new ArrayList <BasicFunctionType> ();
+			boolean isFirstFunctionType = false;
+			for(int secondIndex = 0;secondIndex <  copyClause.get(i).size(); secondIndex ++ )
+			{	if((copyClause.get(i).get(secondIndex) instanceof Token)
+					&&(((Token)copyClause.get(i).get(secondIndex)).getFunctionType() != ServiceProperty.GENERALPROPERTY)
+					&&(((Token)copyClause.get(i).get(secondIndex)).getFunctionType() != null))
+				{	if(isFirstFunctionType == false)
+					{
+						isFirstFunctionType = true;
+					}
+					else if(!functionTypeArray.contains(((Token)copyClause.get(i).get(secondIndex)).getFunctionType()))
+					{
+						functionIndexArray.add(secondIndex);
+						functionTypeArray.add(((Token)copyClause.get(i).get(secondIndex)).getFunctionType());
+					}
 				}
-				if(token instanceof Token 
-					&& ((Token)token).getFunctionType() == ServiceProperty.ROUNDTRIP)
-				{	if(fixWeight(copyClause.get(i)) > 0)
+				if(copyClause.get(i).get(secondIndex) instanceof Token 
+					&& ((Token)copyClause.get(i).get(secondIndex)).getFunctionType() == ServiceProperty.ROUNDTRIP)
+				{	if(fixFunctionWeight(copyClause.get(i)) > 0)
 						isRoundTrip = true;
 					else
 						isRoundTrip = false;				
 				}				
 			}		
-			if(functionTypeArray.contains(ServiceProperty.PACKAGERULE) 
-					&& functionTypeArray.contains(ServiceProperty.DSERVICE) )
+			boolean hasChanged = false;
+			while( hasChanged == true )
 			{
-				functionTypeArray.remove(ServiceProperty.PACKAGERULE);
-			}
-			if( (functionTypeArray.contains(ServiceProperty.SERVICE) 
-					&& functionTypeArray.contains(ServiceProperty.DSERVICE) )
-				|| (functionTypeArray.contains(ServiceProperty.SERVICE) 
-						&& functionTypeArray.contains(ServiceProperty.ASERVICE) ) )
-			{
-				functionTypeArray.remove(ServiceProperty.SERVICE);
-			} 
-			if(functionTypeArray.contains(ServiceProperty.ASERVICE) 
-					&& functionTypeArray.contains(ServiceProperty.DSERVICE) ) 
-			{
-				functionTypeArray.remove(ServiceProperty.ASERVICE);
-			}
-			if(functionTypeArray.contains(ServiceProperty.REPUTATION))
-			{
-				if( functionTypeArray.contains(ServiceProperty.RELIABILITY) )
-				{	
-					functionTypeArray.remove(ServiceProperty.RELIABILITY);
-				}
-				else if(functionTypeArray.contains(ServiceProperty.CONVENIENT) )
+				hasChanged = false;
+				if(functionTypeArray.contains(ServiceProperty.PACKAGERULE) 
+				
+						&& functionTypeArray.contains(ServiceProperty.DSERVICE) )
 				{
-					functionTypeArray.remove(ServiceProperty.CONVENIENT);
+					if(functionTypeArray.indexOf(ServiceProperty.PACKAGERULE) > functionTypeArray.indexOf(ServiceProperty.DSERVICE))
+						functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.PACKAGERULE)-1);
+					else
+						functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.PACKAGERULE)-1);
+					functionTypeArray.remove(ServiceProperty.PACKAGERULE);
+					hasChanged = true;
+				}
+				if( (functionTypeArray.contains(ServiceProperty.SERVICE) 
+						&& functionTypeArray.contains(ServiceProperty.DSERVICE) )
+					|| (functionTypeArray.contains(ServiceProperty.SERVICE) 
+							&& functionTypeArray.contains(ServiceProperty.ASERVICE) ) )
+				{
+					if(functionTypeArray.indexOf(ServiceProperty.SERVICE) > functionTypeArray.indexOf(ServiceProperty.DSERVICE)
+							||functionTypeArray.indexOf(ServiceProperty.SERVICE) > functionTypeArray.indexOf(ServiceProperty.ASERVICE))
+						
+						functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.SERVICE)-1);
+					else
+						functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.SERVICE));
+					functionTypeArray.remove(ServiceProperty.SERVICE);
+					hasChanged = true;
 				} 
+				if(functionTypeArray.contains(ServiceProperty.ASERVICE) 
+						&& functionTypeArray.contains(ServiceProperty.DSERVICE) ) 
+				{
+					if(functionTypeArray.indexOf(ServiceProperty.ASERVICE) > functionTypeArray.indexOf(ServiceProperty.DSERVICE))						
+						functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.ASERVICE)-1);
+					else
+						functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.ASERVICE));
+					functionTypeArray.remove(ServiceProperty.ASERVICE);
+					hasChanged = true;
+				}
+				if(functionTypeArray.contains(ServiceProperty.REPUTATION))
+				{
+					if( functionTypeArray.contains(ServiceProperty.RELIABILITY) )
+					{	
+						if(functionTypeArray.indexOf(ServiceProperty.RELIABILITY) > functionTypeArray.indexOf(ServiceProperty.REPUTATION))											
+							functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.RELIABILITY)-1);
+						else
+							functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.RELIABILITY));				
+						functionTypeArray.remove(ServiceProperty.RELIABILITY);
+						hasChanged = true;
+					}
+					else if(functionTypeArray.contains(ServiceProperty.CONVENIENT) )
+					{
+						if(functionTypeArray.indexOf(ServiceProperty.CONVENIENT) > functionTypeArray.indexOf(ServiceProperty.REPUTATION))																	
+							functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.CONVENIENT)-1);
+						else
+							functionIndexArray.remove(functionTypeArray.indexOf(ServiceProperty.CONVENIENT));
+						functionTypeArray.remove(ServiceProperty.CONVENIENT);
+						hasChanged = true;
+					} 
+				}
 			}
-			ArrayList <BasicFunctionType> removeNull = new ArrayList <BasicFunctionType>();
-			for(BasicFunctionType function : functionTypeArray)
+			ArrayList <Integer> removeNull = new ArrayList <Integer>();
+			for(Integer index : functionIndexArray)
 			{
-				if(function != null)
-					removeNull.add(function);
+				if(index != null)
+					removeNull.add(index);
 			}
-			if(removeNull.size() > 1)
+			if(removeNull.size() >= 1)
 			{ separateFunctionTypeWithoutCojunction( removeNull, i);
-			for(BasicFunctionType b : removeNull)
+			for(Integer b : removeNull)
 			{
 				System.out.println(b );
 			}
@@ -544,17 +582,17 @@ public class Parser {
 		for(TokenGeneralKind token : clause )
 		{	if((token instanceof Token)
 				&&(((Token)token).getFunctionType() != ServiceProperty.GENERALPROPERTY))
-			{	
-				if(!functionTypeArray.contains(((Token)token).getFunctionType()))
+			{ if(!functionTypeArray.contains(((Token)token).getFunctionType()))
 					{functionTypeArray.add(((Token)token).getFunctionType());
 					}
-			}
+			
 			if(token instanceof Token 
 				&& ((Token)token).getFunctionType() == ServiceProperty.ROUNDTRIP)
-			{	if(fixWeight(clause) > 0)
+			{	if(fixFunctionWeight(clause) > 0)
 					isRoundTrip = true;
 				else
 					isRoundTrip = false;				
+			}
 			}
 			
 		}
@@ -569,7 +607,9 @@ public class Parser {
 			else if(functionTypeArray.contains(ServiceProperty.SEATCLASS) )
 				return getSeatClassFunctionType(clause);						
 			else if(functionTypeArray.contains(ServiceProperty.DURATION) )
-				return getDurationFunctionType(clause);		
+				return getDurationFunctionType(clause);
+			else if(functionTypeArray.contains(ServiceProperty.LAYOUT) )
+				return getLayoutFunctionType(clause);
 			else if(functionTypeArray.contains(ServiceProperty.SAFETY) )
 				return getSafetyFunctionType(clause);
 			else if(functionTypeArray.contains(ServiceProperty.RELIABILITY) )
@@ -707,7 +747,75 @@ public class Parser {
      * @return an ReputationFunctionType instance.           
      */
 	private BasicFunctionType getReputationFunctionType(ArrayList<TokenGeneralKind> clause)
-	{return new ReputationFunctionType(ServiceProperty.REPUTATION);
+	{
+		//the airline rank field will be stored as the real rank number of specific airline so is the range of ranks.
+		ArrayList<String> rank = new ArrayList<String>();
+		String [] rankRange = new String[2];
+		for(int i = 0; i<  clause.size();i++)
+		{
+			if(clause.get(i) instanceof Token && ((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicProperty() == Properties.NUMBER)
+			{
+				if(i+2 < clause.size() && clause.get(i +1).getImage().equals("to"))
+				{
+					rankRange[0] = ((Token)clause.get(i)).getImage();
+					if( clause.get(i+2) instanceof Token 
+							&& ((CoreMeaning)((Token)clause.get(i+2)).getCoreMeaning()).getBasicProperty() == Properties.NUMBER)
+						rankRange[1] = ((Token)clause.get(i+2)).getImage();
+					else
+					{
+						rankRange[0] = null;
+						rank.add(((Token)clause.get(i)).getImage());
+					}
+				}
+				else
+					rank.add(((Token)clause.get(i)).getImage());			
+			}
+			else if(clause.get(i) instanceof UnrecognizeToken )
+			{
+				int j = 1;
+				String airlineName = "";
+				while(i+j <  clause.size() && clause.get(i+ j) instanceof UnrecognizeToken)
+					airlineName = airlineName + " " + ((UnrecognizeToken) clause.get(i+ j)).getImage();
+				String airlineCode;
+				if((airlineCode = data.matchToAirLineName(airlineName)) != null)
+					{
+						String rankNumber = data.getAirlineRankNumberByName(airlineCode);
+						rank.add(rankNumber);						
+					}
+			}
+			else if(clause.get(i) instanceof Token 
+					&& ((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicProperty() == Properties.ADJV
+					&& ((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicFunctionType() == ServiceProperty.REPUTATION)
+			{
+				
+			}		
+		}
+		float weight = fixFunctionWeight(clause);
+		if(rankRange.length == 2)
+		{
+			for(int i = Integer.parseInt(rankRange[0]);i<= Integer.parseInt(rankRange[1]); i ++)
+				rank.add(String.valueOf(i));
+		}
+		else if( weight >= 1.1f && weight <= 1.65)
+		{
+			// low level request: top 5
+			for(int i = 1; i<6; i++)
+				rank.add(String.valueOf(i));
+		}
+		else if( weight > 1.65f &&  weight < 2f)
+		{
+			// higher level request: top 3
+			for(int i = 1; i<4; i++)
+				rank.add(String.valueOf(i));
+		}
+		else if(  weight >= 2f)
+		{
+			// highest level request: top 1
+			rank.add("1");
+		}
+		ReputationFunctionType reputation = new ReputationFunctionType(ServiceProperty.REPUTATION);
+		reputation.setRankElements(rank);
+		return reputation;
 	}
 	/**
      * Analyze an SAFETY service-property clause,and generate an SafetyFunctionType instance.
@@ -743,24 +851,24 @@ public class Parser {
 		{	if (clause.get(i) instanceof Token && 
 					((Token)clause.get(i)).getFunctionType() == ServiceProperty.SEATCLASS)
 			{	if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVESUPREME)
-					{seatClassInstance.setSeatClass("first");
+					{seatClassInstance.setSeatClass("FIRST");
 					return seatClassInstance;					
 					}
 				else if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVEENHANCE)
-					{seatClassInstance.setSeatClass("business");
+					{seatClassInstance.setSeatClass("BUSINESS");
 					return seatClassInstance;
 					}
 				else if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVESTABLE)
-					{seatClassInstance.setSeatClass("premium");
+					{seatClassInstance.setSeatClass("PREMIUM");
 					return seatClassInstance;					
 					}
 				else if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.STABLE)
-					{seatClassInstance.setSeatClass("economy");
+					{seatClassInstance.setSeatClass("COACH");
 					return seatClassInstance;
 					}
 			}
 		}
-		seatClassInstance.setSeatClass("economy");
+		seatClassInstance.setSeatClass("COACH");
 		return seatClassInstance;
 	}
 	
@@ -806,6 +914,69 @@ public class Parser {
 		}
 		return roundtripClassInstance;
 	}
+	/**
+     * Analyze an layout service-property clause,and generate an LayoutFunctionType instance.
+     * 
+     * @param clause
+     * 			 one sentence clause 
+     * @return an LayoutFunctionType instance.           
+     */
+	private BasicFunctionType getLayoutFunctionType (ArrayList<TokenGeneralKind> clause)
+	{	float layoutInHour = 0;
+		LayoutFunctionType layoutInstance = new LayoutFunctionType(ServiceProperty.LAYOUT);
+		for(int i = 1; i < clause.size();i++)
+		{	if (clause.get(i) instanceof Token  
+					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
+					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.HOUR
+					&& (clause.get(i-1) instanceof Token && 
+					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
+			{	layoutInHour = layoutInHour + Float.valueOf(((Token)clause.get(i-1)).getImage());				
+			}
+			else if (clause.get(i) instanceof Token  
+					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
+					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.MINUT
+					&& (clause.get(i-1) instanceof Token && 
+					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
+			{	layoutInHour = layoutInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())/ 60f);
+			}
+			else if (clause.get(i) instanceof Token  
+					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
+					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.DAY
+					&& (clause.get(i-1) instanceof Token && 
+					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
+			{	layoutInHour = layoutInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())* 24f);
+			}
+		}
+		if( layoutInHour == 0)
+		{
+			float weight = fixFunctionWeight(clause);
+			
+			// eg: key word : less = -1.5f; -1/weight means flip the weight to possibility range with meaning; 
+			//					0.5f means make the possibility more reasonable : 0.3 for less
+			if(weight <= -1f)
+				weight = 0.5f  *(-1/ weight) ;
+			
+			// eg: key word : not tiny = -0.5f; -1/weight means flip the weight to possibility range with meaning; 
+			//					0.75f means make the possibility more reasonable : when the possibility is above 1,
+			//					means user wants longer duration
+			else if(weight > -1f && weight <= 0)
+				weight = 0.75f  *(-1/ weight);
+			
+			// eg: key word : short = 0.5f, many = 1.5f;  the original value of weight is good enough; 
+
+			else if(weight > 0 && weight <= 1f)
+				;
+			else if(weight > 1f )
+				;
+			
+			layoutInstance.setLayoutInPossibility(weight);
+			
+		}
+		else
+			layoutInstance.setLayoutInHour(layoutInHour);
+		
+		return layoutInstance;
+	}
 	
 	/**
      * Analyze an trip-duration service-property clause,and generate an DurationFunctionType instance.
@@ -820,36 +991,63 @@ public class Parser {
 		for(int i = 1; i < clause.size();i++)
 		{	if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
-					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaning.HOUR
+					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.HOUR
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
 			{	durationInHour = durationInHour + Float.valueOf(((Token)clause.get(i-1)).getImage());				
 			}
 			else if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
-					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaning.MINUT
+					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.MINUT
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
 			{	durationInHour = durationInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())/ 60f);
 			}
 			else if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
-					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaning.DAY
+					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.DAY
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
 			{	durationInHour = durationInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())* 24f);
 			}
 		}
-		durationInstance.setDuationInHour(durationInHour);
+		if( durationInHour == 0)
+		{
+			float weight = fixFunctionWeight(clause);
+			
+			// eg: key word : less = -1.5f; -1/weight means flip the weight to possibility range with meaning; 
+			//					0.5f means make the possibility more reasonable : 0.3 for less
+			if(weight <= -1f)
+				weight = 0.5f  *(-1/ weight) ;
+			
+			// eg: key word : not tiny = -0.5f; -1/weight means flip the weight to possibility range with meaning; 
+			//					0.75f means make the possibility more reasonable : when the possibility is above 1,
+			//					means user wants longer duration
+			else if(weight > -1f && weight <= 0)
+				weight = 0.75f  *(-1/ weight);
+			
+			// eg: key word : short = 0.5f, many = 1.5f;  the original value of weight is good enough; 
+
+			else if(weight > 0 && weight <= 1f)
+				;
+			else if(weight > 1f )
+				;
+			
+			durationInstance.setDuationInPossibility(weight);
+			
+		}
+		else
+			durationInstance.setDuationInHour(durationInHour);
+		
 		return durationInstance;
 	}
 	
 	/**
-     * Analyze an number-of-stop service-property clause,and generate an DurationFunctionType instance.
+     * Analyze an number-of-stop service-property clause,and generate an NumberOfStopFunctionType instance.
      * 
      * @param clause
      * 			 one sentence clause 
-     * @return an DurationFunctionType instance.           
+     * @return an NumberOfStopFunctionType instance.           
      */
 	private BasicFunctionType getNumberofStopFunctionType(ArrayList<TokenGeneralKind> clause)
 	{	NumberofStopFunctionType noStopInstance = new NumberofStopFunctionType(ServiceProperty.NOSTOP);
@@ -862,13 +1060,14 @@ public class Parser {
 			{	noStopInstance.setNumberOfStop(0);	}
 			else if (clause.get(i) instanceof Token && 
 					((((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicProperty() ==  Properties.NUMBER)
-					|| ((((Token)clause.get(i)).getCoreMeaning()  == CoreMeaning.NUMBERTYPE) 
+					|| ((((Token)clause.get(i)).getCoreMeaning()  == CoreMeaningOne.NUMBERTYPE) 
 						&&(((Token)clause.get(i)).getProperty() == NumberProperties.REGULARNUMBER))	))
 			{ 	noStopInstance.setNumberOfStop(Integer.parseInt(((Token)clause.get(i)).getImage()));	}
 	//here define system as "less stop" means 0~1 stop during one trip
 			else if (clause.get(i) instanceof Token && 
 					(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVESLACK)	)
-			{ 	noStopInstance.setNumberOfStop(1);}			 			
+			{ 	noStopInstance.setNumberOfStop(1);}	
+		
 		}
 		return noStopInstance;
 	}
@@ -886,7 +1085,7 @@ public class Parser {
 		float[] priceRange = new float[2];
 		for(int i = 0; i < clause.size();i++)
 		{  
-			if(clause.get(i) instanceof Token && (((Token)clause.get(i)).getCoreMeaning()  == CoreMeaning.NUMBERTYPE) 
+			if(clause.get(i) instanceof Token && (((Token)clause.get(i)).getCoreMeaning()  == CoreMeaningOne.NUMBERTYPE) 
 						&&((((Token)clause.get(i)).getProperty() == NumberProperties.REGULARNUMBER)	
 							||(((Token)clause.get(i)).getProperty() == NumberProperties.MONEYNUMBER)))
 			{	numberArray.add(((Token)clause.get(i)).getImage());
@@ -945,15 +1144,27 @@ public class Parser {
      * 			 the start index of clause to scan city name 
      * @return city name might with airport name and country name               
      */	
-	private ArrayList<String> generateCityClause(ArrayList<TokenGeneralKind> clause,int startIndex )
+	private TokenGeneralKind generateCityClause(ArrayList<TokenGeneralKind> clause,int startIndex )
 	{	boolean canBreak = false;
-		ArrayList<String> cityName = new ArrayList<String>();
+		String cityName = "";
+		String possibleCountryName = null;
 		for(int j = startIndex;j<clause.size() && canBreak == false;j++)
 		{	if(clause.get(j) instanceof UnrecognizeToken )
 			{	
 				for(int z = 0; ( j + z)<clause.size() ;z ++)
 				{	if(clause.get( j + z) instanceof UnrecognizeToken )
-					{cityName.add(((UnrecognizeToken )clause.get( j + z) ).getImage());
+					{	cityName = cityName + " " + clause.get( j + z) ;
+						String name;						
+						if(j + z + 1 < clause.size() && clause.get( j + z + 1)instanceof UnrecognizeToken 	)
+							possibleCountryName = ((UnrecognizeToken)clause.get( j + z)).getImage();
+						if((name = data.matchToAirLineName(((UnrecognizeToken)clause.get( j + z)).getImage())) != null)
+						{
+							return new AirLine(name);
+						}
+						else if((name = data.matchToCityName(((UnrecognizeToken)clause.get( j + z)).getImage(),possibleCountryName)) != null)
+						{
+							return new City(name);
+						}
 					}
 					else 
 					{
@@ -963,7 +1174,13 @@ public class Parser {
 				}			
 			}
 		}
-		return cityName;
+		String name;
+			if((name = data.matchToAirLineName(cityName)) != null)
+				return new AirLine(name);
+			else if((name = data.matchToCityName(cityName,possibleCountryName)) != null)
+				return new City(name);
+		
+		return null;
 	}
 	
 	/**
@@ -1009,12 +1226,14 @@ public class Parser {
 		{if(clause.get(i) instanceof Token && 
 					((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicFunctionType() ==  ServiceProperty.LANDA)
 			{	findLANDACoreMeaning = true;
+				City cityCode;
 				if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.NEGATIVESTABLE)
-				{//boolean findUnrecognizeToken = false;
+				{//boolean findUnrecognizeToken = false;					
 					for(int j = 0;j<5;j++)
-					{	if(clause.get(i+j) instanceof UnrecognizeToken )
-						{	
-							landaInstance.setLeavePlace(generateCityClause(clause, i+j));							
+					{	 
+						if(clause.get(i+j) instanceof UnrecognizeToken )
+						{	if(( cityCode = (City)generateCityClause(clause, i+j)) != null);							
+							landaInstance.setLeavePlace(cityCode);
 						}
 						else if(clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
 						{
@@ -1027,7 +1246,8 @@ public class Parser {
 					for(int j = 0;i+j<clause.size();j++)
 					{	if(clause.get(i+j) instanceof UnrecognizeToken )
 						{
-							landaInstance.setArrivePlace(generateCityClause(clause, i+j));
+							if(( cityCode = (City)generateCityClause(clause, i+j)) != null);
+							landaInstance.setArrivePlace(cityCode);
 						}
 						else if(clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
 						{	if(isRoundTrip == false)					
@@ -1040,7 +1260,10 @@ public class Parser {
 				else
 				{
 					if(clause.get(i) instanceof UnrecognizeToken)
-						landaInstance.setArrivePlace(generateCityClause(clause, i));
+						{if(( cityCode = (City)generateCityClause(clause, i)) != null)
+							landaInstance.setArrivePlace(cityCode);
+						
+						}
 					else if (clause.get(i) instanceof Token && ((Token)clause.get(i)).getProperty() == NumberProperties.DATENUMBER)
 						{landaInstance.setLeaveDay(generateTimeStamp(clause,i));
 						}
@@ -1053,13 +1276,13 @@ public class Parser {
 	}
 	
 	/**
-     * Calculate weight of one clause
+     * Calculate functional weight of one clause not the weight of the clause
      * 
      * @param clause
      * 			 one sentence clause 
      * @return the weight of this sentence clause.           
      */
-	private float fixWeight(ArrayList<TokenGeneralKind> clause)
+	private float fixFunctionWeight(ArrayList<TokenGeneralKind> clause)
 	{	float weight = 1f;
 		for(int i = 0;i<clause.size();i++)
 		{	if(clause.get(i) instanceof Token && (((Token)clause.get(i)).getProperty() ==  Properties.ADJV 
@@ -1072,31 +1295,30 @@ public class Parser {
 		return weight;
 	}
 	
-	/**
-     * Fix weights of all clauses between -1f and 1f
-     * 
-     * @param weightArray
-     * 			 a set of all weights
-     * @return a set of all weights between -1f and 1f.           
-     */
-	private ArrayList<Float> rerangeWeights(ArrayList<Float> weightArray)
-	{	float max = 0;
-		ArrayList<Float> copyArray = weightArray;
-		for(int i =0;i<copyArray.size();i++)
-		{	if(Math.abs(copyArray.get(i))> max)
-				max = Math.abs(copyArray.get(i));		
-		}
-		for(int i =0;i<copyArray.size();i++)
-		{	float valuehere = copyArray.get(i);
-			copyArray.set(i, valuehere/max);			
-		}
-		return copyArray;
-	}	
+//	/**
+//     * Fix weights of all clauses between -1f and 1f
+//     * 
+//     * @param weightArray
+//     * 			 a set of all weights
+//     * @return a set of all weights between -1f and 1f.           
+//     */
+//	private ArrayList<Float> rerangeWeights(ArrayList<Float> weightArray)
+//	{	float max = 0;
+//		ArrayList<Float> copyArray = weightArray;
+//		for(int i =0;i<copyArray.size();i++)
+//		{	if(Math.abs(copyArray.get(i))> max)
+//				max = Math.abs(copyArray.get(i));		
+//		}
+//		for(int i =0;i<copyArray.size();i++)
+//		{	float valuehere = copyArray.get(i);
+//			copyArray.set(i, valuehere/max);			
+//		}
+//		return copyArray;
+//	}	
 	
 	/**
      * Print the detail of result for testing.           
      */
-	@SuppressWarnings("unchecked")
 	public void printMessage()
 	{			
 		for(BasicFunctionType here : propertyArray )
@@ -1130,8 +1352,8 @@ public class Parser {
 			else if(here != null)
 			{	System.out.println(here.toString());
 			}
-			System.out.print("weights after fix: ---");
-			System.out.println(((FunctionType)here).getWeight());
+			System.out.println("    .................." );
+			//System.out.println(((BasicFunctionType)here).getWeight());
 		}		
 		System.out.println("------------------------");
 		if(propertyArrayOfBackTrip.size() >0)
@@ -1166,10 +1388,10 @@ public class Parser {
 			else if(here != null)
 			{	System.out.println(here.toString());
 			}
-			System.out.print("weights after fix: ---");
-			System.out.println(((FunctionType)here).getWeight());
+			System.out.println("    ......................" );
+			//System.out.println(((BasicFunctionType)here).getWeight());
 		}
-		System.out.println("============================" );
+		System.out.println("===============...............=============" );
 		for(int i =0; i <totalArray.size(); i ++)
 		{
 			for(int j =0; j <((ArrayList<Object>) totalArray.get(i)).size(); j ++)

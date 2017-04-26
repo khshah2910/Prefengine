@@ -1,4 +1,4 @@
-package compilerForPF;
+package com.prefengine.service.compilerForPF;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -10,23 +10,24 @@ import java.util.ArrayList;
 public class Data {
 	
 	/** stores all airline data*/
-	private ArrayList<String> airlineContent = new ArrayList<String>();
+	private static ArrayList<String> airlineContent = new ArrayList<String>();
 	
 	/** stores all rank data*/
-	private ArrayList<String> rankContent = new ArrayList<String>();
+	private static ArrayList<String> rankContent = new ArrayList<String>();
 	
 	/** stores all city data*/
-	private ArrayList<String> cityContent = new ArrayList<String>();
+	private static ArrayList<String> cityContent = new ArrayList<String>();
 	
 	/**
-	 * get data from txt files into String
+	 * get data from text files into String
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void setupData() throws FileNotFoundException, IOException
+	public static void setupData() throws FileNotFoundException, IOException
 	{
-		FileInputStream file = new FileInputStream("airlines.txt");
+		String path = System.getProperty("user.dir");
+		FileInputStream file = new FileInputStream(path + "/src/com/prefengine/service/compilerForPF/airlines.txt");
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 		{
 			String line;			
@@ -39,7 +40,7 @@ public class Data {
 			}
 			br.close();
 		}
-		 file = new FileInputStream("citys.txt");
+		 file = new FileInputStream("Prefengine/src/com/prefengine/service/compilerForPF/citys.txt");
 			try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 			{
 				String line;
@@ -54,25 +55,18 @@ public class Data {
 				br.close();
 			}
 	
-			 file = new FileInputStream("rank.txt");
+			 file = new FileInputStream("Prefengine/src/com/prefengine/service/compilerForPF/rank.txt");
 				try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 				{
 					String line;
 					while((line = br.readLine()) != null)
 					{
 						String[] mid = line.split("(\t)|( )");
-						System.out.println("====" + mid[0] );
 						for(int i = 0; i< mid.length; i++)
 							rankContent.add(mid[i]);
 					}
 					br.close();
-				}
-				for(String str : this.airlineContent)
-				{
-					if(str != null)
-					System.out.println(str);
-				}
-	
+				}	
 	}
 
 	/**
@@ -83,32 +77,63 @@ public class Data {
 	 * 
 	 * @return airline code in String type
 	 */
-	public String matchToAirLineName(UnrecognizeToken token)
+	public String matchToAirLineName(String token)
 	{
 		String before = "";
-		if(this.airlineContent.contains(token.getImage()))
+		String result = null;
+		if(airlineContent.contains(token))
 		{
-			int index = this.airlineContent.indexOf(token.getImage());
+			int index = airlineContent.indexOf(token);
 			if(index != 0)
 			{
-				before = this.airlineContent.get(index -1);
+				before = airlineContent.get(index -1);
 			}
 			else
 			{
-				return token.getImage();
+				result =  token;
 			}
 			if(before== null)
 			{
-				return  token.getImage();
+				result =  token;
 			}
 			else
 			{
-				return  before;
+				result =   before;
 			}
 			
 		}
-		else
-			return null;
+		else 
+		{
+			for(int index = 0; index< airlineContent.size(); index ++)
+			{ 
+				
+				if(airlineContent.get(index) != null && airlineContent.get(index).contains(" "))
+				{
+					String target = airlineContent.get(index).replaceAll(" ", "");
+					if(target.equals(token))
+					{
+						if(index != 0)
+						{
+							before = airlineContent.get(index -1);
+						}
+						else
+						{
+							result =  airlineContent.get(index);
+						}
+						if(before== null)
+						{
+							result =  airlineContent.get(index);
+						}
+						else
+						{
+							result =  before;
+						}
+						
+					}
+				}
+			}
+		}
+			return result;
 	}
 
 	/**
@@ -116,34 +141,69 @@ public class Data {
 	 * 
 	 * @param  token
 	 * 			unrecognized-token sent from parser
+	 * @param possibleCountryName 
 	 * 
 	 * @return city code in String type
 	 */
-	public String matchToCityName(UnrecognizeToken token)
+	public String matchToCityName(String token, String possibleCountryName)
 	{
 		String before = "";
 		String extraBefore = "";
-		if(this.cityContent.contains(token.getImage()))
+		String result = null;
+		if(cityContent.contains(token))
 		{
-			int index = this.cityContent.indexOf(token.getImage());
-			if(index<=2)
-			{
-				return this.cityContent.get(0);
+			if(possibleCountryName == null 
+					|| (possibleCountryName != null &&cityContent.get(cityContent.indexOf(token)+1).equals(possibleCountryName)))
+			{	int index = cityContent.indexOf(token);
+				if(index<=2)
+				{
+					result = cityContent.get(0);
+				}
+				else
+				{
+					before = cityContent.get(index -1);
+					extraBefore =  cityContent.get(index -2);
+					if( before == null)
+						result = token;
+					else if(extraBefore == null)
+						result = before;
+					else 
+						result = extraBefore;
+				}
 			}
-			else
-			{
-				before = this.cityContent.get(index -1);
-				extraBefore = this.cityContent.get(index -2);
-				if( before == null)
-					return token.getImage();
-				else if(extraBefore == null)
-					return before;
-				else 
-					return extraBefore;
-			}						
 		}
 		else
-			return null;
+		{
+			for(int index = 0; index< cityContent.size(); index ++)
+			{ 
+				if(cityContent.get(index) != null &&cityContent.get(index).contains(" "))
+				{
+					
+					String target = cityContent.get(index).replaceAll(" ", "");
+					if(possibleCountryName == null ||(possibleCountryName != null 
+							&&( target.equals(token) && possibleCountryName.equals(cityContent.get(index+1))
+							|| (index + 2 < cityContent.size() && possibleCountryName.equals(cityContent.get(index+2))))))
+					{	
+						if(index<=2)
+						{
+							result = cityContent.get(0);
+						}
+						else
+						{
+							before = cityContent.get(index -1);
+							extraBefore =  cityContent.get(index -2);
+							if( before == null)
+								result = cityContent.get(index);
+							else if(extraBefore == null)
+								result = before;
+							else 
+								result = extraBefore;
+						}
+					}
+				}
+			}
+		}
+			return result;
 	}
 	
 	/**
@@ -154,27 +214,42 @@ public class Data {
 	 * 
 	 * @return city code in String type
 	 */
-	public ArrayList<String> getirlineListByRank(int[] range)
+	public String getAirlineRankNumberByName(String airlineName)
 	{
-		int min = range[0];
-		int max = range[1];
-		int minindex = 3* min- 1;
-		int maxindex = 3* max- 1;
-		ArrayList<String> result = new ArrayList<String>();
-		if(min == max)
-		{
-			result.add(this.rankContent.get(minindex));			
-			return result;
-		}
+//		int min = range[0];
+//		int max = range[1];
+//		int minindex = 3* min- 1;
+//		int maxindex = 3* max- 1;
+//		ArrayList<String> result = new ArrayList<String>();
+//		if(min == max)
+//		{
+		String	result = null;
+		if(rankContent.contains(airlineName))
+			result= rankContent.get(rankContent.indexOf(airlineName)-1);	
 		else
 		{
-			for(int i =minindex; i<= maxindex;)
-			{
-				result.add(this.rankContent.get(i));
-				i += 3; 
+			for(int index = 0; index< rankContent.size(); index ++)
+			{ 
+				if(rankContent.get(index) != null &&rankContent.get(index).contains(" "))
+				{
+					String target = rankContent.get(index).replaceAll(" ", "");
+					if(target.equals(airlineName) )
+						result= rankContent.get(index-1);
+				}
 			}
-			return result;
+					
 		}
+		return result;
+//		}
+//		else
+//		{
+//			for(int i =minindex; i<= maxindex;)
+//			{
+//				result.add( rankContent.get(i));
+//				i += 3; 
+//			}
+//			return result;
+//		}
 	
 	}	
 	
