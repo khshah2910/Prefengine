@@ -2,7 +2,9 @@ package com.prefengine.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,7 +49,7 @@ public class SearchController extends HttpServlet {
 		SearchService serviceFromSentence = new SearchService();
 		SearchAttributes searchAttrFromSentence = null ;			
 		ArrayList<Itinerary> tripRecordFromSentence = null;
-		 boolean hasSentenceInput = false;
+		
 		try {
 			
 			String departure =request.getParameter("departure");
@@ -72,9 +74,7 @@ public class SearchController extends HttpServlet {
 			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
  			{
 				
-				searchCriteriaFromSentence.setNumberOfPassengers(1);					
-				
- 				hasSentenceInput = true;
+				searchCriteriaFromSentence.setNumberOfPassengers(1);	
  				Scanner scanner = new Scanner(sentenceInput);
  				scanner.scannerEngine();
  				scanner.printMessage();
@@ -94,7 +94,17 @@ public class SearchController extends HttpServlet {
  	 							searchCriteriaFromSentence.setDeparture(landaInstance.getLeavePlace().getImage().toUpperCase());
  							if(landaInstance.getLeaveDay() != null)
 	 							searchCriteriaFromSentence.setDepartureDate(landaInstance.getLeaveDay().toString());
- 							searchCriteriaFromSentence.setReturnDate(landaInstance.getLeaveDay().toString());
+ 							else if (landaInstance.getArriveDay() != null)
+ 								searchCriteriaFromSentence.setDepartureDate(landaInstance.getArriveDay().toString());
+ 							else
+ 							{	Date date = new Date();
+ 								SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
+ 								String currentDate = formatter.format(date);
+ 							searchCriteriaFromSentence.setDepartureDate(currentDate);
+ 								
+ 								
+ 							}
+ 							searchCriteriaFromSentence.setReturnDate(searchCriteriaFromSentence.getDepartureDate());
  							 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
  							 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
  							request.setAttribute("searchAttr", searchAttrFromSentence);
