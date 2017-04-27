@@ -66,9 +66,7 @@ public class SearchController extends HttpServlet {
 			searchCriteria.setDepartureDate(departureDate);
 			searchCriteria.setNumberOfPassengers(Integer.parseInt(numberOfPassengers));
 			
-			String price = request.getParameter("price");
-			String minPrice1 = price.split(" - ")[0];
-			String maxPrice1 = price.split(" - ")[1];
+			
 			//String maxPrice1 = request.getParameter("maxPrice");
 			//String minPrice1 = request.getParameter("minPrice");
 			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
@@ -91,23 +89,27 @@ public class SearchController extends HttpServlet {
  						{
  							LeaveAndArriveFunctionType landaInstance = (LeaveAndArriveFunctionType)content;
  							if(landaInstance.getArrivePlace() != null)
- 								searchCriteriaFromSentence.setDestination(landaInstance.getArrivePlace().getImage());
+ 								searchCriteriaFromSentence.setDestination(landaInstance.getArrivePlace().getImage().toUpperCase());
  							if(landaInstance.getLeavePlace() != null)
- 	 							searchCriteriaFromSentence.setDeparture(landaInstance.getLeavePlace().getImage());
+ 	 							searchCriteriaFromSentence.setDeparture(landaInstance.getLeavePlace().getImage().toUpperCase());
  							if(landaInstance.getLeaveDay() != null)
 	 							searchCriteriaFromSentence.setDepartureDate(landaInstance.getLeaveDay().toString());
  							searchCriteriaFromSentence.setReturnDate(landaInstance.getLeaveDay().toString());
  							 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
  							 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
- 						}
+ 							request.setAttribute("searchAttr", searchAttrFromSentence);
+ 							request.setAttribute("tripRecord", tripRecordFromSentence);
+ 							}
  					}
  				}
- 				request.setAttribute("searchAttr", searchAttrFromSentence);
-				request.setAttribute("tripRecord", tripRecordFromSentence);
+ 				
  				
  			}
 			else
 			{
+				String price = request.getParameter("price");
+				String minPrice1 = price.split(" - ")[0];
+				String maxPrice1 = price.split(" - ")[1];
 			if((maxPrice1==null||"".equals(maxPrice1)) && (minPrice1==null||"".equals(minPrice1))){
 				searchCriteria.setMaxPrice(0);
 				searchCriteria.setMinPrice(0);
