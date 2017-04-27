@@ -324,9 +324,20 @@ public class Scanner {
 		return result;
 	}
 	
-	private void furtherFixConnectiveOperator()
+	private void furtherFixDateNumber()
 	{
-		
+//		for(int index = 0; index < clauseArray.size(); index ++)
+//			for(int secondIndex = 0; secondIndex < clauseArray.get(index).size(); secondIndex ++)
+//		{
+//			if( clauseArray.get(index).get(secondIndex) instanceof Token 
+//					&& ((Token)clauseArray.get(index).get(secondIndex)).getCoreMeaning() instanceof CoreMeaningOne
+//					&& ((CoreMeaningOne)((Token)clauseArray.get(index).get(secondIndex)).getCoreMeaning()).getBasicProperty() == Properties.MONTH
+//					 && ((CoreMeaningOne)((Token)clauseArray.get(index).get(secondIndex)).getCoreMeaning()).getBasicFunctionType() == ServiceProperty.LANDA
+//					 )
+//			{
+//				
+//			}
+//		}
 	}
 	/**
 	 * Calculate connective Operators into ConnectiveOperator class from TokenGeneralKind(conjunctive tokens).

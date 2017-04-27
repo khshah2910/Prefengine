@@ -1190,7 +1190,7 @@ public class Parser {
      * 			 one sentence clause 
      * @param startIndex
      * 			 the start index of clause to scan city name 
-     * @return date information in Time-stamp format               
+     * @return date information in String format               
      */	
 	private String generateTimeStamp(ArrayList<TokenGeneralKind> clause,int startIndex )
 	{	String dateNumber = ((Token)clause.get(startIndex)).getImage();
@@ -1234,7 +1234,7 @@ public class Parser {
 						{	if(( cityCode = (City)generateCityClause(clause, i+j)) != null);							
 							landaInstance.setLeavePlace(cityCode);
 						}
-						else if(clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
+						else if(i + j < clause.size() &&clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
 						{
 							landaInstance.setLeaveDay(generateTimeStamp(clause,i+j));							
 						}

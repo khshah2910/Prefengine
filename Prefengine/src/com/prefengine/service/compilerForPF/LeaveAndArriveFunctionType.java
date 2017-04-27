@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**  
  * sub-class of FunctionType with ServiceProperty.LANDA	
  */
-public class LeaveAndArriveFunctionType extends abstractFunctionType
+public class LeaveAndArriveFunctionType extends AbstractFunctionType
 {	
 	/** depart city or airport name  */
 	 private City leavePlace;

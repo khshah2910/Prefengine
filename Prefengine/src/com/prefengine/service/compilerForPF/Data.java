@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException; 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 public class Data {
 	
 	/** stores all airline data*/
@@ -26,8 +25,7 @@ public class Data {
 	 */
 	public static void setupData() throws FileNotFoundException, IOException
 	{
-		//FileInputStream file = new FileInputStream("src/com/prefengine/service/compilerForPF/airlines.txt");
-		
+		//FileInputStream file = new FileInputStream("src/com/prefengine/service/compilerForPF/airlines.txt");		
 		FileInputStream file = new FileInputStream(System.getProperty("user.dir") + "/airlines.txt");
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 		{
