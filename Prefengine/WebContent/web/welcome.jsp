@@ -276,58 +276,28 @@
 																	
 																
 																<div id="nonfuncarea">
-																	<div class="row">
+																	<div id="req1" class="row buttonHolder">
 																		<h3>Advanced Non-Functional Parameters</h3>
 																		<div class="col-md-4">
 																		
 																			<div class="form-group form-group-lg">
-																				<label>Non-Functional Requirement</label>
-																				<select name="req1" value="Price, stops, duration..." class="form-control">
-																				  <option value="price">Price</option>
-																				  <option value="stops">Stops</option>
-																				  <option value="duration">Duration</option>
-																				  <option value="mileage">Mileage</option>
-																				</select>	
-																				
-																				<label>Non-Functional Requirement</label>
-																				<select name="req2" value="Price, stops, duration..." class="form-control">
-																				  <option value="price">Price</option>
-																				  <option value="stops">Stops</option>
-																				  <option value="duration">Duration</option>
-																				  <option value="mileage">Mileage</option>
-																				</select>																
-																				
+																				<select id="req1" value="Price, stops, duration..." class="form-control">
+																				  <option value="p">Price</option>
+																				  <option value="s">Stops</option>
+																				  <option value="d">Duration</option>
+																				  <option value="m">Mileage</option>
+																				</select>															
 																			</div>
 																		</div>
-																		<div class="col-md-3">
-																			<div class="form-group form-group-lg">
-																				<label>Operator</label>
-																				<input type="radio" name="operator1" value="and" checked> AND
-																				<input type="radio" name="operator1" value="or"> OR
-																				<input type="radio" name="operator1" value="compromise"> COMPROMISE
-																			</div>
-																		</div>
-																		<!-- <div class="col-md-4">
-																			<div class="form-group form-group-lg">
-																				<label>Non-Functional Requirement</label>
-																				<select name="req2" value="Price, stops, duration..." class="form-control">
-																				  <option value="price">Price</option>
-																				  <option value="stops">Stops</option>
-																				  <option value="duration">Duration</option>
-																				  <option value="mileage">Mileage</option>
-																				</select>																	
-																				
-																			</div>
-																		</div> -->
-																		<div class="col-md-1">
+																		<div class="col-md-1 addButton">
 																			<div class="form-group form-group-lg">
 																				<label>Add</label>
 																					<a href="#" onclick="return addNewRow();"><i class="fa fa-plus" aria-hidden="true"></i></a>
 																				</label>
 																			</div>
 																		</div>
-																	</div>
-															</div>  
+															<!-- </div>  -->
+															
 														</div>
 													</div>
 													<button class="btn btn-primary btn-lg" type="submit">Search
@@ -376,54 +346,52 @@
 		<script src="web/js/custom.js"></script>
 		
 		<script type="text/javascript">
-			var rowCount = 1;
+			var operandCount = 1;
+			
 			//Added code by Yinka
 			function addNewRow(){
-					rowCount += 1;
-					$('#nonfuncarea').append("<div class='row'> "+
-							"<div class='col-md-4'> " +
+				//This removes the add button
+				$( "div" ).remove(".addButton");
+				
+				var previousOperandRow = "req" + operandCount;
+				
+				$('#' + previousOperandRow).append("<div class='col-md-4'> " +
 							"	<div class='form-group form-group-lg'> " +
 							"		<label>Operator</label> " +
-							"		<input type='radio' name='operator" + rowCount + "' value='and' checked> AND " +
-							"		<input type='radio' name='operator" + rowCount + "' value='or'> OR " +
-							"		<input type='radio' name='operator" + rowCount + "' value='compromise'> COMPROMISE " +
+							"		<input type='radio' id='operator" + (operandCount) + "' value='&' checked> AND " +
+							"		<input type='radio' id='operator" + (operandCount) + "' value='|'> OR " +
+							"		<input type='radio' id='operator" + (operandCount) + "' value='◊'> COMPROMISE " +
 							"	</div> " +
 							"</div> " +
-							"<div class='col-md-4'> " +
+							"</div>" );
+				
+				operandCount += 1;
+					$('#nonfuncarea').append(
+							"<div class='row' id='req" + operandCount + "'> " +
+								"<div class='col-md-4'> " +
 							
-							"<div class='form-group form-group-lg'> <label>Non-Functional Requirement</label> " +
+									"<div class='form-group form-group-lg'> <label>Non-Functional Requirement</label> " +
 							
-							"<select name='req" + ((rowCount * 2)-1) + "' value='Price, stops, duration...' class='form-control'> " +
+										"<select name='req" + operandCount + "' value='Price, stops, duration...' class='form-control'> " +
 																				  "<option value='price'>Price</option> " +
 																				  "<option value='stops'>Stops</option> " +
 																				  "<option value='duration'>Duration</option> " +
 																				  "<option value='mileage'>Mileage</option> " +
-																				"</select> " +
-																			"</div> " +
-																			
-																		"</div> " +
-																		/* "<div class='col-md-3'> " +
-																		"	<div class='form-group form-group-lg'> " +
-																		"		<label>Operator</label> " +
-																		"		<input type='radio' name='operator" + rowCount + "' value='and' checked> AND " +
-																		"		<input type='radio' name='operator" + rowCount + "' value='or'> OR " +
-																		"		<input type='radio' name='operator" + rowCount + "' value='compromise'> COMPROMISE " +
-																		"	</div> " +
-																		"</div> " + */
-																		/* "<div class='col-md-4'> " +
-																		"	<div class='form-group form-group-lg'> " +
-																	"			<label>Non-Functional Requirement</label> " +
-																	"			<select name='req" + (rowCount * 2) + "' value='Price, stops, duration...' class='form-control'> " +
-																	"			  <option value='price'>Price</option> " +
-																	"			  <option value='stops'>Stops</option> " +
-																	"			  <option value='duration'>Duration</option> " +
-																	"			  <option value='mileage'>Mileage</option>  " +
-																	"			</select>	 " + */																
-																	"		</div>  " +
-																	"	</div> " +
-																	"</div> " 
-																	
-																	);
+										"</select> " +
+									"</div> " +						
+								"</div> " +
+								
+								
+																		
+								"<div class='col-md-1 addButton'>" +
+									"<div class='form-group form-group-lg'>" +
+										"<label>Add</label>" + 
+										"<a href='#' onclick='return addNewRow();'><i class='fa fa-plus' aria-hidden='true'></i></a> " +
+										"</label>" +
+									"</div>" +
+								"</div>" +
+																		
+							"</div>  " );
 					return false;
 				}
 			$(document).ready(function() {
