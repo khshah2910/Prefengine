@@ -1192,7 +1192,7 @@ public class Parser {
      * 			 the start index of clause to scan city name 
      * @return date information in Time-stamp format               
      */	
-	private Timestamp generateTimeStamp(ArrayList<TokenGeneralKind> clause,int startIndex )
+	private String generateTimeStamp(ArrayList<TokenGeneralKind> clause,int startIndex )
 	{	String dateNumber = ((Token)clause.get(startIndex)).getImage();
 		String[] datenumberArray= dateNumber.split("/");
 		dateNumber = "";
@@ -1203,13 +1203,12 @@ public class Parser {
 		if(datenumberArray[2].length() == 2 )
 			datenumberArray[2] = "20" + datenumberArray[2];							
 		if(datenumberArray.length == 2)
-		{	dateNumber = dateNumber + Year.now().getValue() + "-" + datenumberArray[0] + "-" + datenumberArray[1] + " 00:00:00.000000000"; 
+		{	dateNumber = dateNumber + Year.now().getValue() + "-" + datenumberArray[0] + "-" + datenumberArray[1] ; 
 		}
 		else if(datenumberArray.length == 3)
-		{	dateNumber = datenumberArray[2] + "-" + datenumberArray[0] + "-" + datenumberArray[1] + " 00:00:00.000000000"; 							 
+		{	dateNumber = datenumberArray[2] + "-" + datenumberArray[0] + "-" + datenumberArray[1] ; 							 
 		}
-		Timestamp timeStamp = Timestamp.valueOf(dateNumber);
-		return timeStamp;
+		return dateNumber;
 	}
 	
 	/**
@@ -1230,8 +1229,8 @@ public class Parser {
 				if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.NEGATIVESTABLE)
 				{//boolean findUnrecognizeToken = false;					
 					for(int j = 0;j<5;j++)
-					{	 
-						if(clause.get(i+j) instanceof UnrecognizeToken )
+					{
+						if(  i + j < clause.size() &&clause.get(i+j) instanceof UnrecognizeToken )
 						{	if(( cityCode = (City)generateCityClause(clause, i+j)) != null);							
 							landaInstance.setLeavePlace(cityCode);
 						}
@@ -1244,12 +1243,12 @@ public class Parser {
 				else if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVESTABLE)
 				{	//boolean findUnrecognizeToken = false;
 					for(int j = 0;i+j<clause.size();j++)
-					{	if(clause.get(i+j) instanceof UnrecognizeToken )
+					{	if( i+j < clause.size() && clause.get(i+j) instanceof UnrecognizeToken )
 						{
 							if(( cityCode = (City)generateCityClause(clause, i+j)) != null);
 							landaInstance.setArrivePlace(cityCode);
 						}
-						else if(clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
+						else if( i+j < clause.size() && clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
 						{	if(isRoundTrip == false)					
 								landaInstance.setArriveDay(generateTimeStamp(clause,i+j));
 							else
