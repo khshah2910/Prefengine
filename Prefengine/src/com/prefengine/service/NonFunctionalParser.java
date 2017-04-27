@@ -154,6 +154,8 @@ public class NonFunctionalParser {
 						System.out.printf(format, n);
 					else{
 						System.out.printf(format, n + " -> ");
+						System.out.print("");
+						System.out.print("");
 						//format = "\t" + format;
 						getNodeContent(n, "\t" + format);
 						/*System.out
