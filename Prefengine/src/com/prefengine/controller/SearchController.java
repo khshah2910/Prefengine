@@ -71,24 +71,11 @@ public class SearchController extends HttpServlet {
 			String maxPrice1 = price.split(" - ")[1];
 			//String maxPrice1 = request.getParameter("maxPrice");
 			//String minPrice1 = request.getParameter("minPrice");
-			
-			if((maxPrice1==null||"".equals(maxPrice1)) && (minPrice1==null||"".equals(minPrice1))){
-				searchCriteria.setMaxPrice(0);
-				searchCriteria.setMinPrice(0);
-			}	
-			else{
-				float maxPrice = Float.parseFloat(maxPrice1);
-				float minPrice = Float.parseFloat(minPrice1);
-				searchCriteria.setMaxPrice(maxPrice);
-				searchCriteria.setMinPrice(minPrice);
-			}
-			
- 			
-// when there is sentences input from UI
-			
-			
- 			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
+			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
  			{
+				
+				searchCriteriaFromSentence.setNumberOfPassengers(1);					
+				
  				hasSentenceInput = true;
  				Scanner scanner = new Scanner(sentenceInput);
  				scanner.scannerEngine();
@@ -109,14 +96,34 @@ public class SearchController extends HttpServlet {
  	 							searchCriteriaFromSentence.setDeparture(landaInstance.getLeavePlace().getImage());
  							if(landaInstance.getLeaveDay() != null)
 	 							searchCriteriaFromSentence.setDepartureDate(landaInstance.getLeaveDay().toString());
+ 							searchCriteriaFromSentence.setReturnDate(landaInstance.getLeaveDay().toString());
  							 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
  							 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
  						}
  					}
  				}
-
+ 				request.setAttribute("searchAttr", searchAttrFromSentence);
+				request.setAttribute("tripRecord", tripRecordFromSentence);
  				
  			}
+			else
+			{
+			if((maxPrice1==null||"".equals(maxPrice1)) && (minPrice1==null||"".equals(minPrice1))){
+				searchCriteria.setMaxPrice(0);
+				searchCriteria.setMinPrice(0);
+			}	
+			else{
+				float maxPrice = Float.parseFloat(maxPrice1);
+				float minPrice = Float.parseFloat(minPrice1);
+				searchCriteria.setMaxPrice(maxPrice);
+				searchCriteria.setMinPrice(minPrice);
+			}
+			
+ 			
+// when there is sentences input from UI
+			
+			
+ 			
 			if(stops!=null){
 				for(int i=0;i<stops.length;i++){
 					if("0".equals(stops[i])){
@@ -143,20 +150,12 @@ public class SearchController extends HttpServlet {
 					}
 				}
 			}
+			
 			SearchAttributes searchAttr = service.getSearchAttributes(searchCriteria);
 			ArrayList<Itinerary> tripRecord = service.search(searchCriteria);
 			System.out.println(tripRecord.get(0));
-			
-			//if there is sentence input, then use another set of fields to deal with searching
-			if(hasSentenceInput = true)
-			{
-				request.setAttribute("searchAttr", searchAttrFromSentence);
-				request.setAttribute("tripRecord", tripRecordFromSentence);
-			}
-			else
-			{
-				request.setAttribute("searchAttr", searchAttr);
-				request.setAttribute("tripRecord", tripRecord);
+			request.setAttribute("searchAttr", searchAttr);
+			request.setAttribute("tripRecord", tripRecord);
 			}
 		
 		}
