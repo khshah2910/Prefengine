@@ -16,9 +16,30 @@ public class SearchCriteria {
 	private float price;
 	private String cabin;
 	private String travelTimePreference;
+	/** sentences describe user's description */
+	private String sentence;
 	private float maxPrice;
 	private float minPrice;
 	
+	/**
+	 * set up sentence input from UI
+	 * 
+	 * @param sentence
+	 * 			sentences describe user's description
+	 */
+	public void setSentence(String sentence) {
+		this.sentence = sentence;
+		//System.out.println("get here!!!" + this.sentence);
+	}
+	
+	/**
+	 * get sentence input from UI
+	 * 
+	 * @return  sentences describe user's description
+	 */
+	public String getSentence() {
+			return this.sentence ;
+	}
 	public String getDeparture() {
 		return departure;
 	}
