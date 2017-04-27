@@ -114,6 +114,14 @@
 													<div class="tabbable">
 														<ul class="nav nav-pills nav-sm nav-no-br mb10"
 															id="flightChooseTab">
+															<li class="active">Requirements Sentences:</li>
+															<li>
+																<input class="form-control" type="text"
+																						name="requirementSentence" value="eg: I want flight from boston to new york....">
+															</li>
+														</ul>
+														<ul class="nav nav-pills nav-sm nav-no-br mb10"
+															id="flightChooseTab">
 															<li class="active"><a href="#flight-search-1"
 																data-toggle="tab">Round Trip</a></li>
 															<li><a href="#flight-search-2" data-toggle="tab">One
