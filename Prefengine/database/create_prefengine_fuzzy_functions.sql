@@ -12,10 +12,13 @@ BEGIN
 	DECLARE f_duration_sat_deg DOUBLE;
 	DECLARE f_mileage_sat_deg DOUBLE;
 	DECLARE satisfation_deg DOUBLE;
+	DECLARE max_satisfation_deg DOUBLE;
 	DECLARE flights CURSOR FOR SELECT id,price_sat_deg,stop_sat_deg,duration_sat_deg,mileage_sat_deg FROM temp_flight_record;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 	
 	OPEN flights;
+	
+	SET max_satisfation_deg = 0;
 	
 	loop_flights: LOOP
 		FETCH flights INTO f_id,f_price_sat_deg,f_stop_sat_deg,f_duration_sat_deg,f_mileage_sat_deg;
@@ -31,17 +34,20 @@ BEGIN
 	       flight_sat_deg = satisfation_deg
     	WHERE id = f_id;
     	
+    	IF satisfation_deg > max_satisfation_deg THEN
+    		max_satisfation_deg = satisfation_deg;
+    	END IF;
   	END LOOP;
 	
 	CLOSE flights;
 	
-	RETURN 0;
+	RETURN max_satisfation_deg;
 END //
 
 --
 DROP FUNCTION IF EXISTS `set_attributes_satisfaction_degree`;
 
-CREATE FUNCTION set_attributes_satisfaction_degree (max_price DOUBLE,min_price DOUBLE,n_stops INT,max_duration DOUBLE,min_duration DOUBLE,max_mileage DOUBLE,min_mileage DOUBLE) RETURNS DOUBLE
+CREATE FUNCTION set_attributes_satisfaction_degree (min_price DOUBLE,max_price DOUBLE,n_stops INT,min_duration DOUBLE,max_duration DOUBLE,min_mileage DOUBLE,max_mileage DOUBLE) RETURNS DOUBLE
 BEGIN
 	DECLARE done BOOLEAN DEFAULT FALSE;
 	DECLARE f_id INT;
@@ -326,6 +332,9 @@ BEGIN
   				`cabin` varchar(45) DEFAULT NULL,
   				`thisTrip` varchar(45) DEFAULT NULL,
   				`jsonData` json DEFAULT NULL,
+  				`departureCityName` varchar(45) DEFAULT NULL,
+				`destinationCityName` varchar(45) DEFAULT NULL,
+				`carrierName` varchar(45) DEFAULT NULL,
   				`price_sat_deg` double,
   				`stop_sat_deg` double,
   				`duration_sat_deg` double,
@@ -339,14 +348,14 @@ END //
 --
 DROP FUNCTION IF EXISTS `insert_record_in_flight_temp_table`;
 
-CREATE FUNCTION insert_record_in_flight_temp_table(f_tripId VARCHAR(45),f_departure VARCHAR(45),f_destination VARCHAR(45),f_stops INT,f_departureTime VARCHAR(45),f_arrivalTime VARCHAR(45),f_price DOUBLE,f_carrier VARCHAR(45),f_duration DOUBLE,f_mileage INT,f_cabin VARCHAR(45),f_thisTrip VARCHAR(45),f_jsonData JSON)
+CREATE FUNCTION insert_record_in_flight_temp_table(f_tripId VARCHAR(45),f_departure VARCHAR(45),f_destination VARCHAR(45),f_stops INT,f_departureTime VARCHAR(45),f_arrivalTime VARCHAR(45),f_price DOUBLE,f_carrier VARCHAR(45),f_duration DOUBLE,f_mileage INT,f_cabin VARCHAR(45),f_thisTrip VARCHAR(45),f_jsonData JSON,f_departureCityName VARCHAR(45),f_destinationCityName VARCHAR(45),f_carrierName VARCHAR(45))
 RETURNS INT
 BEGIN
 	DECLARE id INT;
 	SET id = 0;
 	
-	INSERT INTO temp_flight_record (tripId,departure,destination,stops,departureTime,arrivalTime,price,carrier,duration,mileage,cabin,thisTrip,jsonData)
-				 VALUES (f_tripId,f_departure,f_destination,f_stops,f_departureTime,f_arrivalTime,f_price,f_carrier,f_duration,f_mileage,f_cabin,f_thisTrip,f_jsonData);
+	INSERT INTO temp_flight_record (tripId,departure,destination,stops,departureTime,arrivalTime,price,carrier,duration,mileage,cabin,thisTrip,jsonData,departureCityName,destinationCityName,carrierName)
+				 VALUES (f_tripId,f_departure,f_destination,f_stops,f_departureTime,f_arrivalTime,f_price,f_carrier,f_duration,f_mileage,f_cabin,f_thisTrip,f_jsonData,f_departureCityName,f_destinationCityName,f_carrierName);
 	
 	SELECT LAST_INSERT_ID() INTO id;
 	
