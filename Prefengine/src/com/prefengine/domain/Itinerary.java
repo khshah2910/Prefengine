@@ -2,8 +2,6 @@ package com.prefengine.domain;
 
 import java.util.ArrayList;
 
-
-
 public class Itinerary {
 	private ArrayList<Flights> flightRecord = new ArrayList<Flights>();
 	private String tripId;
@@ -25,6 +23,50 @@ public class Itinerary {
 	private String coach;
 	private String departureTime;
 	private String arrivalTime;
+	
+	// ==============  Satisfaction degree fields: =================
+	private double price_sat_deg;
+	private double stop_sat_deg;
+	private double duration_sat_deg;
+	private double mileage_sat_deg;
+	private double flight_sat_deg;
+	
+	public double getPriceSatisfaction() {
+		return price_sat_deg;
+	}
+	public void setPriceSatisfaction(double price_sat_deg) {
+		this.price_sat_deg = price_sat_deg;
+	}
+	
+	public double getStopSatisfaction() {
+		return stop_sat_deg;
+	}
+	public void setStopSatisfaction(double stop_sat_deg) {
+		this.stop_sat_deg = stop_sat_deg;
+	}
+	
+	public double getDurationSatisfaction() {
+		return duration_sat_deg;
+	}
+	public void setDurationSatisfaction(double duration_sat_deg) {
+		this.duration_sat_deg = duration_sat_deg;
+	}
+	
+	public double getMileageSatisfaction() {
+		return mileage_sat_deg;
+	}
+	public void setMileageSatisfaction(double mileage_sat_deg) {
+		this.mileage_sat_deg = mileage_sat_deg;
+	}
+	
+	public double getFlightSatisfaction() {
+		return flight_sat_deg;
+	}
+	public void setFlightSatisfaction(double flight_sat_deg) {
+		this.flight_sat_deg = flight_sat_deg;
+	}
+	//============================================================================
+	
 	public String getDepartureTime() {
 		return departureTime;
 	}
@@ -116,9 +158,4 @@ public class Itinerary {
 	public void setCarrierName(String carrierName) {
 		this.carrierName = carrierName;
 	}
-	
-	
-	
-	
-
 }
