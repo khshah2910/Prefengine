@@ -16,30 +16,13 @@ public class SearchCriteria {
 	private float price;
 	private String cabin;
 	private String travelTimePreference;
-	/** sentences describe user's description */
-	private String sentence;
-	private float maxPrice;
-	private float minPrice;
+	private double maxPrice;
+	private double minPrice;
+	private double maxDuration;
+	private double minDuration;
+	private double maxMileage;
+	private double minMileage;
 	
-	/**
-	 * set up sentence input from UI
-	 * 
-	 * @param sentence
-	 * 			sentences describe user's description
-	 */
-	public void setSentence(String sentence) {
-		this.sentence = sentence;
-		//System.out.println("get here!!!" + this.sentence);
-	}
-	
-	/**
-	 * get sentence input from UI
-	 * 
-	 * @return  sentences describe user's description
-	 */
-	public String getSentence() {
-			return this.sentence ;
-	}
 	public String getDeparture() {
 		return departure;
 	}
@@ -130,17 +113,40 @@ public class SearchCriteria {
 	public void setBusiness(boolean business) {
 		this.business = business;
 	}
-	public float getMaxPrice() {
+	public double getMaxPrice() {
 		return maxPrice;
 	}
-	public void setMaxPrice(float maxPrice) {
+	public void setMaxPrice(double maxPrice) {
 		this.maxPrice = maxPrice;
 	}
-	public float getMinPrice() {
+	public double getMinPrice() {
 		return minPrice;
 	}
-	public void setMinPrice(float minPrice) {
+	public void setMinPrice(double minPrice) {
 		this.minPrice = minPrice;
 	}
-	
+	public double getMinDuration() {
+		return minDuration;
+	}
+	public void setMinDuration(double minDuration) {
+		this.minDuration = minDuration;
+	}
+	public double getMaxDuration() {
+		return maxDuration;
+	}
+	public void setMaxDuration(double maxDuration) {
+		this.maxDuration = maxDuration;
+	}
+	public double getMinMileage() {
+		return minMileage;
+	}
+	public void setMinMileage(double minMileage) {
+		this.minMileage = minMileage;
+	}
+	public double getMaxMileage() {
+		return maxMileage;
+	}
+	public void setMaxMileage(double maxMileage) {
+		this.maxMileage = maxMileage;
+	}
 }
