@@ -29,7 +29,7 @@ public class FlightRecordDAO {
 		System.out.println("Records Deleted!!	");
 	}
 	
-	public void saveFlightRecordsBatch(ArrayList<Itinerary> tripRec){
+	public void saveFlightRecordsBatch(ArrayList<Itinerary> tripRecord){
 		System.out.println("--->>Insertion Begins----> ");
 		try {
 			truncateRecord();
@@ -37,6 +37,24 @@ public class FlightRecordDAO {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		//==================================================================================
+		// NEW ADDED:
+		// Applies the fuzzy logic on the flight search result.
+		SearchCriteria searchCriteria = null;
+		ArrayList<String> non_functional_attributes = null;
+		FlightsearchDAO flightSearchDAO = new FlightsearchDAO();
+		ArrayList<Itinerary> tripRec = null;
+		
+		try {
+			tripRec = flightSearchDAO.execute_fuzzy_logic(tripRecord, non_functional_attributes, searchCriteria,connection);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//===================================================================================
+		
 		System.out.println(tripRec.size());
 		for(int i=0;i<tripRec.size();i++)
 		{
