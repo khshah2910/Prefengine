@@ -1,4 +1,4 @@
-package carmo.reno.dao;
+package com.prefengine.dao;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
-import carmo.reno.domain.Itinerary;
-import carmo.reno.domain.SearchCriteria;
+import com.prefengine.domain.Itinerary;
+import com.prefengine.service.SearchCriteria;
 
 // This class does not close sql connection.
-// It is the resposability of program that calls this class to close any connection to DB.
+// It is the responsibility of program that calls this class to close any connection to DB.
 public class FlightsearchDAO {
+	// This class throws all the exceptions to be handled by service layer.
 	
-	// Returns the list of flights in certain order,
-	// satisfying all the required conditions.
+	// Returns the list of flights in certain order, satisfying all the required conditions.
 	public ArrayList<Itinerary> execute_fuzzy_logic(ArrayList<Itinerary> flight_records_list, ArrayList<String> non_functional_attributes, SearchCriteria searchCriteria, Connection conn)
 							throws SQLException{
 		// This method runs all the fuzzy logic process.
@@ -38,11 +38,22 @@ public class FlightsearchDAO {
 			// with non-functional attributes, so it can be used.
 			load_attributes_temp_table(non_functional_attributes, conn);
 			
+			// Create copies of flight temp records needed for min and max.
+			create_aux_flights_temp_table(conn);
+			create_aux1_flights_temp_table(conn);
+			create_aux2_flights_temp_table(conn);
+			create_aux4_flights_temp_table(conn);
+			create_aux5_flights_temp_table(conn);
+			create_aux6_flights_temp_table(conn);
+			create_aux7_flights_temp_table(conn);
+			create_aux8_flights_temp_table(conn);
+			
 			// Calculate and set the satisfaction degree for each attribute of each flight.
 			set_attribuites_satisfaction(searchCriteria, conn);
 			
 			// Calculate the satisfaction degree for each flight.
-			double satisfaction_degree = set_flights_satisfactions(conn);
+			double satisfaction_degree = 0;
+			satisfaction_degree = set_flights_satisfactions(conn);
 			
 			// Get all flight records for returning.
 			flight_records = get_flight_records(satisfaction_degree, conn);
@@ -52,6 +63,7 @@ public class FlightsearchDAO {
 		}
 		
 		// Return the list of all records for display.
+		//return flight_records;
 		return flight_records;
 	}
 	
@@ -68,6 +80,9 @@ public class FlightsearchDAO {
 			// Open connection to sql statement: cStmt.
 			CallableStatement cStmt = conn.prepareCall("{call get_satisfactory_flights(?)}");
 			
+			// Send the satisfaction degree to sql query.
+			cStmt.setDouble(1, satisfactory);
+			
 			// Execute and get the result: List of flights data.
 			ResultSet rs = cStmt.executeQuery();
 			
@@ -76,23 +91,31 @@ public class FlightsearchDAO {
 				Itinerary flight_record = new Itinerary();
 				
 				// Get the data of each flight.
-				flight_record.setTripId(rs.getString("f_tripId"));
-				flight_record.setOrigin(rs.getString("f_departure"));
-				flight_record.setDestination(rs.getString("f_destination"));
-				flight_record.setNumberOfStops(rs.getInt("f_stops"));
-				flight_record.setDepartureTime(rs.getString("f_departureTime"));
-				flight_record.setArrivalTime(rs.getString("f_arrivalTime"));
-				flight_record.setPrice(rs.getFloat("f_price"));
-				flight_record.setTripCarrier(rs.getString("f_carrier"));
-				flight_record.setTotalDuration(rs.getFloat("f_duration"));
-				flight_record.setTotalMiles(rs.getDouble("f_mileage"));
-				flight_record.setCoach(rs.getString("f_cabin"));
-				flight_record.setOriginCityName(rs.getString("f_departureCityName"));
-				flight_record.setDestinationCityName(rs.getString("f_destinationCityName"));
-				flight_record.setCarrierName(rs.getString("f_carrierName"));
+				flight_record.setTripId(rs.getString("tripId"));
+				flight_record.setOrigin(rs.getString("departure"));
+				flight_record.setDestination(rs.getString("destination"));
+				flight_record.setNumberOfStops(rs.getInt("stops"));
+				flight_record.setDepartureTime(rs.getString("departureTime"));
+				flight_record.setArrivalTime(rs.getString("arrivalTime"));
+				flight_record.setPrice(rs.getFloat("price"));
+				flight_record.setTripCarrier(rs.getString("carrier"));
+				flight_record.setTotalDuration(rs.getFloat("duration"));
+				flight_record.setTotalMiles(rs.getDouble("mileage"));
+				flight_record.setCoach(rs.getString(12));//"f_cabin"));
+				flight_record.setOriginCityName(rs.getString("departureCityName"));
+				flight_record.setDestinationCityName(rs.getString("destinationCityName"));
+				flight_record.setCarrierName(rs.getString("carrierName"));
+				
+				// Add satisfaction degrees fields.
+				flight_record.setPriceSatisfaction(rs.getDouble("price_sat_deg"));
+				flight_record.setStopSatisfaction(rs.getDouble("stop_sat_deg"));
+				flight_record.setDurationSatisfaction(rs.getDouble("duration_sat_deg"));
+				flight_record.setMileageSatisfaction(rs.getDouble("mileage_sat_deg"));
+				flight_record.setFlightSatisfaction(rs.getDouble("flight_sat_deg"));
+				//---------------------------------------------------------------------------
 				
 				flight_record.setFlightRecord(new ArrayList<>());
-								
+				
 				// Add the record to the list.
 				flight_records.add(flight_record);
 			}
@@ -123,6 +146,7 @@ public class FlightsearchDAO {
 			ResultSet rs = cStmt.executeQuery();
 			
 			// Get the returning result.
+			rs.next();
 			satisfactory = rs.getDouble(1);
 		}
 		
@@ -131,10 +155,13 @@ public class FlightsearchDAO {
 	}
 	
 	// Nothing to return.
-	public void set_attribuites_satisfaction(SearchCriteria searchCriteria, Connection conn)
+	public double set_attribuites_satisfaction(SearchCriteria searchCriteria, Connection conn)
 			throws SQLException{
 		// This method runs all the fuzzy logic process.
+		
+		double sat = 100;
 		CallableStatement cStmt = null;
+		
 		try{
 			if(conn != null){
 				// Open connection to sql statement: cStmt.
@@ -146,12 +173,15 @@ public class FlightsearchDAO {
 				
 				cStmt.setDouble(2, searchCriteria.getMinPrice());
 				cStmt.setDouble(3, searchCriteria.getMaxPrice());
-				
-				
+				cStmt.setDouble(4, searchCriteria.getStops());
+				cStmt.setDouble(5, searchCriteria.getMinDuration());
+				cStmt.setDouble(6, searchCriteria.getMaxDuration());
+				cStmt.setDouble(7, searchCriteria.getMinMileage());
+				cStmt.setDouble(8, searchCriteria.getMaxMileage());
 				
 				ResultSet rs = cStmt.executeQuery();
-				
-				double sat = rs.getDouble(1);
+				rs.next();
+				sat = rs.getDouble(1);
 				if(sat==1){
 					// Do something.
 				}
@@ -163,6 +193,8 @@ public class FlightsearchDAO {
 			// Close the statement connection
 			cStmt.close();
 		}
+		
+		return sat;
 	}
 	
 	// Nothing to return.
@@ -181,6 +213,7 @@ public class FlightsearchDAO {
 		}
 	}
 	
+	// Insert an attribute into temp table.
 	public void insert_attribute(String attribute, Connection conn)
 								throws SQLException {
 		// This method load one flight data into temp table.
@@ -216,9 +249,10 @@ public class FlightsearchDAO {
 	}
 	
 	// Create temp table to store the attributes.
-	public void create_attributes_temp_table(Connection conn)
+	public int create_attributes_temp_table(Connection conn)
 									throws SQLException{
 		// This method creates attributes temp table.
+		int result = 10;
 		
 		// Proceed if connected to server
 		if(conn != null){
@@ -233,7 +267,7 @@ public class FlightsearchDAO {
 			cStmt.execute();
 			
 			// Get the return value from the execution result.
-			int result = cStmt.getInt(1);
+			result = cStmt.getInt(1);
 			
 			if(result == 1){
 				// The result is always 1;
@@ -245,13 +279,15 @@ public class FlightsearchDAO {
 			// Clean-up environment closing the statement.
 			cStmt.close();
 		}
+		return result;
 	}
 	
 	// Create temp table to store the flight search result.
 	// Nothing to return.
-	public void create_flights_temp_table(Connection conn)
+	public int create_flights_temp_table(Connection conn)
 									throws SQLException{
 		// This method creates flight temp table.
+		int result = 0;
 		
 		// Proceed if connected to server
 		if(conn != null){
@@ -266,7 +302,7 @@ public class FlightsearchDAO {
 			cStmt.execute();
 			
 			// Get the return value from the execution result.
-			int result = cStmt.getInt(1);
+			result = cStmt.getInt(1);
 			
 			if(result == 1){
 				// The result is always 1;
@@ -278,12 +314,329 @@ public class FlightsearchDAO {
 			// Clean-up environment closing the statement.
 			cStmt.close();
 		}
+		return result;
 	}
 	
+	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public void load_flight_temp_table(ArrayList<Itinerary> flight_records, Connection conn)
+	public int create_aux_flights_temp_table(Connection conn)
+						throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+	
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux1_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux1_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+	
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux2_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux2_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux3_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux3_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux4_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux4_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux5_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux5_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux6_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux6_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux7_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux7_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Create auxiliary temp table to store the flight search result.
+	// Nothing to return.
+	public int create_aux8_flights_temp_table(Connection conn)
+								throws SQLException{
+		// This method creates flight temp table.
+		int result = 0;
+		
+		// Proceed if connected to server
+		if(conn != null){
+			
+			// Open connection to sql statement: cStmt.
+			CallableStatement cStmt = conn.prepareCall("{? = call create_aux8_flight_record_temp_table()}");
+			
+			// Register the output so it can be caught in the return.
+			cStmt.registerOutParameter(1, Types.INTEGER);  
+			
+			// Execute the sql statement.
+			cStmt.execute();
+			
+			// Get the return value from the execution result.
+			result = cStmt.getInt(1);
+			
+			if(result == 1){
+				// The result is always 1;
+			}
+			else{
+				// Never accessed for now;
+			}
+			
+			// Clean-up environment closing the statement.
+			cStmt.close();
+		}
+		return result;
+	}
+
+	// Nothing to return.
+	public int load_flight_temp_table(ArrayList<Itinerary> flight_records, Connection conn)
 											throws SQLException {
 		// This method load temp temp with flight records.
+		int result = 0;
 		
 		// Use this connection to access the database ...
 		if(conn != null){
@@ -291,15 +644,18 @@ public class FlightsearchDAO {
 			for(Itinerary flight: flight_records){
 				
 				// Insert one flight data for each record in the list.
-				insert_flight_record(flight, conn);
+				result = insert_flight_record(flight, conn);
 			}
 		}
+		
+		return result;
 	}
 	
 	// Nothing to return.
-	public void insert_flight_record(Itinerary flight, Connection conn)
+	public int insert_flight_record(Itinerary flight, Connection conn)
 										throws SQLException {
 		// This method load one flight data into temp table.
+		int result = 0;
 		
 		if(conn != null){
 			
@@ -346,7 +702,7 @@ public class FlightsearchDAO {
 			cStmt.execute();
 			
 			// Get the id (primary key of the inserted row).
-			int result = cStmt.getInt (1);
+			result = cStmt.getInt (1);
 			
 			if(result == 0){
 				// Do something if needed in case of satisfied.
@@ -358,5 +714,7 @@ public class FlightsearchDAO {
 			// Clean-up environment closing the statement.
 			cStmt.close();
 		}
+		
+		return result;
 	}
 }
