@@ -250,8 +250,8 @@ public class FlightRecordDAO {
 		pst.setString(1, sc.getDeparture());
 		pst.setString(2, sc.getDestination());
 		if(sc.getMaxPrice()!=0 && sc.getMinPrice()!=0){
-			pst.setFloat(3, sc.getMinPrice());
-			pst.setFloat(4, sc.getMaxPrice());
+			pst.setDouble(3, sc.getMinPrice());
+			pst.setDouble(4, sc.getMaxPrice());
 		}
 		rs = pst.executeQuery();
 		System.out.println(sql);

@@ -1,18 +1,23 @@
 package com.prefengine.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.prefengine.domain.NonFunctionalAttributes;
 
 public class NonFunctionalParser {
 	private final char[] tokens = {'&','◊','v'};
+	private final String[] tokensToSQL = {"LEAST","AVERAGE","GREATEST"};
 	private char[] allOperands;
-	private String userInput = "P&DvM&S◊P";
-	private List<Node<Character>> nodeList;
-	private static Node<Character> rootNode;
+	private String userInput = "P&DvM&S◊PvP◊S";
+	private Map<Integer, Node<Character>> userInputMap;
+	private Node<Character> rootNode;
 	private static String format = "\t-%s%n";
+	private String output = "";
+	private String opr="";
 	
 	public NonFunctionalParser(){
 		rootNode = new Node<Character>('r');
@@ -35,167 +40,170 @@ public class NonFunctionalParser {
 	}
 	
 	public void sliceForTree(){
-		nodeList = new ArrayList<Node<Character>>();
+		userInputMap = new HashMap<>();
+
+		//Create parent node equal to the token
+		Node<Character> parentNode = null; 
 		if(splitInput() != null){
 			char[] splitInputArray = splitInput();
 			String splitInputString = new String(splitInputArray);
-			 //= new Node<Character>(token);
 			
+			//place each character with a null value. Null value is replaced with individual nodes later
+			int a = 0;
+			for(char c : splitInputArray){
+				userInputMap.put(a, new Node<Character>(c));
+				a++;
+			}
+		
 			for(char token: tokens){
-				//Create parent node equal to the token
-				Node<Character> parentNode = null; 
 				// find all occurrences of the token
 				int splitStringLen = splitInputString.split(Character.toString(token)).length;
 				int[] occurrences = new int[splitStringLen-1];
-				//System.out.println(splitStringLen);
-				//Find the occurrences within the 
+				//Find the occurrences of an operator within the input string
 				int count = 0;
 				for (int i = -1; (i = splitInputString.indexOf(token, i + 1)) != -1; ) {
-				    System.out.println("Location of occurence " + (count + 1 ) + ": " + (i + 1));
+				    System.out.println("Location " + (count + 1 ) + " of occurence : " + (i + 1));
 					occurrences[count] = i;
 					count ++;
-					
-					parentNode = new Node<Character>(token);
-					Node<Character> operand1 = new Node<Character>(splitInputArray[i-1]);
-					operand1.setOldData(userInput.toCharArray()[i-1]);
-					
-					Node<Character> operand2 = new Node<Character>(splitInputArray[i+1]);
-					operand2.setOldData(userInput.toCharArray()[i+1]);
-					
-					parentNode.addChild(operand1);
-					parentNode.addChild(operand2);
-					//replace the operands and operator set with the parent.
-					//splitInputArray[i-1] = '#';
-					StringBuilder sb = new StringBuilder(splitInputString);
-					sb.deleteCharAt(i+1);
-					sb.deleteCharAt(i-1);
-					System.out.println(sb);
-					
-					splitInputString = new String(sb);
-					//splitInputArray[i+1] = '#';
-					//splitInputString = new String(splitInputArray);
-					//System.out.println(splitInputString);
-					rootNode.addChild(parentNode);
-				
-				//for(int occur:occurrences)
-					System.out.println("Amount of times " + token + " found:" +occurrences.length);
-				/*for (int location = 0; location < occurrences.length; location++) {
-					parentNode = new Node<Character>(token);
-					Node<Character> operand1 = new Node<Character>(splitInputArray[occurrences[location]-1]);
-					operand1.setOldData(userInput.toCharArray()[occurrences[location]-1]);
-					
-					Node<Character> operand2 = new Node<Character>(splitInputArray[occurrences[location]+1]);
-					operand2.setOldData(userInput.toCharArray()[occurrences[location]+1]);
-					
-					parentNode.addChild(operand1);
-					parentNode.addChild(operand2);
-					//replace the operands and operator set with the parent.
-					splitInputArray[occurrences[location]-1] = '#';
-					splitInputArray[occurrences[location]+1] = '#';
-					splitInputString = new String(splitInputArray);
-					//System.out.println(splitInputString);
-					rootNode.addChild(parentNode);*/
-					
-					//System.out.println(operand1.getParent().getData());
-					/*if(operand1.getData() == '#')
-						while(operand1.getData()=='#'){
-							operand1 = operand1.getParent();
-							System.out.println(operand1.getParent().getData());
-						}
-					//nodeList.add(parentNode);
-				*/
-
-				System.out.println(splitInputArray);
-				//System.out.println(new String(splitInput()).indexOf(token));
-				//String[] splitInput = userInput.split(Character.toString(token));
-				/*for(String split : splitInput){
-					for(char c : split.toCharArray()){
-						Node<Character> aNode = new Node<Character>(c);
-						parentNode.addChild(aNode);
-					}
-					*/
 				}
+				
+				//Use the occurrences to populate the nodes and tree structure starting with the root
+				for(int o = occurrences.length; o > 0; o--){
+					parentNode = new Node<Character>(token);
+					Node<Character> operand1 = userInputMap.get(occurrences[o-1]-1);
+					Node<Character> operand2 = userInputMap.get(occurrences[o-1]+1);
+
+					//Swap each node with the operator based on operator precedence
+					try{
+						//Left hand of the operator
+						if(!userInputMap.get(occurrences[o-1]+1).getChildren().isEmpty()){
+							int h = 0;
+							for(Node<Character> n : userInputMap.values()) {
+								if (n.equals(userInputMap.get(occurrences[o-1]+1))){
+									userInputMap.replace(h, parentNode);
+								}
+								h++;
+							}
+							
+						}
+						userInputMap.replace(occurrences[o-1]+1, parentNode);
+						
+						
+						//Right hand of the operator
+						if(!userInputMap.get(occurrences[o-1]-1).getChildren().isEmpty()){
+							int h = 0;
+							for(Node<Character> n : userInputMap.values()) {
+								if (n.equals(userInputMap.get(occurrences[o-1]-1))){
+									userInputMap.replace(h, parentNode);
+								}
+								h++;
+							}
+						}
+						userInputMap.replace(occurrences[o-1]-1, parentNode);
+						
+					}catch(ArrayIndexOutOfBoundsException e){
+						System.out.println(e.getMessage());
+					}
+					
+					parentNode.addChild(operand1);
+					parentNode.addChild(operand2);
+
+					userInputMap.replace(occurrences[o-1], parentNode);
+		
+				}
+				splitInputString = "";
+				for(Node<Character> c:userInputMap.values())
+					splitInputString += c;
+				System.out.println("String after using the " + token + " operator: " + splitInputString);
+				System.out.println();
 
 			}
 		}else
-			System.out.println("String to short");
-		//nodeList.forEach(Node<Character> n);
-		//Iterator<Node<Character>> i = nodeList.iterator();
-		if(rootNode.isLeaf()){
-			System.out.println(rootNode.getData());
-		}else{
-			showAllNodes();
-		}
+			System.out.println("String too short");
+
+		rootNode.addChild(parentNode);
+		
 	
 	}
 	
-	public static void showAllNodes() {
+	public String generateOutputString(){
+		//List<Node<Character>> rootOperations = rootNode.getChildren();
+		if(rootNode==null)
+			System.out.println("Root Node is null. You must instantiate the class");
+		else{
+			output = "";
+			//getNodeList(rootNode);
+		}
+			//output = tokensToSQL[tokenCount] + "(";
+	
+			//output += userInputMap.get(occurrences[o-1]+1);
+			
+	
+			//output += "," + userInputMap.get(occurrences[o-1]-1) + ")";
+		
+		return null;
+	}
+	public void showEntireStructure(){
+		if(rootNode.isLeaf())
+			System.out.println(rootNode.getData());
+		else
+			showAllNodes();
+	}
+	
+	public void showAllNodes() {
 		if(rootNode!=null){
 			System.out.println(rootNode);
 			//get directory content
-			getNodeContent(rootNode, format);
+			
+			output += showNodeContent(rootNode, format);
+			
 		}
 		else{
 			System.out.println("File directory is empty");
 		}		
 	}
-	public static void getNodeContent(Node<Character> parent, String format){
+	public String showNodeContent(Node<Character> parent, String format){
 		Iterator<Node<Character>> it = parent.getChildren().iterator();
-		//for(Node<Character> n: parent.getChildren()){
-			if(parent.isLeaf())
-				if(parent.getOldData()!=null)
-					System.out.printf(format, parent.getOldData());
-				else
-					System.out.printf(format, parent);
-			else{
-				while(it.hasNext()){
-					Node<Character> n = it.next();
-					if(n.isLeaf())
-						System.out.printf(format, n);
-					else{
-						System.out.printf(format, n + " -> ");
-						System.out.print("");
-						System.out.print("");
-						//format = "\t" + format;
-						getNodeContent(n, "\t" + format);
-						/*System.out
-						System.out.print(nextNode + "->");
-						for(Node<Character> child: nextNode.getChildren())
-							if(child.getData() == '#'){
-								System.out.print(child.getChildren().toString());
-							}else
-								System.out.print(child.getData().toString());
-						System.out.println();*/
-					}
+		
+		for (int i=0; i<tokens.length;i++)
+			if(tokens[i]==(Character)parent.getData())
+				opr += tokensToSQL[i] + "(";
+		if(parent.isLeaf()){
+			System.out.printf(format, parent);
+			opr+=parent;
+		}else{
+			while(it.hasNext()){
+				Node<Character> n = it.next();
+				if(n.isLeaf()){
+					System.out.printf(format, n);
+					for(NonFunctionalAttributes s: NonFunctionalAttributes.values())
+						if(s.toString().toCharArray()[0] ==n.getData())
+							opr += s.sqlName();
+					
 				}
+				else{
+					System.out.printf(format, n + " -> ");
+					System.out.print("");
+					System.out.print("");
+					showNodeContent(n, "\t" + format);
+				}
+				if(it.hasNext())
+					opr += ",";
 			}
+			opr += ")";
 		}
-	public List<Node<Character>> getChildren(Node<Character> parentNode){
-		return parentNode.getChildren();
+		return opr;
 	}
+	/*public List<Node<Character>> getChildren(Node<Character> parentNode){
+		return parentNode.getChildren();
+	}*/
 	public static void main (String[] args){
 		NonFunctionalParser np = new NonFunctionalParser();
 		System.out.println("User input:'" + np.userInput + "'");
 		np.sliceForTree();
+		np.showEntireStructure();
+		System.out.println(np.output);
 		
-		System.out.println(np.rootNode.getChildren().get(1).getChildren());
-		
-		
-		/*Node<String> parentNode = np.new Node<String>("Parent"); 
-		Node<String> childNode1 = np.new Node<String>("Child 1", parentNode);
-		Node<String> childNode2 = np.new Node<String>("Child 2");     
-
-		childNode2.setParent(parentNode); 
-		parentNode.addChild(childNode1);
-
-		parentNode.addChild(childNode2);
-
-		Node<String> grandchildNode = np.new Node<String>("Grandchild of parentNode. Child of childNode1", childNode1); 
-		childNode1.addChild(grandchildNode);
-		List<Node<String>> childrenNodes = parentNode.getChildren();
-		
-		System.out.println(childrenNodes.get(0).getChildren());
-		System.out.println(np.userInput.split("&")[2].toString());*/
 	}
 	/**
 	 * @return the userInput
@@ -215,7 +223,6 @@ public class NonFunctionalParser {
 	    private List<Node<T>> children = new ArrayList<Node<T>>();
 	    private Node<T> parent = null;
 	    private T data = null;
-	    private T oldData = null;
 
 	    public Node(T data) {
 	        this.data = data;
@@ -276,18 +283,5 @@ public class NonFunctionalParser {
 	    	return this.getData().toString();
 	    }
 
-		/**
-		 * @return the oldData
-		 */
-		public T getOldData() {
-			return oldData;
-		}
-
-		/**
-		 * @param oldData the oldData to set
-		 */
-		public void setOldData(T oldData) {
-			this.oldData = oldData;
-		}
 	}
 }
