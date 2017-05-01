@@ -67,7 +67,7 @@ public class FlightsearchDAO {
 		return flight_records;
 	}
 	
-	public ArrayList<Itinerary> get_flight_records(double satisfactory, Connection conn)
+	private ArrayList<Itinerary> get_flight_records(double satisfactory, Connection conn)
 											throws SQLException {
 		// This method get all the records in the flight temp table.
 		
@@ -130,7 +130,7 @@ public class FlightsearchDAO {
 	
 	// Calculates satisfaction degree of each flight.
 	// Return the maximum satisfaction degree of the flights.
-	public double set_flights_satisfactions(Connection conn)
+	private double set_flights_satisfactions(Connection conn)
 									throws SQLException{
 		double satisfactory = 0;
 		
@@ -155,7 +155,7 @@ public class FlightsearchDAO {
 	}
 	
 	// Nothing to return.
-	public double set_attribuites_satisfaction(SearchCriteria searchCriteria, Connection conn)
+	private double set_attribuites_satisfaction(SearchCriteria searchCriteria, Connection conn)
 			throws SQLException{
 		// This method runs all the fuzzy logic process.
 		
@@ -198,7 +198,7 @@ public class FlightsearchDAO {
 	}
 	
 	// Nothing to return.
-	public void load_attributes_temp_table(ArrayList<String> attributes_list, Connection conn)
+	private void load_attributes_temp_table(ArrayList<String> attributes_list, Connection conn)
 									throws SQLException {
 		// This method load temp with list of attributes.
 		
@@ -214,7 +214,7 @@ public class FlightsearchDAO {
 	}
 	
 	// Insert an attribute into temp table.
-	public void insert_attribute(String attribute, Connection conn)
+	private void insert_attribute(String attribute, Connection conn)
 								throws SQLException {
 		// This method load one flight data into temp table.
 		
@@ -249,7 +249,7 @@ public class FlightsearchDAO {
 	}
 	
 	// Create temp table to store the attributes.
-	public int create_attributes_temp_table(Connection conn)
+	private int create_attributes_temp_table(Connection conn)
 									throws SQLException{
 		// This method creates attributes temp table.
 		int result = 10;
@@ -284,7 +284,7 @@ public class FlightsearchDAO {
 	
 	// Create temp table to store the flight search result.
 	// Nothing to return.
-	public int create_flights_temp_table(Connection conn)
+	private int create_flights_temp_table(Connection conn)
 									throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -319,7 +319,7 @@ public class FlightsearchDAO {
 	
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux_flights_temp_table(Connection conn)
+	private int create_aux_flights_temp_table(Connection conn)
 						throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -354,7 +354,7 @@ public class FlightsearchDAO {
 	
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux1_flights_temp_table(Connection conn)
+	private int create_aux1_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -389,7 +389,7 @@ public class FlightsearchDAO {
 	
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux2_flights_temp_table(Connection conn)
+	private int create_aux2_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -424,42 +424,7 @@ public class FlightsearchDAO {
 
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux3_flights_temp_table(Connection conn)
-								throws SQLException{
-		// This method creates flight temp table.
-		int result = 0;
-		
-		// Proceed if connected to server
-		if(conn != null){
-			
-			// Open connection to sql statement: cStmt.
-			CallableStatement cStmt = conn.prepareCall("{? = call create_aux3_flight_record_temp_table()}");
-			
-			// Register the output so it can be caught in the return.
-			cStmt.registerOutParameter(1, Types.INTEGER);  
-			
-			// Execute the sql statement.
-			cStmt.execute();
-			
-			// Get the return value from the execution result.
-			result = cStmt.getInt(1);
-			
-			if(result == 1){
-				// The result is always 1;
-			}
-			else{
-				// Never accessed for now;
-			}
-			
-			// Clean-up environment closing the statement.
-			cStmt.close();
-		}
-		return result;
-	}
-
-	// Create auxiliary temp table to store the flight search result.
-	// Nothing to return.
-	public int create_aux4_flights_temp_table(Connection conn)
+	private int create_aux4_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -494,7 +459,7 @@ public class FlightsearchDAO {
 
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux5_flights_temp_table(Connection conn)
+	private int create_aux5_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -529,7 +494,7 @@ public class FlightsearchDAO {
 
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux6_flights_temp_table(Connection conn)
+	private int create_aux6_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -564,7 +529,7 @@ public class FlightsearchDAO {
 
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux7_flights_temp_table(Connection conn)
+	private int create_aux7_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -599,7 +564,7 @@ public class FlightsearchDAO {
 
 	// Create auxiliary temp table to store the flight search result.
 	// Nothing to return.
-	public int create_aux8_flights_temp_table(Connection conn)
+	private int create_aux8_flights_temp_table(Connection conn)
 								throws SQLException{
 		// This method creates flight temp table.
 		int result = 0;
@@ -633,7 +598,7 @@ public class FlightsearchDAO {
 	}
 
 	// Nothing to return.
-	public int load_flight_temp_table(ArrayList<Itinerary> flight_records, Connection conn)
+	private int load_flight_temp_table(ArrayList<Itinerary> flight_records, Connection conn)
 											throws SQLException {
 		// This method load temp temp with flight records.
 		int result = 0;
@@ -652,7 +617,7 @@ public class FlightsearchDAO {
 	}
 	
 	// Nothing to return.
-	public int insert_flight_record(Itinerary flight, Connection conn)
+	private int insert_flight_record(Itinerary flight, Connection conn)
 										throws SQLException {
 		// This method load one flight data into temp table.
 		int result = 0;
