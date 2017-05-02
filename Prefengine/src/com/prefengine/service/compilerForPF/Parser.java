@@ -1405,7 +1405,14 @@ public class Parser {
 			}
 		}
 		if(findLANDACoreMeaning == true)
+			{ if(landaInstance.getArriveDay() != null && landaInstance.getLeaveDay() == null)
+				{
+					landaInstance.setLeaveDay(landaInstance.getArriveDay());
+					landaInstance.setArriveDay(null);
+				}
 			return landaInstance;
+			
+			}
 		return null;
 	}
 	
@@ -1557,66 +1564,66 @@ public class Parser {
 		for(BasicFunctionType here : propertyArray )
 		{	
 			if(here instanceof CostFunctionType)
-			{	outputString += here.getClass();
+			{	outputString += "PRICE request" + "<br>";
 				float[] f = ((CostFunctionType)here).getPriceRange();
 				if(f[1] != 0f)
-					outputString += "price :"+f[0] + " ~ " +f[1]+ "\n";
+					outputString += "price :"+f[0] + " ~ " +f[1]+ "<br>";
 				else
-					outputString +="price percentage:  "+((CostFunctionType)here).getPriceInPossibility()+ "\n";
+					outputString +="price percentage:  "+((CostFunctionType)here).getPriceInPossibility()+ "<br>";
 			}
 			else if(here instanceof LeaveAndArriveFunctionType)				
-			{	outputString += here.getClass()+ "\n";
-				outputString += "leave : "+((LeaveAndArriveFunctionType)here).getLeavePlace() + "   at:" 
-			+((LeaveAndArriveFunctionType)here).getLeaveDay()+ "---arrive : "
-			+((LeaveAndArriveFunctionType)here).getArrivePlace() + "   at:" 
-			+((LeaveAndArriveFunctionType)here).getArriveDay()+ "\n";
+			{	outputString += "LEAVE and ARRIVE request"+ "<br>";
+				outputString += "leave : "+(((LeaveAndArriveFunctionType)here).getLeavePlace()) + "   at:" 
+			+((LeaveAndArriveFunctionType)here).getLeaveDay()+ "<br>"+ "---arrive : "
+			+(((LeaveAndArriveFunctionType)here).getArrivePlace()) + "   at:" 
+			+((LeaveAndArriveFunctionType)here).getArriveDay()+ "<br>";
 			}	
 			else if(here instanceof MileageFunctionType)				
-			{	outputString += here.getClass();
+			{	outputString += "MILEAGE request"+ "<br>";
 				if(((MileageFunctionType)here).hasPossibility() == false)
 					outputString += "mileage : "+
 							((MileageFunctionType)here).getMileage()[0]+  " ~ " +
-							((MileageFunctionType)here).getMileage()[1]+ "\n";
+							((MileageFunctionType)here).getMileage()[1]+ "<br>";
 				else
-					outputString +="mileage percentage:  "+((MileageFunctionType)here).getMileageInPossibility()+ "\n";
+					outputString +="mileage percentage:  "+((MileageFunctionType)here).getMileageInPossibility()+ "<br>";
 				
 			}
 			else if(here instanceof LayoutFunctionType)				
-			{	outputString += here.getClass();
+			{	outputString += "LAYOUT request"+ "<br>";
 				if(((LayoutFunctionType)here).hasPossibility() == false)
 					outputString += "layout : "+
 							((LayoutFunctionType)here).getLayoutInHour()[0]+  " ~ " +
-							((LayoutFunctionType)here).getLayoutInHour()[1]+ "\n";
+							((LayoutFunctionType)here).getLayoutInHour()[1]+ "<br>";
 				else
-					outputString +="layout percentage:  "+((LayoutFunctionType)here).getLayoutInPossibility()+ "\n";
+					outputString +="layout percentage:  "+((LayoutFunctionType)here).getLayoutInPossibility()+ "<br>";
 				
 			}
 			else if(here instanceof NumberofStopFunctionType)				
-			{	outputString += here.getClass()+"\n";
-				outputString += "number of Stop : "+((NumberofStopFunctionType)here).getNumberOfStop()+"\n";
+			{	outputString += "NUMBER of STOP request"+ "<br>";
+				outputString += "number of Stop : "+((NumberofStopFunctionType)here).getNumberOfStop()+ "<br>";
 			}else if(here instanceof SeatClassFunctionType)				
-			{	outputString += here.getClass()+"\n";
-				outputString += "seat class : "+((SeatClassFunctionType)here).getSeatClass()+"\n";
+			{	outputString += "SEATCLASS request"+ "<br>";
+				outputString += "seat class : "+((SeatClassFunctionType)here).getSeatClass()+ "<br>";
 			}
 			else if(here instanceof ReputationFunctionType)				
-			{	outputString += here.getClass()+"\n";
+			{	outputString += "REPUTATION request"+ "<br>";
 				ArrayList<String> airlines = ((ReputationFunctionType)here).getRankElements();
 				for(String str : airlines)
-					outputString += "order from airline of : "+str+"\n";
+					outputString += "order from airline of : "+str+ "<br>";
 			}
 			else if(here instanceof DurationFunctionType)				
-			{	outputString += here.getClass()+"\n";
+			{	outputString += "DURATION request"+ "<br>";
 				if(((DurationFunctionType)here).hasPossibility() == false)
 					outputString += "duration : "+
 							((DurationFunctionType)here).getDuationInHour()[0]+  " ~ " +
-							((DurationFunctionType)here).getDuationInHour()[1]+ "\n";
+							((DurationFunctionType)here).getDuationInHour()[1]+ "<br>";
 				else
-					outputString +="duration percentage:  "+((DurationFunctionType)here).getDuationInPossibility()+ "\n";
+					outputString +="duration percentage:  "+((DurationFunctionType)here).getDuationInPossibility()+ "<br>";
 				}
 			else if(here != null)
-			{	outputString += here.toString()+"\n";
+			{	outputString += here.toString()+ "<br>";
 			}
-			outputString +="    ..................\n" ;
+			outputString +="    .................. <br>" ;
 			//System.out.println(((BasicFunctionType)here).getWeight());
 		}
 		return outputString;

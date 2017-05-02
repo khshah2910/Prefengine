@@ -2482,7 +2482,7 @@ enum CoreMeaningOne implements CoreMeaning
 	FLAT("flat",Properties.ADJV,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.POSITIVESLACK),
 	FLAVOR("flavor",Properties.NOUN,ServiceProperty.DSERVICE,WeightOriginalRange.STABLE),
 	FLESH("flesh",Properties.NOUN,ServiceProperty.DSERVICE,WeightOriginalRange.STABLE),
-	FLIGHT("flight",Properties.NOUN,ServiceProperty.BPROPERTY,WeightOriginalRange.POSITIVESTABLE),
+	FLIGHT("flight",Properties.NOUN,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.POSITIVESTABLE),
 	FLOAT("float",Properties.VERB,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.NEGATIVESLACK),
 	FLOOD("flood",Properties.NOUN,ServiceProperty.RELIABILITY,WeightOriginalRange.NEGATIVESTABLE),
 	FLOOR("floor",Properties.NOUN,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.USELESS),
