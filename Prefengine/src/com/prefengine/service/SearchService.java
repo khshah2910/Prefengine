@@ -127,7 +127,7 @@ public class SearchService {
 			result.add(tr);
 			
 		}
-		frd.saveFlightRecordsBatch(result);
+		frd.saveFlightRecordsBatch(result, sc);
 		try {
 			result1 = frd.searchByParameters(sc);
 			for(int t=0;t<result.size();t++){
