@@ -17,10 +17,16 @@ import com.prefengine.domain.Itinerary;
 import com.prefengine.domain.SearchAttributes;
 import com.prefengine.service.APIService;
 import com.prefengine.service.SearchCriteria;
-
+import com.prefengine.service.compilerForPF.CostFunctionType;
+import com.prefengine.service.compilerForPF.DurationFunctionType;
+import com.prefengine.service.compilerForPF.LayoutFunctionType;
 import com.prefengine.service.compilerForPF.LeaveAndArriveFunctionType;
+import com.prefengine.service.compilerForPF.MileageFunctionType;
+import com.prefengine.service.compilerForPF.NumberofStopFunctionType;
 import com.prefengine.service.compilerForPF.Parser;
+import com.prefengine.service.compilerForPF.ReputationFunctionType;
 import com.prefengine.service.compilerForPF.Scanner;
+import com.prefengine.service.compilerForPF.SeatClassFunctionType;
 import com.prefengine.service.SearchService;
 
 /**
@@ -71,6 +77,8 @@ public class SearchController extends HttpServlet {
 			
 			//String maxPrice1 = request.getParameter("maxPrice");
 			//String minPrice1 = request.getParameter("minPrice");
+			
+			// when there is sentences input from UI
 			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
  			{
 				
@@ -81,7 +89,8 @@ public class SearchController extends HttpServlet {
  				Parser parser = new Parser(scanner);
  				ArrayList<ArrayList<Object>> resultFromCompiler = parser.parserEngine();
  				parser.printMessage();
- 				if(resultFromCompiler.size() == 1)
+ 				//even user request round trip, still only use requirements for single trip for now
+ 				if(resultFromCompiler.size() !=0)
  				{
  					for(Object content : resultFromCompiler.get(0))
  					{
@@ -104,13 +113,122 @@ public class SearchController extends HttpServlet {
  								
  								
  							}
- 							searchCriteriaFromSentence.setReturnDate(searchCriteriaFromSentence.getDepartureDate());
- 							 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
- 							 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
- 							request.setAttribute("searchAttr", searchAttrFromSentence);
- 							request.setAttribute("tripRecord", tripRecordFromSentence);
+ 						}
+ 						else if(content instanceof CostFunctionType)
+ 						{
+ 							CostFunctionType costInstance = (CostFunctionType)content;
+ 							if(costInstance.hasPossibility() == false)
+ 							{
+ 								//if there is only general price range requested by user, the max and min price will be same, this is the sign of general price range
+ 								searchCriteriaFromSentence.setMaxPrice(costInstance.getPriceInPossibility());
+ 								searchCriteriaFromSentence.setMinPrice(costInstance.getPriceInPossibility());
+ 								
+ 							}else
+ 							{	searchCriteriaFromSentence.setMaxPrice(costInstance.getPriceRange()[1]);
+								searchCriteriaFromSentence.setMinPrice(costInstance.getPriceRange()[0]);							
  							}
+ 						}
+ 						else if(content instanceof DurationFunctionType)
+ 						{
+ 							DurationFunctionType durationInstance = (DurationFunctionType)content;
+ 							if(durationInstance.hasPossibility() == false)
+ 							{
+ 								//if there is only general duration range requested by user, the max and min price will be same, this is the sign of general price range
+ 								searchCriteriaFromSentence.setMinDuration(durationInstance.getDuationInPossibility());
+ 								searchCriteriaFromSentence.setMaxDuration(durationInstance.getDuationInPossibility());
+ 								
+ 							}else
+ 							{	searchCriteriaFromSentence.setMaxPrice(durationInstance.getDuationInHour()[1]);
+								searchCriteriaFromSentence.setMinPrice(durationInstance.getDuationInHour()[0]);							
+ 							}
+ 						}
+ 						else if(content instanceof NumberofStopFunctionType)
+ 						{
+ 							NumberofStopFunctionType stopsInstance = (NumberofStopFunctionType)content;
+ 							switch( stopsInstance.getNumberOfStop())
+ 							{
+ 							case 0:
+	 								searchCriteriaFromSentence.setNonStop(true);
+ 							case 1:
+	 								searchCriteriaFromSentence.setOneStop(true);
+	 								searchCriteriaFromSentence.setNonStop(true);
+ 							default:
+ 								searchCriteriaFromSentence.setTwoOrMoreStop(true);
+ 								searchCriteriaFromSentence.setOneStop(true);
+ 								searchCriteriaFromSentence.setNonStop(true);
+ 							
+ 							}
+ 								
+ 						}
+ 						else if(content instanceof MileageFunctionType)
+ 						{
+ 							MileageFunctionType mileageInstance = (MileageFunctionType)content;
+ 							if( mileageInstance.hasPossibility() == true)
+ 							{
+ 								//if there is only general price range requested by user, the max and min price will be same, this is the sign of general price range
+ 								searchCriteriaFromSentence.setMaxMileage(mileageInstance.getMileageInPossibility());
+ 								searchCriteriaFromSentence.setMinPrice(mileageInstance.getMileageInPossibility()); 							
+							
+ 							}
+ 							else
+ 							{
+ 								searchCriteriaFromSentence.setMaxMileage(mileageInstance.getMileage()[1]);
+								searchCriteriaFromSentence.setMinPrice(mileageInstance.getMileage()[0]); 							
+							
+ 							}
+ 								
+ 						}
+ 						else if(content instanceof LayoutFunctionType)
+ 						{
+ 							LayoutFunctionType layoutInstance = (LayoutFunctionType)content;
+ 							if( layoutInstance.hasPossibility() == true)
+ 							{
+ 								//if there is only general price range requested by user, the max and min price will be same, this is the sign of general price range
+ 								searchCriteriaFromSentence.setMinLayout(layoutInstance.getLayoutInPossibility());
+ 								searchCriteriaFromSentence.setMaxLayout(layoutInstance.getLayoutInPossibility()); 							
+							
+ 							}
+ 							else
+ 							{
+ 								searchCriteriaFromSentence.setMinLayout(layoutInstance.getLayoutInHour()[1]);
+ 								searchCriteriaFromSentence.setMaxLayout(layoutInstance.getLayoutInHour()[01]); 							
+							}
+ 								
+ 						}
+ 						else if(content instanceof SeatClassFunctionType)
+ 						{
+ 							SeatClassFunctionType seatclassInstance = (SeatClassFunctionType)content;
+ 							switch( seatclassInstance.getSeatClass() )
+ 							{
+ 							
+ 							case "BUSINESS":
+ 								searchCriteriaFromSentence.setBusiness(true);
+ 							case "FIRST":
+ 								searchCriteriaFromSentence.setFirst(true);
+ 							default:
+ 								searchCriteriaFromSentence.setEconomy(true);
+ 							}
+ 						}
+ 						else if(content instanceof ReputationFunctionType)
+ 						{
+ 							ReputationFunctionType reputationInstance = (ReputationFunctionType)content;				
+ 							searchCriteriaFromSentence.setRankElements(reputationInstance.getRankElements());							
+ 						}
+ 							
+ 							
  					}
+ 					if(searchCriteriaFromSentence.isNonStop() == false)
+ 					{
+ 						searchCriteriaFromSentence.setTwoOrMoreStop(true);
+							searchCriteriaFromSentence.setOneStop(true);
+							searchCriteriaFromSentence.setNonStop(true);
+							searchCriteriaFromSentence.setStops(3);
+ 					}
+ 					searchCriteriaFromSentence.setReturnDate(searchCriteriaFromSentence.getDepartureDate());
+					 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
+					 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
+					request.setAttribute("searchAttr", searchAttrFromSentence);
+					request.setAttribute("tripRecord", tripRecordFromSentence);
  				}
  				
  				
@@ -132,7 +250,7 @@ public class SearchController extends HttpServlet {
 			}
 			
  			
-// when there is sentences input from UI
+
 			
 			
  			
