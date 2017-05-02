@@ -16,52 +16,57 @@ public class FlightsearchDAO {
 	// This class throws all the exceptions to be handled by service layer.
 	
 	// Returns the list of flights in certain order, satisfying all the required conditions.
-	public ArrayList<Itinerary> execute_fuzzy_logic(ArrayList<Itinerary> flight_records_list, ArrayList<String> non_functional_attributes, SearchCriteria searchCriteria, Connection conn)
+	public ArrayList<Itinerary> execute_fuzzy_logic(ArrayList<Itinerary> flight_records_list, SearchCriteria searchCriteria, Connection conn)
 							throws SQLException{
 		// This method runs all the fuzzy logic process.
 		// The life time of temp table is per connection's life time.
-		
+		ArrayList<String> non_functional_attributes = searchCriteria.getNonFunctionalAttributes();
 		ArrayList<Itinerary> flight_records = null;
 		
-		// Confirm if the connection is active.
-		if(conn != null){
-			// Create temp table to store flight data.
-			create_flights_temp_table(conn);
-			
-			// Upload the flight data to temp table so it can be used.
-			load_flight_temp_table(flight_records_list, conn);
-			
-			// Create temp table to store flight data.
-			create_attributes_temp_table(conn);
-			
-			// Load the attributes into temp table
-			// with non-functional attributes, so it can be used.
-			load_attributes_temp_table(non_functional_attributes, conn);
-			
-			// Create copies of flight temp records needed for min and max.
-			create_aux_flights_temp_table(conn);
-			create_aux1_flights_temp_table(conn);
-			create_aux2_flights_temp_table(conn);
-			create_aux4_flights_temp_table(conn);
-			create_aux5_flights_temp_table(conn);
-			create_aux6_flights_temp_table(conn);
-			create_aux7_flights_temp_table(conn);
-			create_aux8_flights_temp_table(conn);
-			
-			// Calculate and set the satisfaction degree for each attribute of each flight.
-			set_attribuites_satisfaction(searchCriteria, conn);
-			
-			// Calculate the satisfaction degree for each flight.
-			double satisfaction_degree = 0;
-			satisfaction_degree = set_flights_satisfactions(conn);
-			
-			// Get all flight records for returning.
-			flight_records = get_flight_records(satisfaction_degree, conn);
+		// Do not apply fuzzy logicals if there is no non-functional attributes passed.
+		if(non_functional_attributes != null){
+			// Confirm if the connection is active.
+			if(conn != null){
+				// Create temp table to store flight data.
+				create_flights_temp_table(conn);
+				
+				// Upload the flight data to temp table so it can be used.
+				load_flight_temp_table(flight_records_list, conn);
+				
+				// Create temp table to store flight data.
+				create_attributes_temp_table(conn);
+				
+				// Load the attributes into temp table
+				// with non-functional attributes, so it can be used.
+				load_attributes_temp_table(non_functional_attributes, conn);
+				
+				// Create copies of flight temp records needed for min and max.
+				create_aux_flights_temp_table(conn);
+				create_aux1_flights_temp_table(conn);
+				create_aux2_flights_temp_table(conn);
+				create_aux4_flights_temp_table(conn);
+				create_aux5_flights_temp_table(conn);
+				create_aux6_flights_temp_table(conn);
+				create_aux7_flights_temp_table(conn);
+				create_aux8_flights_temp_table(conn);
+				
+				// Calculate and set the satisfaction degree for each attribute of each flight.
+				set_attribuites_satisfaction(searchCriteria, conn);
+				
+				// Calculate the satisfaction degree for each flight.
+				double satisfaction_degree = 0;
+				satisfaction_degree = set_flights_satisfactions(conn);
+				
+				// Get all flight records for returning.
+				flight_records = get_flight_records(satisfaction_degree, conn);
+			}
+			else{
+				flight_records = flight_records_list;
+			}
 		}
 		else{
-			
+			flight_records = flight_records_list;
 		}
-		
 		// Return the list of all records for display.
 		//return flight_records;
 		return flight_records;
