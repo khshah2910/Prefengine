@@ -1,5 +1,7 @@
 package com.prefengine.service;
 
+import java.util.ArrayList;
+
 public class SearchCriteria {
 	private String departure;
 	private String destination;
@@ -14,6 +16,8 @@ public class SearchCriteria {
 	private boolean business=false;
 	private int numberOfPassengers;
 	private float price;
+	private float minLayout;
+	private float maxLayout;
 	private String cabin;
 	private String travelTimePreference;
 	private double maxPrice;
@@ -22,6 +26,8 @@ public class SearchCriteria {
 	private double minDuration;
 	private double maxMileage;
 	private double minMileage;
+	/**  a list of airline ranking number in String type	*/
+	 private ArrayList<String> rankElements;
 	/** sentences describe user's description */
 	private String sentence;
 	
@@ -141,6 +147,18 @@ public class SearchCriteria {
 	public void setMaxPrice(double maxPrice) {
 		this.maxPrice = maxPrice;
 	}
+	public float getMaxLayout() {
+		return maxLayout;
+	}
+	public void setMaxLayout(float maxLayout) {
+		this.maxLayout = maxLayout;
+	}
+	public float getMinLayout() {
+		return minLayout;
+	}
+	public void setMinLayout(float minLayout) {
+		this.minLayout = minLayout;
+	}
 	public double getMinPrice() {
 		return minPrice;
 	}
@@ -171,4 +189,25 @@ public class SearchCriteria {
 	public void setMaxMileage(double maxMileage) {
 		this.maxMileage = maxMileage;
 	}
+	 /**  
+	  * get range of airline ranking
+	  * 
+	  * @return  an array-list of airline ranking number in String type
+	  */
+	public ArrayList<String> getRankElements()
+	{
+		return this.rankElements;
+	}
+	 
+	 /**  
+	  * set up range of airline ranking
+	  * 
+	  * @param  rankRange
+	  * 			an array-list of airline ranking number in String type
+	  */
+	public void setRankElements(ArrayList<String> rankElements)
+	{
+		 this.rankElements = rankElements;
+	}
+
 }
