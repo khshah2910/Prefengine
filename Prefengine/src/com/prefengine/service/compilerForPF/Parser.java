@@ -18,6 +18,7 @@ public class Parser {
 	 *  */
 	private ArrayList<ArrayList<Object>> totalArray = new ArrayList<ArrayList<Object>>();
 	
+	private ArrayList<String> non_functional_attribute_list = new ArrayList<String>();
 	/** Define the output ArrayList of non-functional request. */
 	private ArrayList<BasicFunctionType> propertyArray = new ArrayList<BasicFunctionType>();
 
@@ -60,6 +61,24 @@ public class Parser {
 		this.connevtiveOperatorArray = scanner.getConnectiveOperatorArray();
 		this.isRoundTrip = false;
 		Data.setupData();
+	}
+	
+	/**
+     * generate the ArrayList of non_functional_attributes and operators all in String type.
+     * 
+     * @return the list of final result of NFRs and operators
+      */
+	public 	 ArrayList<String> getNonFunctionalAttributeArrayList()
+	{
+		non_functional_attribute_list = new ArrayList<String>();
+		if(this.propertyArray != null)
+		for(int index = 0;index < this.propertyArray.size()-1; index ++ )
+		{
+			non_functional_attribute_list.add(this.propertyArray.get(index).getProperty().getExplanation());
+			non_functional_attribute_list.add(this.connevtiveOperatorArray.get(index).getImage());
+		}
+		non_functional_attribute_list.add(this.propertyArray.get(this.propertyArray.size()-1).getProperty().getExplanation());
+		return this.non_functional_attribute_list;
 	}
 	
 	/**
@@ -126,9 +145,19 @@ public class Parser {
 //			}
 //			System.out.println("-----------");
 //		}
+		getNonFunctionalAttributeArrayList();
 		return this.totalArray;
 	}
 	
+	/**
+     * give output to fuzzy-logic.
+     * 
+     * @return the list of final result of NFRs and operators
+     */
+	public ArrayList<String> getNonFunctionalAttributeList()
+	{
+		return this.non_functional_attribute_list;
+	}
 	/**
      * Get the arrays of go and round trip's function properties and operations.
      * 
@@ -1419,6 +1448,10 @@ public class Parser {
 			//System.out.println(((BasicFunctionType)here).getWeight());
 		}		
 		System.out.println("------------------------");
+		System.out.println("============================" );
+		System.out.println("============================" );
+		for(String str : this.non_functional_attribute_list)
+			System.out.println(str);
 		if(propertyArrayOfBackTrip.size() >0)
 		for(BasicFunctionType here : propertyArrayOfBackTrip )
 		{	
@@ -1468,5 +1501,8 @@ public class Parser {
 					System.out.println(((ArrayList<Object>) totalArray.get(i)).get(j).toString());
 			}
 		}
+		
+		
+		
 	}
 }
