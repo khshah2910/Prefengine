@@ -146,6 +146,7 @@ public class Parser {
 //			System.out.println("-----------");
 //		}
 		getNonFunctionalAttributeArrayList();
+		System.out.println(generateMessageForUI());
 		return this.totalArray;
 	}
 	
@@ -1549,5 +1550,75 @@ public class Parser {
 		
 		
 		
+	}
+	public String generateMessageForUI()
+	{
+		String outputString = "";
+		for(BasicFunctionType here : propertyArray )
+		{	
+			if(here instanceof CostFunctionType)
+			{	outputString += here.getClass();
+				float[] f = ((CostFunctionType)here).getPriceRange();
+				if(f[1] != 0f)
+					outputString += "price :"+f[0] + " ~ " +f[1]+ "\n";
+				else
+					outputString +="price percentage:  "+((CostFunctionType)here).getPriceInPossibility()+ "\n";
+			}
+			else if(here instanceof LeaveAndArriveFunctionType)				
+			{	outputString += here.getClass()+ "\n";
+				outputString += "leave : "+((LeaveAndArriveFunctionType)here).getLeavePlace() + "   at:" 
+			+((LeaveAndArriveFunctionType)here).getLeaveDay()+ "---arrive : "
+			+((LeaveAndArriveFunctionType)here).getArrivePlace() + "   at:" 
+			+((LeaveAndArriveFunctionType)here).getArriveDay()+ "\n";
+			}	
+			else if(here instanceof MileageFunctionType)				
+			{	outputString += here.getClass();
+				if(((MileageFunctionType)here).hasPossibility() == false)
+					outputString += "mileage : "+
+							((MileageFunctionType)here).getMileage()[0]+  " ~ " +
+							((MileageFunctionType)here).getMileage()[1]+ "\n";
+				else
+					outputString +="mileage percentage:  "+((MileageFunctionType)here).getMileageInPossibility()+ "\n";
+				
+			}
+			else if(here instanceof LayoutFunctionType)				
+			{	outputString += here.getClass();
+				if(((LayoutFunctionType)here).hasPossibility() == false)
+					outputString += "layout : "+
+							((LayoutFunctionType)here).getLayoutInHour()[0]+  " ~ " +
+							((LayoutFunctionType)here).getLayoutInHour()[1]+ "\n";
+				else
+					outputString +="layout percentage:  "+((LayoutFunctionType)here).getLayoutInPossibility()+ "\n";
+				
+			}
+			else if(here instanceof NumberofStopFunctionType)				
+			{	outputString += here.getClass()+"\n";
+				outputString += "number of Stop : "+((NumberofStopFunctionType)here).getNumberOfStop()+"\n";
+			}else if(here instanceof SeatClassFunctionType)				
+			{	outputString += here.getClass()+"\n";
+				outputString += "seat class : "+((SeatClassFunctionType)here).getSeatClass()+"\n";
+			}
+			else if(here instanceof ReputationFunctionType)				
+			{	outputString += here.getClass()+"\n";
+				ArrayList<String> airlines = ((ReputationFunctionType)here).getRankElements();
+				for(String str : airlines)
+					outputString += "order from airline of : "+str+"\n";
+			}
+			else if(here instanceof DurationFunctionType)				
+			{	outputString += here.getClass()+"\n";
+				if(((DurationFunctionType)here).hasPossibility() == false)
+					outputString += "duration : "+
+							((DurationFunctionType)here).getDuationInHour()[0]+  " ~ " +
+							((DurationFunctionType)here).getDuationInHour()[1]+ "\n";
+				else
+					outputString +="duration percentage:  "+((DurationFunctionType)here).getDuationInPossibility()+ "\n";
+				}
+			else if(here != null)
+			{	outputString += here.toString()+"\n";
+			}
+			outputString +="    ..................\n" ;
+			//System.out.println(((BasicFunctionType)here).getWeight());
+		}
+		return outputString;
 	}
 }
