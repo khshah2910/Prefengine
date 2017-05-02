@@ -6,7 +6,7 @@ package com.prefengine.service.compilerForPF;
 public class DurationFunctionType extends AbstractFunctionType
 {
 	 /** store duration in hour */
-	 private float durationInHour;
+	 private float[] durationInHour;
 	 
 	 /** store duration in Possibility */
 	 private float durationInPossibility;
@@ -59,7 +59,7 @@ public class DurationFunctionType extends AbstractFunctionType
 	  * @param durationInHour
 	  * 			float type			
 	  */
-	public void setDuationInHour(float durationInHour)
+	public void setDuationInHour(float[] durationInHour)
 	{
 		this.durationInHour = durationInHour;
 	}
@@ -68,7 +68,7 @@ public class DurationFunctionType extends AbstractFunctionType
 	  * get duration in hour
 	  * @return float type			
 	  */
-	public float getDuationInHour()
+	public float[] getDuationInHour()
 	{
 		return this.durationInHour ;
 	}

@@ -17,7 +17,7 @@ public class SeatClassFunctionType extends AbstractFunctionType
 	public SeatClassFunctionType(ServiceProperty serviceProperty) {
 		super(serviceProperty);
 		// TODO Auto-generated constructor stub
-		this.seatClass = "economy";
+		this.seatClass = "COACH";
 	}
 
 	 /**  

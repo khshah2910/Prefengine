@@ -7,7 +7,7 @@ package com.prefengine.service.compilerForPF;
 public class MileageFunctionType extends AbstractFunctionType{
 
 	 /** store mileage  */
-		 private float mileage;
+		 private float[] mileage;
 		 
 		 /** store mileage in Possibility */
 		 private float mileageInPossibility;
@@ -60,7 +60,7 @@ public class MileageFunctionType extends AbstractFunctionType{
 		  * @param mileage
 		  * 			float type			
 		  */
-		public void setMileage(float mileage)
+		public void setMileage(float[] mileage)
 		{
 			this.mileage = mileage;
 		}
@@ -69,7 +69,7 @@ public class MileageFunctionType extends AbstractFunctionType{
 		  * get mileage 
 		  * @return float type			
 		  */
-		public float getMileage()
+		public float[] getMileage()
 		{
 			return this.mileage ;
 		}

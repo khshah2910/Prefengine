@@ -6,7 +6,7 @@ package com.prefengine.service.compilerForPF;
 public class LayoutFunctionType extends AbstractFunctionType
 {
 	 /** store layout in hour */
-	 private float layoutInHour;
+	 private float[] layoutInHour;
 	 
 	 /** store layout in Possibility */
 	 private float layoutInPossibility;
@@ -59,7 +59,7 @@ public class LayoutFunctionType extends AbstractFunctionType
 	  * @param layoutInHour
 	  * 			float type			
 	  */
-	public void setLayoutInHour(float layoutInHour)
+	public void setLayoutInHour(float[] layoutInHour)
 	{
 		this.layoutInHour = layoutInHour;
 	}
@@ -68,7 +68,7 @@ public class LayoutFunctionType extends AbstractFunctionType
 	  * get layout in hour
 	  * @return float type			
 	  */
-	public float getLayoutInHour()
+	public float[] getLayoutInHour()
 	{
 		return this.layoutInHour ;
 	}

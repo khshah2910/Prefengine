@@ -985,32 +985,47 @@ public class Parser {
      * @return an LayoutFunctionType instance.           
      */
 	private BasicFunctionType getLayoutFunctionType (ArrayList<TokenGeneralKind> clause)
-	{	float layoutInHour = 0;
+	{	float[] layoutInHour = new float[2];
+		float middleresult = 0;
+		layoutInHour[0] = layoutInHour[1] = 0;
 		LayoutFunctionType layoutInstance = new LayoutFunctionType(ServiceProperty.LAYOUT);
 		for(int i = 1; i < clause.size();i++)
-		{	if (clause.get(i) instanceof Token  
+		{	middleresult = 0;
+			if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
 					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.HOUR
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
-			{	layoutInHour = layoutInHour + Float.valueOf(((Token)clause.get(i-1)).getImage());				
+			{	middleresult = middleresult + Float.valueOf(((Token)clause.get(i-1)).getImage());				
 			}
 			else if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
 					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.MINUT
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
-			{	layoutInHour = layoutInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())/ 60f);
+			{	middleresult = middleresult + (Float.valueOf(((Token)clause.get(i-1)).getImage())/ 60f);
 			}
 			else if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
 					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.DAY
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
-			{	layoutInHour = layoutInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())* 24f);
+			{	middleresult = middleresult + (Float.valueOf(((Token)clause.get(i-1)).getImage())* 24f);
+			}
+			if(middleresult != 0)
+			{
+				if(middleresult > layoutInHour[1])
+				{
+					layoutInHour[0] = layoutInHour[1];
+					layoutInHour[1] = middleresult;
+				}
+				else
+				{
+					layoutInHour[1] = middleresult;
+				}
 			}
 		}
-		if( layoutInHour == 0)
+		if( layoutInHour[1] == 0)
 		{
 			float weight = fixFunctionWeight(clause);
 			
@@ -1049,32 +1064,47 @@ public class Parser {
      * @return an DurationFunctionType instance.           
      */
 	private BasicFunctionType getDurationFunctionType (ArrayList<TokenGeneralKind> clause)
-	{	float durationInHour = 0;
+	{	float[] durationInHour = new float[2];
+		float middleresult = 0;
+		durationInHour[0] = durationInHour[1]= 0;
 		DurationFunctionType durationInstance = new DurationFunctionType(ServiceProperty.DURATION);
 		for(int i = 1; i < clause.size();i++)
-		{	if (clause.get(i) instanceof Token  
+		{	middleresult = 0;
+			if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
 					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.HOUR
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
-			{	durationInHour = durationInHour + Float.valueOf(((Token)clause.get(i-1)).getImage());				
+			{	middleresult = middleresult + Float.valueOf(((Token)clause.get(i-1)).getImage());				
 			}
 			else if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
 					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.MINUT
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
-			{	durationInHour = durationInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())/ 60f);
+			{	middleresult = middleresult + (Float.valueOf(((Token)clause.get(i-1)).getImage())/ 60f);
 			}
 			else if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getFunctionType() == ServiceProperty.DURATION 
 					&& ((Token)clause.get(i)).getCoreMeaning() == CoreMeaningOne.DAY
 					&& (clause.get(i-1) instanceof Token && 
 					((Token)clause.get(i-1)).getProperty() == NumberProperties.REGULARNUMBER))
-			{	durationInHour = durationInHour + (Float.valueOf(((Token)clause.get(i-1)).getImage())* 24f);
+			{	middleresult = middleresult + (Float.valueOf(((Token)clause.get(i-1)).getImage())* 24f);
+			}
+			if(middleresult != 0)
+			{
+				if(middleresult > durationInHour[1])
+				{
+					durationInHour[0] = durationInHour[1];
+					durationInHour[1] = middleresult;
+				}
+				else
+				{
+					durationInHour[1] = middleresult;
+				}
 			}
 		}
-		if( durationInHour == 0)
+		if( durationInHour[1] == 0)
 		{
 			float weight = fixFunctionWeight(clause);			
 			durationInstance.setDuationInPossibility(calculatePosibilityForFunctionType(weight));			
@@ -1091,16 +1121,31 @@ public class Parser {
      * @return an MileageFunctionType instance.           
      */
 	private BasicFunctionType getMileageFunctionType (ArrayList<TokenGeneralKind> clause)
-	{	float mileage = 0;
+	{	float mileage[] = new float[2];
+		mileage[0] = mileage[1] = 0;
+		float middleresult = 0;
 		MileageFunctionType mileageInstance = new MileageFunctionType(ServiceProperty.MILEAGE);
 		for(int i = 0; i < clause.size();i++)
-		{	if (clause.get(i) instanceof Token  
+		{	middleresult = 0;
+			if (clause.get(i) instanceof Token  
 					&& ((Token)clause.get(i)).getProperty() == NumberProperties.REGULARNUMBER )
 			{				
-			mileage =  Float.valueOf(((Token)clause.get(i)).getImage());				
-			}		
+				middleresult =  Float.valueOf(((Token)clause.get(i)).getImage());				
+			}	
+		if(middleresult != 0)
+		{
+			if(middleresult > mileage[1])
+			{
+				mileage[0] = mileage[1];
+				mileage[1] = middleresult;
+			}
+			else
+			{
+				mileage[1] = middleresult;
+			}
 		}
-		if( mileage == 0)
+		}
+		if( mileage[1] == 0)
 		{
 			float weight = fixFunctionWeight(clause);		
 			mileageInstance.setMileageInPossibility(calculatePosibilityForFunctionType(weight));			
@@ -1217,7 +1262,7 @@ public class Parser {
 					&& ((Token)token).getProperty() == Properties.ADJV)
 				generalPriceRequest *= ((Token)token).getWeight();
 		}
-		costInstance.setgeneralPriceRequest(generalPriceRequest);
+		costInstance.setPriceInPossibility(generalPriceRequest);
 		return costInstance;
 		}
 		costInstance.setPriceRange(priceRange);
@@ -1417,7 +1462,7 @@ public class Parser {
 				if(f[1] != 0f)
 					System.out.println("price :"+f[0] + " ~ " +f[1]);
 				else
-					System.out.println("price percentage:  "+((CostFunctionType)here).getgeneralPriceRequest());
+					System.out.println("price percentage:  "+((CostFunctionType)here).getPriceInPossibility());
 			}
 			else if(here instanceof LeaveAndArriveFunctionType)				
 			{	System.out.println(here.getClass());
@@ -1461,7 +1506,7 @@ public class Parser {
 				if(f[1] != 0f)
 					System.out.println("price :"+f[0] + " ~ " +f[1]);
 				else
-					System.out.println("price percentage:  "+((CostFunctionType)here).getgeneralPriceRequest());
+					System.out.println("price percentage:  "+((CostFunctionType)here).getPriceInPossibility());
 			}
 			else if(here instanceof LeaveAndArriveFunctionType)				
 			{	System.out.println(here.getClass());

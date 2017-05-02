@@ -25,8 +25,8 @@ public class Data {
 	 */
 	public static void setupData() throws FileNotFoundException, IOException
 	{
-		FileInputStream file = new FileInputStream("src/com/prefengine/service/compilerForPF/airlines.txt");		
-		//FileInputStream file = new FileInputStream(System.getProperty("user.dir") + "/airlines.txt");
+		//FileInputStream file = new FileInputStream("src/com/prefengine/service/compilerForPF/airlines.txt");		
+		FileInputStream file = new FileInputStream(System.getProperty("user.dir") + "/airlines.txt");
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 		{
 			String line;			
@@ -39,8 +39,8 @@ public class Data {
 			}
 			br.close();
 		}
-		 file = new FileInputStream("src/com/prefengine/service/compilerForPF/citys.txt");
-		 //file = new FileInputStream(System.getProperty("user.dir") + "/citys.txt");
+		 //file = new FileInputStream("src/com/prefengine/service/compilerForPF/citys.txt");
+		 file = new FileInputStream(System.getProperty("user.dir") + "/citys.txt");
 			try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 			{
 				String line;
@@ -55,8 +55,8 @@ public class Data {
 				br.close();
 			}
 	
-			 file = new FileInputStream("src/com/prefengine/service/compilerForPF/rank.txt");
-			 //file = new FileInputStream(System.getProperty("user.dir") + "/rank.txt");
+			 //file = new FileInputStream("src/com/prefengine/service/compilerForPF/rank.txt");
+			 file = new FileInputStream(System.getProperty("user.dir") + "/rank.txt");
 				try(BufferedReader br = new BufferedReader(new InputStreamReader(file)))
 				{
 					String line;

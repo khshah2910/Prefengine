@@ -7,13 +7,15 @@ public class CostFunctionType extends AbstractFunctionType
 {
 	 /** store maximum price and minimum price from user */
 	 private float[] priceRange = new float[2];
-
-	 /** if generalPriceRequest != 0, means user only request like "cheap price" without exactly price range
-	 * 
+	 
+	 /** store price range in possibility */
+	 private boolean hasPossibility;
+	 
+	 /** 
 	 *  with range of [0,1f], represents the price range of all tickets' price. example: if generalPriceRequest = 0.3,
 	 *  and all tickets price between [100,300], system will get tickets between [100,160] 
 	 *   */
-	 private float generalPriceRequest;
+	 private float priceInPossibility;
 	 
 	 /**  
 	  * constructor for CostFunctionType
@@ -27,17 +29,24 @@ public class CostFunctionType extends AbstractFunctionType
 		// TODO Auto-generated constructor stub
 		this.priceRange[0] = 0f;
 		this.priceRange[1] = 0f;
-		this.generalPriceRequest = 1f;
+		this.hasPossibility = false;
 	}
-
+	 /**  
+	  * get if the information stored in possibility or specific price 
+	  * @return when stored in possibility return true			
+	  */
+	public boolean hasPossibility()
+	{
+		return this.hasPossibility;
+	}
 		/**  
 		  * set up for general price range
 		  * 
-		  * @param generalPriceRequest
+		  * @param priceInPossibility
 		  * 			
 		  */
-	 public void setgeneralPriceRequest(float generalPriceRequest)
-	{	this.generalPriceRequest = generalPriceRequest;
+	 public void setPriceInPossibility(float priceInPossibility)
+	{	this.priceInPossibility = priceInPossibility;
 	}
 	 /**  
 	  * get general price range
@@ -45,8 +54,8 @@ public class CostFunctionType extends AbstractFunctionType
 	  * @return general Price range
 	  * 			
 	  */
-	 public float getgeneralPriceRequest()
-	{	return this.generalPriceRequest;
+	 public float getPriceInPossibility()
+	{	return this.priceInPossibility;
 	}
 		
 	 /**  
