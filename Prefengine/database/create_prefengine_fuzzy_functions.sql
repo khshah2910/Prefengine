@@ -259,8 +259,13 @@ DROP FUNCTION IF EXISTS `calculate_mileage_satisfaction`;
 CREATE FUNCTION calculate_mileage_satisfaction (max_mileage DOUBLE, min_mileage DOUBLE, current_mileage DOUBLE) RETURNS DOUBLE
 BEGIN
 	DECLARE degree DOUBLE;
-	
-	SET degree = (max_mileage-current_mileage)/(max_mileage-min_mileage);
+	IF current_mileage <= min_mileage THEN
+		SET degree = 1;
+	ELSEIF current_mileage > max_mileage THEN
+		SET degree = 0;
+	ELSE
+		SET degree = (max_mileage-current_mileage)/(max_mileage-min_mileage);
+	END IF;
 	
 	RETURN ROUND(degree,1);
 END //
@@ -272,7 +277,13 @@ CREATE FUNCTION calculate_duration_satisfaction (max_duration DOUBLE, min_durati
 BEGIN
 	DECLARE degree DOUBLE;
 	
-	SET degree = (max_duration-current_duration)/(max_duration-min_duration);
+	IF current_duration <= min_duration THEN
+		SET degree = 1;
+	ELSEIF current_duration > max_duration THEN
+		SET degree = 0;
+	ELSE
+		SET degree = (max_duration-current_duration)/(max_duration-min_duration);
+	END IF;
 	
 	RETURN ROUND(degree,2);
 END //
@@ -284,7 +295,13 @@ CREATE FUNCTION calculate_price_satisfaction (max_price DOUBLE, min_price DOUBLE
 BEGIN
 	DECLARE degree DOUBLE;
 	
-	SET degree = (max_price-current_price)/(max_price-min_price);
+	IF current_price <= min_price THEN
+		SET degree = 1;
+	ELSEIF current_price > max_price THEN
+		SET degree = 0;
+	ELSE
+		SET degree = (max_price-current_price)/(max_price-min_price);
+	END IF;
 	
 	RETURN ROUND(degree,2);
 END //
@@ -306,8 +323,10 @@ BEGIN
 			SET degree = 0.50;
 		ELSEIF stops = u_stops + 3 THEN
 			SET degree = 0.30;
-		ELSE
+		ELSEIF stops = u_stops + 4 THEN
 			SET degree = 0.10;
+		ELSE
+			SET degree = 0;
 		END IF;
 	END IF;
 	
