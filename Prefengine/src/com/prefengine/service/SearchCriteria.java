@@ -22,6 +22,28 @@ public class SearchCriteria {
 	private double minDuration;
 	private double maxMileage;
 	private double minMileage;
+	/** sentences describe user's description */
+	private String sentence;
+	
+	/**
+	 * set up sentence input from UI
+	 * 
+	 * @param sentence
+	 * 			sentences describe user's description
+	 */
+	public void setSentence(String sentence) {
+		this.sentence = sentence;
+		//System.out.println("get here!!!" + this.sentence);
+	}
+	/**
+	 * get sentence input from UI
+	 * 
+	 * @return  sentences describe user's description
+	 */
+	public String getSentence() {
+			return this.sentence ;
+	}
+	
 	
 	public String getDeparture() {
 		return departure;
