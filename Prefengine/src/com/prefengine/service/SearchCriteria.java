@@ -30,6 +30,8 @@ public class SearchCriteria {
 	 private ArrayList<String> rankElements;
 	/** sentences describe user's description */
 	private String sentence;
+	// Field for non funcional attributes
+	private ArrayList<String> non_functional_attributes;
 	
 	/**
 	 * set up sentence input from UI
@@ -209,5 +211,12 @@ public class SearchCriteria {
 	{
 		 this.rankElements = rankElements;
 	}
-
+	
+	// Set and get for non functional attributes.
+	public void setNonFunctionalAttributes(ArrayList<String> non_functional_attributes){
+		this.non_functional_attributes = non_functional_attributes;
+	}
+	public ArrayList<String> getNonFunctionalAttributes(){
+		return this.non_functional_attributes;
+	}
 }
