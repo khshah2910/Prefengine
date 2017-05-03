@@ -44,6 +44,7 @@ public class SearchController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -55,6 +56,8 @@ public class SearchController extends HttpServlet {
 		SearchService serviceFromSentence = new SearchService();
 		SearchAttributes searchAttrFromSentence = null ;			
 		ArrayList<Itinerary> tripRecordFromSentence = null;
+		String outputString= "";
+		String sentenceInput = "eg: I want flight from boston to new york....";
 		
 		try {
 			
@@ -66,22 +69,49 @@ public class SearchController extends HttpServlet {
 			String[] cabin = request.getParameterValues("cabin");
  			String numberOfPassengers = request.getParameter("numberOfPassengers");
 
- 			String sentenceInput = request.getParameter("requirementSentence");
+ 			sentenceInput = request.getParameter("requirementSentence");
 			//int actualStops = Integer.parseInt(stops);
 			//String price =request.getParameter("price");
 			searchCriteria.setDeparture(departure);
 			searchCriteria.setDestination(destination);
 			searchCriteria.setDepartureDate(departureDate);
 			searchCriteria.setNumberOfPassengers(Integer.parseInt(numberOfPassengers));
-			
+			//================================================================================
+			// Get non functional attributes and their operators.
+			// This array is at form: attribute-operator-attribute-operator-attribute...
+			ArrayList<String> non_functional_attributes = new ArrayList<String>();
+			/*String[] attributes =request.getParameterValues("req1");
+			String[] operators =request.getParameterValues("operator1");
+			if(attributes.length==0 || operators.length==0){
+			}else{
+				int k = 0;
+				for(k = 0; k < operators.length; k++){
+					non_functional_attributes.add(attributes[k]);
+					non_functional_attributes.add(operators[k]);
+				}
+				//non_functional_attributes.add(attributes[k]);
+				searchCriteria.setNonFunctionalAttributes(non_functional_attributes);
+			*/
 			
 			//String maxPrice1 = request.getParameter("maxPrice");
 			//String minPrice1 = request.getParameter("minPrice");
 			
-			// when there is sentences input from UI
+			
 			if(!sentenceInput.equals("eg: I want flight from boston to new york....") )
  			{
-				
+				// when there is sentences input from UI
+				if(request.getParameter("getCompilerReview") != null)
+				{
+						
+						Scanner scanner = new Scanner(sentenceInput);
+						scanner.scannerEngine();
+						scanner.printMessage();
+						Parser parser = new Parser(scanner);
+						parser.parserEngine();
+						outputString = parser.generateMessageForUI();					
+				}
+				else
+				{
 				searchCriteriaFromSentence.setNumberOfPassengers(1);	
  				Scanner scanner = new Scanner(sentenceInput);
  				scanner.scannerEngine();
@@ -89,6 +119,12 @@ public class SearchController extends HttpServlet {
  				Parser parser = new Parser(scanner);
  				ArrayList<ArrayList<Object>> resultFromCompiler = parser.parserEngine();
  				parser.printMessage();
+ 				non_functional_attributes = parser.getNonFunctionalAttributeArrayList();
+ 				//===============================================================================
+ 				
+ 				//int actualStops = Integer.parseInt(stops);
+ 				//String price =request.getParameter("price");
+ 				searchCriteriaFromSentence.setNonFunctionalAttributes(non_functional_attributes);
  				//even user request round trip, still only use requirements for single trip for now
  				if(resultFromCompiler.size() !=0)
  				{
@@ -108,7 +144,7 @@ public class SearchController extends HttpServlet {
  							else
  							{	Date date = new Date();
  								SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
- 								String currentDate = formatter.format(date);
+ 								String currentDate = "2017-05-03";
  							searchCriteriaFromSentence.setDepartureDate(currentDate);
  								
  								
@@ -117,7 +153,7 @@ public class SearchController extends HttpServlet {
  						else if(content instanceof CostFunctionType)
  						{
  							CostFunctionType costInstance = (CostFunctionType)content;
- 							if(costInstance.hasPossibility() == false)
+ 							if(costInstance.hasPossibility() == true)
  							{
  								//if there is only general price range requested by user, the max and min price will be same, this is the sign of general price range
  								searchCriteriaFromSentence.setMaxPrice(costInstance.getPriceInPossibility());
@@ -131,15 +167,15 @@ public class SearchController extends HttpServlet {
  						else if(content instanceof DurationFunctionType)
  						{
  							DurationFunctionType durationInstance = (DurationFunctionType)content;
- 							if(durationInstance.hasPossibility() == false)
+ 							if(durationInstance.hasPossibility() == true)
  							{
  								//if there is only general duration range requested by user, the max and min price will be same, this is the sign of general price range
  								searchCriteriaFromSentence.setMinDuration(durationInstance.getDuationInPossibility());
  								searchCriteriaFromSentence.setMaxDuration(durationInstance.getDuationInPossibility());
  								
  							}else
- 							{	searchCriteriaFromSentence.setMaxPrice(durationInstance.getDuationInHour()[1]);
-								searchCriteriaFromSentence.setMinPrice(durationInstance.getDuationInHour()[0]);							
+ 							{	searchCriteriaFromSentence.setMaxDuration(durationInstance.getDuationInHour()[1]);
+								searchCriteriaFromSentence.setMinDuration(durationInstance.getDuationInHour()[0]);							
  							}
  						}
  						else if(content instanceof NumberofStopFunctionType)
@@ -167,13 +203,13 @@ public class SearchController extends HttpServlet {
  							{
  								//if there is only general price range requested by user, the max and min price will be same, this is the sign of general price range
  								searchCriteriaFromSentence.setMaxMileage(mileageInstance.getMileageInPossibility());
- 								searchCriteriaFromSentence.setMinPrice(mileageInstance.getMileageInPossibility()); 							
+ 								searchCriteriaFromSentence.setMinMileage(mileageInstance.getMileageInPossibility()); 							
 							
  							}
  							else
  							{
  								searchCriteriaFromSentence.setMaxMileage(mileageInstance.getMileage()[1]);
-								searchCriteriaFromSentence.setMinPrice(mileageInstance.getMileage()[0]); 							
+								searchCriteriaFromSentence.setMinMileage(mileageInstance.getMileage()[0]); 							
 							
  							}
  								
@@ -217,20 +253,13 @@ public class SearchController extends HttpServlet {
  							
  							
  					}
- 					if(searchCriteriaFromSentence.isNonStop() == false)
- 					{
- 						searchCriteriaFromSentence.setTwoOrMoreStop(true);
-							searchCriteriaFromSentence.setOneStop(true);
-							searchCriteriaFromSentence.setNonStop(true);
-							searchCriteriaFromSentence.setStops(3);
- 					}
  					searchCriteriaFromSentence.setReturnDate(searchCriteriaFromSentence.getDepartureDate());
 					 searchAttrFromSentence = serviceFromSentence.getSearchAttributes(searchCriteriaFromSentence);
 					 tripRecordFromSentence = serviceFromSentence.search(searchCriteriaFromSentence);
 					request.setAttribute("searchAttr", searchAttrFromSentence);
 					request.setAttribute("tripRecord", tripRecordFromSentence);
  				}
- 				
+			}
  				
  			}
 			else
@@ -249,11 +278,6 @@ public class SearchController extends HttpServlet {
 				searchCriteria.setMinPrice(minPrice);
 			}
 			
- 			
-
-			
-			
- 			
 			if(stops!=null){
 				for(int i=0;i<stops.length;i++){
 					if("0".equals(stops[i])){
@@ -293,9 +317,18 @@ public class SearchController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("./web/search_result.jsp");
-		rd.forward(request, response);	
+		if(request.getParameter("getCompilerReview") == null)
+		{
+			RequestDispatcher rd = request.getRequestDispatcher("./web/search_result.jsp");
+			rd.forward(request, response);	
+		}
+		else
+		{
+			request.setAttribute("outputOfReview", outputString);
+			request.setAttribute("sentenceRequest", sentenceInput);
+			RequestDispatcher rd = request.getRequestDispatcher("./web/review.jsp");
+			rd.forward(request, response);	
+		}
 	}
 
 	/**
