@@ -1,8 +1,3 @@
-
-<%@page import="com.prefengine.service.SearchService"%>
-<%@page import="com.prefengine.service.SearchCriteria"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="com.prefengine.domain.SearchAttributes"%>
 <!DOCTYPE HTML>
 <html>
 
@@ -49,7 +44,8 @@
     		}
     		//alert("done");
     	}
- 
+    </script>
+
 
 </head>
 
@@ -116,33 +112,33 @@
 												<form method="post" action="/prefengine/SearchController"
 													name="search">
 													<div class="tabbable">
-													<ul class="nav nav-pills nav-sm nav-no-br mb10"
+														<ul class="nav nav-pills nav-sm nav-no-br mb10"
 															id="flightChooseTab">
 															<li class="active">Requirements Sentences:</li>
+															<%String sentenceofRequest = (String)request.getAttribute("sentenceRequest");
+															out.print(sentenceofRequest);%>
 															<li>
-															
-																<input class="form-control" type="text" id = "sentenceInput"
-																						name="requirementSentence" value="eg: I want flight from boston to new york....">
-															
+																<input class="form-control" type="text"
+																						name="requirementSentence" value=sentenceofRequest" >
 															</li>
-															
-															<button class="btn btn-primary btn-lg" type = "submit"    name ="getCompilerReview"  id = "reviewOfCompiler" >Review Request </button>
+																<button class="btn btn-primary btn-lg" type = "submit"    name ="getCompilerReview"  id = "reviewOfCompiler" >Review Request </button>
 											
 														</ul>
 														<ul>
-														<li>  
-														<p><%
-														String str = (String)request.getAttribute("outputOfReview");
-														if(str.equals(""))
-															out.print("Compiler recognized it as:     ");
-														else
-															out.print("Compiler recognized it as:      " + str);
-														%>
-														</p>
-														 </li>
-														 </ul>
-														<ul id = "listOfReview">
+															<li> 
+														 
+																<p><%
+																String str = (String)request.getAttribute("outputOfReview");
+																if(str.equals(""))
+																	out.print("Compiler recognized it as:     ");
+																else
+																	out.print("Compiler recognized it as:      " + str);
+																%>
+																</p> 
+															</li>
 														</ul>
+														
+														
 														<ul class="nav nav-pills nav-sm nav-no-br mb10"
 															id="flightChooseTab">
 															<li class="active"><a href="#flight-search-1"
@@ -328,7 +324,7 @@
 																			</div>
 																		</div>
 															<!-- </div>  -->
-													   		
+															
 														</div>
 													</div>
 													<button class="btn btn-primary btn-lg" type="submit">Search
