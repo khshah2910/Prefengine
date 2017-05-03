@@ -109,15 +109,19 @@
 
 											<div class="tab-pane fade in active" id="tab-1">
 												<h2>Search for Cheap Flights</h2>
+												<h3>   </h3>
+												<h5>Requirements Sentences:  </h5>
+															
 												<form method="post" action="/prefengine/SearchController"
 													name="search">
 													<div class="tabbable">
 														<ul class="nav nav-pills nav-sm nav-no-br mb10"
 															id="flightChooseTab">
-															<li class="active">Requirements Sentences:</li>
 															<li>
-																<input class="form-control" type="text"
-																						name="requirementSentence" value="eg: I want flight from boston to new york....">
+																<textarea  style="text-align: left;padding-left:0; padding-top:0; padding-bottom:80px; 
+																	 width: 500px; display:inline-block; word-wrap:break-word; height: 100px; margin-right: 20px;" class="form-controlSentence" 
+																							name="requirementSentence"  >eg: I want flight from boston to new york....
+																				</textarea>
 															</li>
 																<button class="btn btn-primary btn-lg" type = "submit"    name ="getCompilerReview"  id = "reviewOfCompiler" >Review Request </button>
 											
