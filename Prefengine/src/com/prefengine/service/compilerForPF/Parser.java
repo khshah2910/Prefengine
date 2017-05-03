@@ -497,19 +497,21 @@ public class Parser {
 		{
 			ArrayList <Integer> functionIndexArray = new ArrayList <Integer>();
 			ArrayList <BasicFunctionType> functionTypeArray = new ArrayList <BasicFunctionType> ();
-			boolean isFirstFunctionType = false;
+			boolean isFirstFunctionType = true;
+			BasicFunctionType currentFunctionTpe = ServiceProperty.GENERALPROPERTY;
 			for(int secondIndex = 0;secondIndex <  copyClause.get(i).size(); secondIndex ++ )
-			{	if((copyClause.get(i).get(secondIndex) instanceof Token)
+			{	
+				if((copyClause.get(i).get(secondIndex) instanceof Token)
 					&&(((Token)copyClause.get(i).get(secondIndex)).getFunctionType() != ServiceProperty.GENERALPROPERTY)
 					&&(((Token)copyClause.get(i).get(secondIndex)).getFunctionType() != null))
 				{	
-				if(isFirstFunctionType == false)
+				if(isFirstFunctionType == true)
 					{
-						isFirstFunctionType = true;
+						isFirstFunctionType = false;
+						currentFunctionTpe = (((Token)copyClause.get(i).get(secondIndex)).getFunctionType());
 					}
 					else if(!functionTypeArray.contains(((Token)copyClause.get(i).get(secondIndex)).getFunctionType()))
-					{
-						if(((Token)copyClause.get(i).get(secondIndex)).getFunctionType() == ServiceProperty.MILEAGE)
+					{	if(((Token)copyClause.get(i).get(secondIndex)).getFunctionType() == ServiceProperty.MILEAGE)
 						{
 							if((secondIndex -1 >=0
 									&& ((copyClause.get(i).get(secondIndex-1) instanceof Token)
@@ -534,14 +536,16 @@ public class Parser {
 							{
 								functionIndexArray.add(secondIndex);
 								functionTypeArray.add(((Token)copyClause.get(i).get(secondIndex)).getFunctionType());
-						
+								currentFunctionTpe = ((Token)copyClause.get(i).get(secondIndex)).getFunctionType();
 							}
 						}
 						else
 						{
-							functionIndexArray.add(secondIndex);
-							functionTypeArray.add(((Token)copyClause.get(i).get(secondIndex)).getFunctionType());
-					
+							if(currentFunctionTpe != ((Token)copyClause.get(i).get(secondIndex)).getFunctionType())
+							{	functionIndexArray.add(secondIndex);
+								functionTypeArray.add(((Token)copyClause.get(i).get(secondIndex)).getFunctionType());
+								currentFunctionTpe = ((Token)copyClause.get(i).get(secondIndex)).getFunctionType();
+							}
 						}
 					}
 				}
@@ -1356,24 +1360,30 @@ public class Parser {
 	private BasicFunctionType getLeaveAndArriveProperties(ArrayList<TokenGeneralKind> clause)
 	{	LeaveAndArriveFunctionType landaInstance = new LeaveAndArriveFunctionType(ServiceProperty.LANDA);
 		boolean findLANDACoreMeaning = false;
+
 		for(int i =0;i<clause.size();i++)
 		{if(clause.get(i) instanceof Token && 
 					((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicFunctionType() ==  ServiceProperty.LANDA)
 			{	findLANDACoreMeaning = true;
 				City cityCode;
 				if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.NEGATIVESTABLE)
-				{//boolean findUnrecognizeToken = false;					
+				{//boolean findUnrecognizeToken = false;
+					int index = 0;
 					for(int j = 0;j<5;j++)
 					{
 						if(  i + j < clause.size() &&clause.get(i+j) instanceof UnrecognizeToken )
 						{	if(( cityCode = (City)generateCityClause(clause, i+j)) != null);							
 							landaInstance.setLeavePlace(cityCode);
+							index = j;
 						}
 						else if(i + j < clause.size() &&clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
-						{
-							landaInstance.setLeaveDay(generateTimeStamp(clause,i+j));							
+						{	landaInstance.setLeaveDay(generateTimeStamp(clause,i+j));	
+							index = j;
 						}
-					}				
+						
+					}
+					i  = i+index;
+					
 				}
 				else if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVESTABLE)
 				{	//boolean findUnrecognizeToken = false;
@@ -1386,7 +1396,7 @@ public class Parser {
 						else if( i+j < clause.size() && clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
 						{	if(isRoundTrip == false)					
 								landaInstance.setArriveDay(generateTimeStamp(clause,i+j));
-							else
+							else if(landaInstance.getLeaveDay() == null)
 								landaInstance.setLeaveDay(generateTimeStamp(clause,i+j));
 						}
 					}				

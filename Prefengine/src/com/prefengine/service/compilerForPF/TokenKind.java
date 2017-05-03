@@ -1033,7 +1033,6 @@ enum CoreMeaningTwo implements CoreMeaning
 	TIRED("tired",Properties.ADJV,ServiceProperty.DSERVICE,WeightOriginalRange.NEGATIVESTABLE),
 	TITL("titl",Properties.NOUN,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.USELESS),
 	TO("to",Properties.SPREP,ServiceProperty.LANDA,WeightOriginalRange.POSITIVESTABLE),
-	PRICETO("priceto",Properties.SPREP,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.POSITIVESTABLE),
 	TODAY("today",Properties.NOUN,ServiceProperty.LANDA,WeightOriginalRange.POSITIVEENHANCE),
 	TOE("toe",Properties.NOUN,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.USELESS),
 	TOGETHER("together",Properties.ADJV,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.STABLE),
@@ -1499,6 +1498,8 @@ enum CoreMeaningOne implements CoreMeaning
 	OCTOBER("october",Properties.MONTH,ServiceProperty.LANDA,10F),
 	NOVEMBER("november",Properties.MONTH,ServiceProperty.LANDA,11F),
 	DECEMBER("december",Properties.MONTH,ServiceProperty.LANDA,12F),
+	PRICEFROM("pricefrom",Properties.SPREP,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.POSITIVESTABLE),
+	PRICETO("priceto",Properties.SPREP,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.POSITIVESTABLE),
 	
 	ABANDON("abandon",Properties.VERB,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.NEGATIVESTABLE),
 	ABIL("abil",Properties.VERB,ServiceProperty.GENERALPROPERTY,WeightOriginalRange.POSITIVESTABLE),
