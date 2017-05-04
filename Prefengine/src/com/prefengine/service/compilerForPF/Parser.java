@@ -1362,7 +1362,8 @@ public class Parser {
 		boolean findLANDACoreMeaning = false;
 
 		for(int i =0;i<clause.size();i++)
-		{if(clause.get(i) instanceof Token && 
+		{
+			if(clause.get(i) instanceof Token && 
 					((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getBasicFunctionType() ==  ServiceProperty.LANDA)
 			{	findLANDACoreMeaning = true;
 				City cityCode;
@@ -1371,22 +1372,26 @@ public class Parser {
 					int index = 0;
 					for(int j = 0;j<5;j++)
 					{
+						if(i + j < clause.size() &&clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getImage().equals("to"))
+							break;
 						if(  i + j < clause.size() &&clause.get(i+j) instanceof UnrecognizeToken )
 						{	if(( cityCode = (City)generateCityClause(clause, i+j)) != null);							
 							landaInstance.setLeavePlace(cityCode);
 							index = j;
+							
 						}
 						else if(i + j < clause.size() &&clause.get(i+j) instanceof Token && ((Token)clause.get(i+j)).getProperty() == NumberProperties.DATENUMBER)
 						{	landaInstance.setLeaveDay(generateTimeStamp(clause,i+j));	
 							index = j;
+							
 						}
-						
 					}
 					i  = i+index;
 					
 				}
 				else if(((CoreMeaning)((Token)clause.get(i)).getCoreMeaning()).getWeight() == WeightOriginalRange.POSITIVESTABLE)
 				{	//boolean findUnrecognizeToken = false;
+					
 					for(int j = 0;i+j<clause.size();j++)
 					{	if( i+j < clause.size() && clause.get(i+j) instanceof UnrecognizeToken )
 						{
